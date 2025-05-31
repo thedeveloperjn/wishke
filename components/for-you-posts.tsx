@@ -1,5 +1,4 @@
 import PropertyPost from "@/components/property-post"
-import ProjectPost from "@/components/project-post"
 import RequirementPost from "@/components/requirement-post"
 
 export default function ForYouPosts() {
@@ -21,11 +20,12 @@ export default function ForYouPosts() {
       />
 
       {/* Project post with multiple images */}
-      <ProjectPost
+      <PropertyPost
+      type="project"
         title="Project X • 3, 4, 5 BHK Flats • 5BHK Residential-Bungalow"
-        developer="Godrej Properties"
+  
         location="Godrej Evenue 11, Mahalaxmi, Mumbai South"
-        priceRange="₹21 Cr - 40 Cr"
+        price="₹21 Cr - 40 Cr"
         description="For athletes, high altitude produces two contradictory effects on performance. For performance. For explosive events..."
         timestamp="24 April at 12:16 PM"
         authorName="Mark Russel"
@@ -39,7 +39,8 @@ export default function ForYouPosts() {
         comments={24}
       />
 
-      {/* Requirement post */}
+
+
       <RequirementPost
         title="Looking for 2/3 BHK Apartment"
         budget="₹50K - 80K per Month"

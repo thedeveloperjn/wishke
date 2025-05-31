@@ -3,6 +3,8 @@ import Image from "next/image"
 import { Search, Edit } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import { Smile, Send, Filter } from "lucide-react"
+import { useRouter } from "next/navigation"
+
 const vendors = [
   {
     id: 1,
@@ -55,6 +57,7 @@ const vendors = [
 ]
 
 export default function VendorsContent() {
+    const router = useRouter()
     const contentRef = useRef<HTMLDivElement>(null)
     const [isScrolled, setIsScrolled] = useState(false)
     const [showFilter, setShowFilter] = useState(false)
@@ -71,6 +74,12 @@ export default function VendorsContent() {
       content.addEventListener("scroll", handleScroll)
       return () => content.removeEventListener("scroll", handleScroll)
     }, [])
+
+    const handleVendorClick = (vendor: typeof vendors[0]) => {
+        const slug = vendor.title.toLowerCase().replace(/\s+/g, '-')
+        router.push(`/vendors/${slug}`)
+    }
+
   return (
     <div
       ref={contentRef}
@@ -103,7 +112,11 @@ export default function VendorsContent() {
       {/* Vendors Grid */}
       <div className="flex flex-wrap gap-3 mb-4">
         {vendors.map((vendor) => (
-          <div key={vendor.id} className="bg-white   overflow-hidden">
+          <div 
+            key={vendor.id} 
+            className="bg-white mb-4 overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+            onClick={() => handleVendorClick(vendor)}
+          >
             <div className="relative w-full  h-[230px] w-[240px]">
               <Image src={vendor.image} alt={vendor.title} fill className="object-cover rounded-lg" />
             </div>

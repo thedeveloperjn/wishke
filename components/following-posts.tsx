@@ -1,5 +1,5 @@
 import PropertyPost from "@/components/property-post"
-import ProjectPost from "@/components/project-post"
+
 
 export default function FollowingPosts() {
   return (
@@ -7,36 +7,40 @@ export default function FollowingPosts() {
       {/* Property post with single image */}
       <PropertyPost
         type="property"
-        title="4BHK Luxury Villa"
-        location="Powai, Mumbai"
-        price="₹2.5L per Month"
-        description="Experience luxury living in this stunning 4BHK villa located in the heart of Powai. Features include a private pool, landscaped garden, and smart home automation."
-        timestamp="26 April at 11:30 AM"
-        authorName="David Chen"
-        authorImage="/diverse-group-profile.png"
-        images={[{ type: "image", url: "/luxury-villa.png" }]}
-        likes={432}
-        comments={89}
+        title="3BHK Residential-Flat"
+        location="Andheri, Mumbai"
+        price="₹75K per Month"
+        description="Discover your dream home in the heart of Andheri, Mumbai! This stunning 3BHK flat is located in a secure gated community with modern amenities and spacious rooms."
+        timestamp="23 April at 10:23 AM"
+        authorName="Samantha Rivers"
+        authorImage="/stylish-profile-picture.png"
+        images={[{ type: "image", url: "/modern-apartment-exterior.png" }]}
+        likes={654}
+        comments={122}
       />
 
       {/* Project post with multiple images */}
-      <ProjectPost
-        title="Luxury Heights • Premium Apartments"
-        developer="Lodha Group"
-        location="Worli, Mumbai"
-        priceRange="₹5 Cr - 8 Cr"
-        description="Introducing Luxury Heights, where elegance meets modern living. Our premium apartments offer breathtaking views and world-class amenities."
-        timestamp="27 April at 2:15 PM"
-        authorName="Sarah Johnson"
-        authorImage="/stylish-profile-picture.png"
+      <PropertyPost
+      type="project"
+        title="Project X • 3, 4, 5 BHK Flats • 5BHK Residential-Bungalow"
+  
+        location="Godrej Evenue 11, Mahalaxmi, Mumbai South"
+        price="₹21 Cr - 40 Cr"
+        description="For athletes, high altitude produces two contradictory effects on performance. For performance. For explosive events..."
+        timestamp="24 April at 12:16 PM"
+        authorName="Mark Russel"
+        authorImage="/jamie-parker.png"
         images={[
-          { type: "image", url: "/luxury-apartment.png" },
-          { type: "image", url: "/luxury-interior.png" },
-          { type: "image", url: "/luxury-amenities.png" }
+          { type: "image", url: "/luxury-tower-pool.png" },
+          { type: "image", url: "/modern-apartment-exterior.png" },
+          { type: "image", url: "/luxury-lobby.png" }
         ]}
-        likes={567}
-        comments={123}
+        likes={76}
+        comments={24}
       />
+
+
+
     </div>
   )
 } 

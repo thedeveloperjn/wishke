@@ -21,7 +21,12 @@ import {
  
 } from "lucide-react"
 
-export default function Sidebar() {
+interface SidebarProps {
+  activeSection?: string;
+  onSectionChange?: (section: string) => void;
+}
+
+export default function Sidebar({ activeSection, onSectionChange }: SidebarProps = {}) {
   const sidebarRef = useRef<HTMLDivElement>(null)
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
@@ -176,7 +181,7 @@ function NavItem({ icon, label, active, href, onClick }: NavItemProps) {
   return (
     <Link
       href={href}
-      className={`flex items-center gap-3 rounded-lg px-3 py-3 text-[18px] font-medium ${
+      className={`flex items-center gap-3 rounded-lg px-3 py-3 text-[16px] font-medium ${
         active ? "bg-[#EFF8F4] text-[#01A76F]" : "text-muted-foreground hover:bg-[#000000] hover:bg-opacity-[3%] hover:text-foreground"
       }`}
       onClick={(e) => {

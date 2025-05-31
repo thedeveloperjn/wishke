@@ -20,7 +20,7 @@ interface PropertyPostProps {
 }
 
 export default function PropertyPost({
-  type = "property",
+  type,
   title,
   location,
   description,
@@ -73,7 +73,7 @@ export default function PropertyPost({
   }
 
   return (
-    <div className="rounded-lg bg-white p-4 mb-4">
+    <div className="rounded-lg bg-white p-4 mb-4"  onClick={handleReadMore}>
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="relative h-12 w-12 overflow-hidden rounded-full">
@@ -93,7 +93,7 @@ export default function PropertyPost({
 
       <div className="mb-4">
         <div className="mb-2 flex flex-wrap gap-2">
-          <span className={`text-[16px] ${getTypeColor()}`}>{type.charAt(0).toUpperCase() + type.slice(1)}</span>
+          <span className={`text-[16px] ${getTypeColor()}`}>{type ? type.charAt(0).toUpperCase() + type.slice(1) : 'Property'}</span>
           <span className="text-[16px] text-muted-foreground">•</span>
           <span className="text-[16px] text-muted-foreground">{title}</span>
           <span className="text-[16px] text-muted-foreground">•</span>

@@ -3,11 +3,12 @@
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
-import { Send, Paperclip, Smile, MoreVertical, Phone, Video, ArrowLeft } from "lucide-react"
-import { Input } from "@/components/ui/input"
+import { Send, Paperclip, Smile, MoreVertical, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
-import { ImageIcon, Microphone } from "@phosphor-icons/react/dist/ssr";
+import { ImageIcon, Microphone } from "@phosphor-icons/react/dist/ssr"
+import { Input } from "@/components/ui/input"
+
 interface Message {
   id: number
   text: string
@@ -34,6 +35,8 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [messageId, setMessageId] = useState(1000)
+  
 
   useEffect(() => {
     const content = contentRef.current
@@ -131,24 +134,6 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
     2: [
       { id: 1, text: "Hey! How are you doing?", sender: "other", timestamp: "9:15 AM" },
       { id: 2, text: "I'm doing great! Thanks for asking. How about you?", sender: "me", timestamp: "9:20 AM" },
-      {
-        id: 3,
-        text: "Pretty good! I wanted to ask about the property requirements you mentioned.",
-        sender: "other",
-        timestamp: "9:22 AM",
-      },
-      {
-        id: 4,
-        text: "I'm looking for a 2-3 BHK apartment in Mumbai, preferably in Bandra or Andheri area.",
-        sender: "me",
-        timestamp: "9:25 AM",
-      },
-      {
-        id: 5,
-        text: "Great! I have some excellent options in both areas. What's your budget range?",
-        sender: "other",
-        timestamp: "9:27 AM",
-      },
     ],
     3: [
       { id: 1, text: "Thanks for sharing the property details", sender: "other", timestamp: "Yesterday" },
@@ -156,12 +141,6 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
         id: 2,
         text: "You're welcome! Let me know if you need any more information.",
         sender: "me",
-        timestamp: "Yesterday",
-      },
-      {
-        id: 3,
-        text: "I'll review everything and get back to you by tomorrow.",
-        sender: "other",
         timestamp: "Yesterday",
       },
     ],
@@ -178,12 +157,6 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
         sender: "me",
         timestamp: "2:05 PM",
       },
-      {
-        id: 3,
-        text: "Let's schedule a meeting tomorrow to discuss the next steps.",
-        sender: "other",
-        timestamp: "2:07 PM",
-      },
     ],
     5: [
       {
@@ -192,24 +165,12 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
         sender: "other",
         timestamp: "11:30 AM",
       },
-      {
-        id: 2,
-        text: "Perfect! I'll check it out. The color scheme looks amazing from the preview.",
-        sender: "me",
-        timestamp: "11:35 AM",
-      },
     ],
     6: [
       {
         id: 1,
         text: "The location looks great for the new property development.",
         sender: "other",
-        timestamp: "2 days ago",
-      },
-      {
-        id: 2,
-        text: "Yes, it's in a prime location with excellent connectivity.",
-        sender: "me",
         timestamp: "2 days ago",
       },
     ],
@@ -220,24 +181,12 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
         sender: "other",
         timestamp: "3 days ago",
       },
-      {
-        id: 2,
-        text: "I'll prepare a detailed quote and send it over by tomorrow.",
-        sender: "me",
-        timestamp: "3 days ago",
-      },
     ],
     8: [
       {
         id: 1,
         text: "I'm interested in this property. Can you help with the legal documentation?",
         sender: "other",
-        timestamp: "1 week ago",
-      },
-      {
-        id: 2,
-        text: "I'll review all the documents and ensure everything is in order.",
-        sender: "me",
         timestamp: "1 week ago",
       },
     ],
@@ -257,13 +206,13 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
   const handleSendMessage = () => {
     if (message.trim()) {
       const newMessage: Message = {
-        id: Date.now(),
+        id: messageId,
         text: message,
         sender: "me",
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
       }
-
       setMessages((prev) => [...prev, newMessage])
+      setMessageId((id) => id + 1)
       setMessage("")
 
       // Simulate typing indicator and response
@@ -272,25 +221,26 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
         setIsTyping(false)
 
         const responses = [
-          "That sounds great!",
-          "I'll get back to you on that.",
-          "Thanks for the information.",
-          "Let me check and confirm.",
-          "Perfect! Looking forward to it.",
-          "I'll coordinate with my team and update you.",
-          "That works for me. Let's proceed.",
-          "Excellent! I'll prepare the documents.",
+          "kuch khaya aapne",
+          "chlo thik h thda rest kr lena",
+          "thda time mil jaye to mujhse mil bhi lena .",
+          "thik h call to kar hi sakte ho na ",
+          "acha h kam se kam baat to hoye",
+          "pata h mere paas aapke liye ek surprise h",
+          "Surprise h abhi nhi bta rhi milo fir btati",
+          "Okay byee aap kaam krlo  mai bhi chlti hu ",
         ]
 
         const randomResponse = responses[Math.floor(Math.random() * responses.length)]
         const responseMessage: Message = {
-          id: Date.now() + 1,
+          id: messageId + 1,
           text: randomResponse,
           sender: "other",
           timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         }
 
         setMessages((prev) => [...prev, responseMessage])
+        setMessageId((id) => id + 1)
       }, 1500)
     }
   }
@@ -333,7 +283,7 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
 
   if (!currentContact) {
     return (
-      <div className="flex items-center justify-center h-full">
+         <div className="flex items-center justify-center h-full">
         <div className="text-center">
           <h3 className="text-lg font-medium text-gray-900 mb-2">Contact not found</h3>
           <Button onClick={handleBackToHome}>Back to Home</Button>
@@ -343,18 +293,18 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
   }
 
   return (
-    <div
-      ref={contentRef}
-      className={`flex-1 bg-white  overflow-y-auto  h-[calc(100vh-96px)] no-scrollbar transition-all duration-200 ${
-        isScrolled ? "rounded-b-lg" : "!rounded-lg"
-      }`}
-      style={{
-        borderTopLeftRadius: isScrolled ? 0 : "0.5rem",
-        borderTopRightRadius: isScrolled ? 0 : "0.5rem",
-      }}
-    >
-      {/* Chat Header */}
-      <div className="flex items-center rounded-t-[12px] overflow-hidden justify-between p-4 border-b border-gray-100 bg-white">
+   <div
+        ref={contentRef}
+        className={`flex-1 bg-white  overflow-y-auto min-h-[85vh] no-scrollbar transition-all duration-200 ${
+          isScrolled ? "rounded-b-lg" : "!rounded-lg"
+        }`}
+        style={{
+          borderTopLeftRadius: isScrolled ? 0 : "0.5rem",
+          borderTopRightRadius: isScrolled ? 0 : "0.5rem",
+        }}
+      >
+      {/* Chat Header - Fixed at top */}
+      <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" onClick={handleBackToHome}>
             <ArrowLeft className="h-4 w-4" />
@@ -378,97 +328,97 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {/* <Button variant="ghost" size="sm">
-            <Phone className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="sm">
-            <Video className="h-5 w-5" />
-          </Button> */}
           <Button variant="ghost" size="sm">
             <MoreVertical className="h-5 w-5" />
           </Button>
         </div>
       </div>
 
-      {/* Messages Area */}
-      <div className="flex-1 bg-white overflow-y-auto p-6 space-y-4 ">
-        {currentMessages.map((msg) => (
-          <div key={msg.id} className={`flex items-end gap-3 ${msg.sender === "me" ? "justify-end" : "justify-start"}`}>
-            {/* Profile Picture for Other User */}
-            {msg.sender === "other" && (
-              <div className="relative h-8 w-8 flex-shrink-0">
-                <Image
-                  src="/stylish-profile-picture.png"
-                  alt={currentContact.name}
-                  fill
-                  className="rounded-full object-cover"
-                />
+      {/* Messages Area - Flexible height, bottom aligned when few messages */}
+      <div className="flex-1 overflow-y-auto h-[66vh] bg-white">
+        <div className="min-h-full flex flex-col justify-end p-6">
+          <div className="space-y-4">
+            {currentMessages.map((msg) => (
+              <div
+                key={msg.id}
+                className={`flex items-end gap-3 ${msg.sender === "me" ? "justify-end" : "justify-start"}`}
+              >
+                {/* Profile Picture for Other User */}
+                {msg.sender === "other" && (
+                  <div className="relative h-8 w-8 flex-shrink-0">
+                    <Image
+                      src="/stylish-profile-picture.png"
+                      alt={currentContact.name}
+                      fill
+                      className="rounded-full object-cover"
+                    />
+                  </div>
+                )}
+
+                {/* Message Bubble */}
+                <div
+                  className={`max-w-[70%] rounded-2xl px-4 py-3 cursor-pointer transition-all ${
+                    msg.sender === "me"
+                      ? "bg-[#8E33FF] text-white rounded-br-md"
+                      : "bg-[#EFF8F4] text-gray-900 rounded-bl-md"
+                  }`}
+                  onClick={(e) => handleMessageClick(e, msg)}
+                >
+                  <p className="text-sm leading-relaxed">{msg.text}</p>
+                </div>
+
+                {/* Profile Picture for My Messages */}
+                {msg.sender === "me" && (
+                  <div className="relative h-8 w-8 flex-shrink-0">
+                    <Image
+                      src="/imagesstatic/malvika.jpg"
+                      alt={myProfile.name}
+                      fill
+                      className="rounded-full object-cover"
+                    />
+                  </div>
+                )}
               </div>
-            )}
+            ))}
 
-            {/* Message Bubble */}
-            <div
-              className={`max-w-[70%] rounded-2xl px-4 py-3 cursor-pointer transition-all ${
-                msg.sender === "me"
-                  ? "bg-[#8E33FF] text-white rounded-br-md"
-                  : "bg-[#EFF8F4] text-gray-900 rounded-bl-md "
-              }`}
-              onClick={(e) => handleMessageClick(e, msg)}
-            >
-              <p className="text-sm leading-relaxed">{msg.text}</p>
-            </div>
-
-            {/* Profile Picture for My Messages */}
-            {msg.sender === "me" && (
-              <div className="relative h-8 w-8 flex-shrink-0">
-                <Image
-                  src="/imagesstatic/malvika.jpg"
-                  alt={myProfile.name}
-                  fill
-                  className="rounded-full object-cover"
-                />
-              </div>
-            )}
-          </div>
-        ))}
-
-        {isTyping && (
-          <div className="flex gap-3 justify-start">
-            <div className="relative h-8 w-8 flex-shrink-0">
-              <Image
-                src={currentContact.avatar || "/placeholder.svg"}
-                alt={currentContact.name}
-                fill
-                className="rounded-full object-cover"
-              />
-            </div>
-            <div className="bg-white rounded-2xl rounded-bl-md px-4 py-3 shadow-sm">
-              <div className="flex items-center space-x-2">
-                <span className="text-xs text-gray-500">{currentContact.name} is typing</span>
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                  <div
-                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                    style={{ animationDelay: "0.1s" }}
-                  ></div>
-                  <div
-                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
-                    style={{ animationDelay: "0.2s" }}
-                  ></div>
+            {isTyping && (
+              <div className="flex gap-3 justify-start">
+                <div className="relative h-8 w-8 flex-shrink-0">
+                  <Image
+                    src="/stylish-profile-picture.png"
+                    alt={currentContact.name}
+                    fill
+                    className="rounded-full object-cover"
+                  />
+                </div>
+                <div className="bg-[#EFF8F4] rounded-2xl rounded-bl-md px-4 py-3">
+                  <div className="flex items-center space-x-2">
+                    <div className="flex space-x-1">
+                      <div className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"></div>
+                      <div
+                        className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"
+                        style={{ animationDelay: "0.1s" }}
+                      ></div>
+                      <div
+                        className="w-1 h-1 bg-gray-400 rounded-full animate-bounce"
+                        style={{ animationDelay: "0.2s" }}
+                      ></div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        )}
+            )}
 
-        <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
       </div>
 
-      {/* Message Input */}
+      {/* Message Input - Fixed at bottom */}
       <div className="p-4 border-t border-gray-100 bg-white">
-        <div className="flex items-center border border-gray-700 bg-[#F8F8FA] rounded-[8px] px-4 py-2 shadow-sm w-full">
+        <div className="flex items-center border border-gray-200 bg-[#F8F8FA] rounded-full px-4 py-2 shadow-sm w-full">
           <Smile className="h-5 w-5 text-gray-400 mr-2" />
-          <input
+          <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={handleKeyPress}
@@ -476,13 +426,13 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
             className="flex-1 bg-transparent border-none outline-none text-base placeholder-gray-400"
           />
           <Button variant="ghost" size="icon" className="ml-2">
-            <ImageIcon  size={28} color="#919191"/>
+            <Image src="/image.svg" alt="Add Image" width={20} height={20} />
           </Button>
           <Button variant="ghost" size="icon">
             <Paperclip className="h-5 w-5 text-gray-400" />
           </Button>
           <Button variant="ghost" size="icon">
-          <Microphone size={32}  color="#919191" />
+            <Image src="/mic.svg" alt="Mic" width={20} height={20} />
           </Button>
           {message.trim() && (
             <Button

@@ -12,17 +12,9 @@ export default function VendorDetailPage() {
   const [activeSection, setActiveSection] = useState("vendors")
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F8F8FA] no-scrollbar">
-      <Header />
-      <div className="flex flex-1 p-6 gap-6 overflow-hidden no-scrollbar">
-        {/* Left Sidebar - Fixed width */}
-        <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
-
-        {/* Vendor Detail Content - Takes all remaining space */}
-        <div className="flex-1 ">
+    <div className="max-w-[74%]">
           <VendorDetailContent vendorId={vendorId} />
         </div>
-      </div>
-    </div>
+     
   )
 }

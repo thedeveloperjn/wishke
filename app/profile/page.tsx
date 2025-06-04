@@ -10,16 +10,9 @@ export default function ProfilePage() {
   const [activeSection, setActiveSection] = useState("home")
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F8F8FA] no-scrollbar">
-      <Header />
-      <div className="flex flex-1 p-6 gap-6 overflow-hidden no-scrollbar">
-        <Sidebar />
-
-          <ProfileContent />
-        
-        {/* Right Messages Sidebar */}
-        <MessagesSidebar />
-      </div>
+    <div className="min-w-[51%] xl:max-w-[51%]">
+<ProfileContent />
     </div>
+        
   )
 }

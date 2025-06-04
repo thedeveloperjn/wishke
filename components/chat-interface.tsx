@@ -34,21 +34,9 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
-  const [isScrolled, setIsScrolled] = useState(false)
+
   const [messageId, setMessageId] = useState(1000)
   
-
-  useEffect(() => {
-    const content = contentRef.current
-    if (!content) return
-
-    const handleScroll = () => {
-      setIsScrolled(content.scrollTop > 0)
-    }
-
-    content.addEventListener("scroll", handleScroll)
-    return () => content.removeEventListener("scroll", handleScroll)
-  }, [])
 
   const [contextMenu, setContextMenu] = useState<{
     show: boolean
@@ -221,14 +209,14 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
         setIsTyping(false)
 
         const responses = [
-          "kuch khaya aapne",
-          "chlo thik h thda rest kr lena",
-          "thda time mil jaye to mujhse mil bhi lena .",
-          "thik h call to kar hi sakte ho na ",
-          "acha h kam se kam baat to hoye",
-          "pata h mere paas aapke liye ek surprise h",
-          "Surprise h abhi nhi bta rhi milo fir btati",
-          "Okay byee aap kaam krlo  mai bhi chlti hu ",
+          "That sounds great!",
+          "I'll get back to you on that.",
+          "Thanks for the information.",
+          "Let me check and confirm.",
+          "Perfect! Looking forward to it.",
+          "I'll coordinate with my team and update you.",
+          "That works for me. Let's proceed.",
+          "Excellent! I'll prepare the documents.",
         ]
 
         const randomResponse = responses[Math.floor(Math.random() * responses.length)]
@@ -295,13 +283,9 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
   return (
    <div
         ref={contentRef}
-        className={`flex-1 bg-white  overflow-y-auto min-h-[85vh] no-scrollbar transition-all duration-200 ${
-          isScrolled ? "rounded-b-lg" : "!rounded-lg"
-        }`}
-        style={{
-          borderTopLeftRadius: isScrolled ? 0 : "0.5rem",
-          borderTopRightRadius: isScrolled ? 0 : "0.5rem",
-        }}
+        className="flex-1 bg-white  overflow-y-auto max-h-[85vh] no-scrollbar transition-all duration-200 !rounded-lg"
+        
+        
       >
       {/* Chat Header - Fixed at top */}
       <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white">
@@ -335,7 +319,7 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
       </div>
 
       {/* Messages Area - Flexible height, bottom aligned when few messages */}
-      <div className="flex-1 overflow-y-auto h-[66vh] bg-white">
+      <div className="flex-1 overflow-y-auto h-[50vh] bg-white">
         <div className="min-h-full flex flex-col justify-end p-6">
           <div className="space-y-4">
             {currentMessages.map((msg) => (

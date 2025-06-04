@@ -325,8 +325,8 @@ export default function StorySection() {
                   <div
                     className={`flex justify-center items-center relative h-[85px] w-[85px] rounded-full ${
                       hasActiveUserStory && isStoryFullyViewed(userStory.id)
-                      ? "bg-gradient-to-l from-[#AAD652]/30 to-[#08bcb0]/30"
-                      : "bg-gradient-to-l from-[#AAD652] to-[#08bcb0]"
+                      ? "bg-gradient-to-r from-[#FFD78A]/30 to-[#F4762D]/30"
+                      : "bg-gradient-to-r from-[#FFD78A] to-[#F4762D]"
                   } !p-[2px]`}
                   >
                   
@@ -386,8 +386,8 @@ export default function StorySection() {
                 <div
                   className={ `flex justify-center items-center relative h-[85px] w-[85px] rounded-full ${
                     isFullyViewed
-                      ? "bg-gradient-to-l from-[#AAD652]/30 to-[#08bcb0]/30"
-                      : "bg-gradient-to-l from-[#AAD652] to-[#08bcb0]"
+                      ? "bg-gradient-to-r from-[#FFD78A]/30 to-[#F4762D]/30"
+                      : "bg-gradient-to-r from-[#FFD78A] to-[#F4762D]"
                   } !p-[2px] `}
                 >
                   <div className="relative  h-[81px] w-[81px]   overflow-hidden">

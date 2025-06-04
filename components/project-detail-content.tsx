@@ -9,18 +9,18 @@ import {
   ArrowLeft,
   Heart,
   ChatCircle,
-  Building ,
+  Building,
   ShareNetwork,
-  Ruler ,
+  Ruler,
   BookmarkSimple,
   MapPin,
   Buildings,
   Bed,
   Bathtub,
-  Wind ,
+  Wind,
   Car,
   Elevator,
-  ShareFat ,
+  ShareFat,
   Shield,
   PaperPlaneTilt,
   Fire,
@@ -103,10 +103,10 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
       postedBy: "Owner",
     },
     amenities: [
-      { icon: ChefHat , name: "Modular Kitchen" },
-      { icon: Clover , name: "Garden" },
+      { icon: ChefHat, name: "Modular Kitchen" },
+      { icon: Clover, name: "Garden" },
       { icon: FireExtinguisher, name: "Fire Fighting System" },
-      { icon: SecurityCamera  , name: "24×7 Security" },
+      { icon: SecurityCamera, name: "24×7 Security" },
       { icon: Elevator, name: "Fast Elevators" },
       { icon: CarBattery, name: "Power Backup" },
       { icon: Warehouse, name: "Covered Parking" },
@@ -199,23 +199,24 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
   return (
     <div className="w-full h-full bg-white rounded-lg overflow-hidden">
       <div ref={contentRef} className="h-[calc(100vh-96px)] overflow-y-auto no-scrollbar">
-        <div className="p-6">
+        <div className="p-6 pt-0">
           {/* Header */}
-          <div className="flex items-center gap-3 mb-6">
-            <Button variant="ghost" size="sm" onClick={() => router.back()}>
-              <ArrowLeft size={16} />
-            </Button>
-            <h1 className="text-lg font-semibold">Property Detail</h1>
-          </div>
-
+          <button
+            onClick={() => router.back()}
+            className="sticky top-0 py-4 flex w-full items-center bg-white z-[5] text-[20px] font-semibold gap-2 text-gray-900 hover:text-gray-900"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Property Detail
+          </button>
           {/* Project Title and Price */}
           <div className="mb-6 flex justify-between">
             <div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">{project.title}</h1>
-            <div className="flex items-center gap-2 text-gray-600 mb-2">
-              <MapPin size={16} />
-              <span className="text-[16px]">{project.location}</span>
-            </div></div>
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">{project.title}</h1>
+              <div className="flex items-center gap-2 text-gray-600 mb-2">
+                <MapPin size={16} />
+                <span className="text-[16px]">{project.location}</span>
+              </div>
+            </div>
             <p className="text-2xl font-bold text-gray-900">{project.priceRange}</p>
           </div>
 
@@ -263,18 +264,18 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
               </button>
 
               <button className="flex items-center gap-2 text-gray-500">
-                < ShareFat  size={20} />
+                <ShareFat size={20} />
                 <span className="text-sm">Share</span>
               </button>
             </div>
 
             <button className="text-gray-500">
-              <BookmarkSimple   size={20} />
+              <BookmarkSimple size={20} />
             </button>
           </div>
 
           {/* Sticky Tabs */}
-          <div className="sticky top-[0px] bg-white border-b mb-6 z-10">
+          <div className="sticky top-[60px] bg-white border-b mb-6 z-10">
             <div className="flex gap-8">
               {tabs.map((tab) => (
                 <button
@@ -302,7 +303,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
           {/* Overview Section */}
           <div ref={overviewRef} className="space-y-6 mb-12">
-            <h3 className="text-xl font-semibold border-b pb-4 mb-6  text-gray-900">Overview</h3>
+            <h3 className="text-xl font-semibold border-b pb-4 mb-6 text-gray-900">Overview</h3>
 
             <div className="grid grid-cols-3 gap-6 px-4">
               <div className="space-y-4">
@@ -331,7 +332,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-gray-500">
-                  <Wind  size={22} />
+                  <Wind size={22} />
                   <span className="text-[16px]">Balcony</span>
                 </div>
                 <p className="font-[500] text-[16px]">{project.specifications.balcony}</p>
@@ -339,7 +340,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-gray-500">
-                  <Couch  size={22} />
+                  <Couch size={22} />
                   <span className="text-[16px]">Furnishing Type</span>
                 </div>
                 <p className="font-[500] text-[16px]">{project.specifications.furnishingType}</p>
@@ -347,7 +348,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-gray-500">
-                  <SunHorizon  size={22} />
+                  <SunHorizon size={22} />
                   <span className="text-[16px]">Facing</span>
                 </div>
                 <p className="font-[500] text-[16px]">{project.specifications.facing}</p>
@@ -355,7 +356,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-gray-500">
-                  <SunHorizon  size={22} />
+                  <SunHorizon size={22} />
                   <span className="text-[16px]">Property Status</span>
                 </div>
                 <p className="font-[500] text-[16px]">{project.specifications.propertyStatus}</p>
@@ -363,7 +364,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-gray-500">
-                  <CarSimple  size={22} />
+                  <CarSimple size={22} />
                   <span className="text-[16px]">Car Parking</span>
                 </div>
                 <p className="font-[500] text-[16px]">{project.specifications.carParking}</p>
@@ -371,7 +372,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-gray-500">
-                  <Ruler  size={22} />
+                  <Ruler size={22} />
                   <span className="text-[16px]">Total Area</span>
                 </div>
                 <p className="font-[500] text-[16px]">{project.specifications.totalArea}</p>
@@ -379,7 +380,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-gray-500">
-                  <ArrowsOut  size={22} />
+                  <ArrowsOut size={22} />
                   <span className="text-[16px]">Buildup Area</span>
                 </div>
                 <p className="font-[500] text-[16px]">{project.specifications.buildupArea}</p>
@@ -387,7 +388,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-gray-500">
-                  <ArrowsOut  size={22} />
+                  <ArrowsOut size={22} />
                   <span className="text-[16px]">Carpet Area</span>
                 </div>
                 <p className="font-[500] text-[16px]">{project.specifications.carpetArea}</p>
@@ -395,7 +396,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-gray-500">
-                  <Building  size={22} />
+                  <Building size={22} />
                   <span className="text-[16px]">Total Floors</span>
                 </div>
                 <p className="font-[500] text-[16px]">{project.specifications.totalFloors}</p>
@@ -403,7 +404,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-gray-500">
-                  <BuildingOffice  size={22} />
+                  <BuildingOffice size={22} />
                   <span className="text-[16px]">Available Floor</span>
                 </div>
                 <p className="font-[500] text-[16px]">{project.specifications.availableFloor}</p>
@@ -411,7 +412,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-gray-500">
-                  <ClockCountdown  size={22} />
+                  <ClockCountdown size={22} />
                   <span className="text-[16px]">Age of Property</span>
                 </div>
                 <p className="font-[500] text-[16px]">{project.specifications.ageOfProperty}</p>
@@ -445,7 +446,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
           {/* Amenities Section */}
           <div ref={amenitiesRef} className="space-y-6 mb-12">
-            <h3 className="text-xl font-semibold border-b pb-4 mb-6  text-gray-900">Amenities</h3>
+            <h3 className="text-xl font-semibold border-b pb-4 mb-6 text-gray-900">Amenities</h3>
             <div className="grid grid-cols-3 gap-6 px-4">
               {project.amenities.map((amenity, index) => (
                 <div key={index} className="flex items-center gap-3">
@@ -458,7 +459,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
           {/* Highlights Section */}
           <div ref={highlightsRef} className="space-y-6 mb-12">
-            <h3 className="text-xl font-semibold border-b pb-4 mb-6  text-gray-900">Highlights</h3>
+            <h3 className="text-xl font-semibold border-b pb-4 mb-6 text-gray-900">Highlights</h3>
             <div className="grid grid-cols-2 gap-4">
               {project.highlights.map((highlight, index) => (
                 <div key={index} className="flex items-center gap-3 px-4">
@@ -467,15 +468,16 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
                 </div>
               ))}
             </div>
-            
           </div>
 
           {/* Contact Section */}
-          <div ref={contactRef} className=" space-y-4  mb-12">
-
-<Postedby avatar={project.postedBy.avatar || "/placeholder.svg"} name={project.postedBy.name}   username={project.postedBy.username} company={project.postedBy.company} /> 
-            
-  
+          <div ref={contactRef} className="space-y-4 mb-12">
+            <Postedby
+              avatar={project.postedBy.avatar || "/placeholder.svg"}
+              name={project.postedBy.name}
+              username={project.postedBy.username}
+              company={project.postedBy.company}
+            />
           </div>
         </div>
       </div>

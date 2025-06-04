@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { Smile, Send, Filter } from "lucide-react"
 import StorySection from "@/components/story-section"
 import CategoryTabs from "@/components/category-tabs"
@@ -33,7 +34,7 @@ export default function MainContent() {
   return (
     <div
       ref={contentRef}
-      className={`flex-1 overflow-y-auto h-[calc(100vh-96px)] no-scrollbar  transition-all duration-200 ${
+      className={`flex-1 overflow-y-auto  h-[calc(85vh)] pb-6 no-scrollbar  transition-all duration-200 ${
         isScrolled ? "rounded-b-lg" : "rounded-lg"
       }`}
       style={{
@@ -44,6 +45,7 @@ export default function MainContent() {
       <div>
         <AddPost />
 
+<Link href="/portfolio/1">
         <PortfolioPost
           authorName="James Lee"
           authorImage="/stylish-profile-picture.png"
@@ -58,6 +60,8 @@ export default function MainContent() {
           likes={1200}
           comments={30}
         />
+        </Link>
+        <Link href="/portfolio/1">
         <PortfolioPost
           authorName="Jamie Parker"
           authorImage="/jamie-parker.png"
@@ -71,6 +75,8 @@ export default function MainContent() {
           likes={980}
           comments={18}
         />
+        </Link>
+        <Link href="/portfolio/1">
         <PortfolioPost
           authorName="Chris Morgan"
           authorImage="/chris-morgan.png"
@@ -85,6 +91,8 @@ export default function MainContent() {
           likes={760}
           comments={12}
         />
+        </Link>
+        <Link href="/portfolio/1">
         <PortfolioPost
           authorName="Sam Taylor"
           authorImage="/sam-taylor.png"
@@ -98,6 +106,8 @@ export default function MainContent() {
           likes={540}
           comments={8}
         />
+        </Link>
+        <Link href="/portfolio/1">
         <PortfolioPost
           authorName="Alex Carter"
           authorImage="/alex-carter.png"
@@ -110,6 +120,7 @@ export default function MainContent() {
           likes={320}
           comments={5}
         />
+        </Link>
       </div>
 
       <FilterComponent isOpen={showFilter} onClose={() => setShowFilter(false)} />

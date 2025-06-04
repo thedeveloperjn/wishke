@@ -1,5 +1,5 @@
 import { Calendar, MapPin } from "lucide-react"
-import { Buildings    } from "@phosphor-icons/react/dist/ssr";
+import { Buildings,CalendarDots    } from "@phosphor-icons/react/dist/ssr";
 import { Card } from "@/components/ui/card"
 import Image from "next/image"
 
@@ -45,7 +45,7 @@ export default function EventCard({ event }: EventCardProps) {
       <div className="p-6">
         {/* Date and Time */}
         <div className="flex items-center gap-2 text-gray-500 mb-3">
-          <Calendar className="w-4 h-4" />
+          <CalendarDots className="w-4 h-4" />
           <span className="text-[14px]">
             {event.time} {event.date}
           </span>

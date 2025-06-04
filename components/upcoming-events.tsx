@@ -2,6 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import Link from "next/link";
 import { Buildings, BuildingsIcon, CalendarDots,MapPin     } from "@phosphor-icons/react/dist/ssr";
 interface Event {
   id: number
@@ -24,13 +25,15 @@ interface UpcomingEventsProps {
 
 export default function UpcomingEvents({ events }: UpcomingEventsProps) {
   return (
+    
     <Card className="bg-white border-0 ">
       <CardHeader className="!p-5 !pb-0 ">
         <CardTitle className="text-lg  border-b border-gray-200 pb-3 font-bold text-gray-900 mb-4">Upcoming Events</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {events.map((event) => (
-          <div key={event.id} className="flex gap-3 p-0 rounded-lg hover:bg-gray-50 transition-colors">
+          <Link key={event.id} className="flex gap-3 p-0 rounded-lg hover:bg-gray-50 transition-colors" href={`/events/${event.id}`}>
+        
             <div className="w-[180px] h-[120px] relative bg-gray-200 rounded-lg flex-shrink-0 overflow-hidden">
             <Badge variant="secondary" className="text-gray-700 !rounded-[6px] mt-2 absolute text-xs ml-2">
                  <BuildingsIcon className="h-5 w-5" /> {event.category}
@@ -57,9 +60,11 @@ export default function UpcomingEvents({ events }: UpcomingEventsProps) {
               
               
             </div>
-          </div>
+       
+           </Link>
         ))}
       </CardContent>
     </Card>
+   
   )
 }

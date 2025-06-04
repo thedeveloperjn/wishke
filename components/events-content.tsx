@@ -3,6 +3,7 @@ import { useState ,useEffect,useRef } from "react"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
 import EventCard from "@/components/event-card"
 // import TrendingSection from "@/components/trending-section"
 import UpcomingEvents from "@/components/upcoming-events"
@@ -55,7 +56,7 @@ export default function EventsContent({ events }: EventsContentProps) {
   return (
     <main
       ref={contentRef}
-      className={`flex-1  rounded-[12px] overflow-y-auto h-[calc(100vh-96px)] no-scrollbar  transition-all duration-200 ${
+      className={`flex-1  rounded-[12px] overflow-y-auto  h-[calc(85vh)] pb-6 no-scrollbar  transition-all duration-200 ${
         isScrolled ? "rounded-b-lg" : "rounded-lg"
       }`}
       style={{
@@ -76,7 +77,9 @@ export default function EventsContent({ events }: EventsContentProps) {
         <h2 className="text-lg  border-b border-gray-200 pb-3 font-bold text-gray-900 mb-4">Recent Events</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {events.slice(0, 4).map((event) => (
+            <Link key={event.id} href={`/events/${event.id}`}>
             <EventCard key={event.id} event={event} />
+            </Link>
           ))}
         </div>
       </div>
@@ -87,8 +90,8 @@ export default function EventsContent({ events }: EventsContentProps) {
       </div> */}
 
       {/* Upcoming Events */}
-      <div className="bg-white border-0 rounded-[12px]">
-        <UpcomingEvents events={events.slice(4)} />
+      <div className="bg-white rounded-[12px]">
+        <UpcomingEvents events={events} />
       </div>
     </main>
   )

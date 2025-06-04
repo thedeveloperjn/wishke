@@ -99,16 +99,11 @@ export default function Home() {
   })
 
   return (
-    <div className="flex max-h-screen flex-col bg-[#F8F8FA] no-scrollbar">
-      <Header />
-      <div className="flex flex-1 p-6 gap-6 overflow-hidden no-scrollbar">
-        <Sidebar />
+    <div className="min-w-[51%] xl:max-w-[51%]">
         <MainContent posts={filteredPosts} selectedHashtag={selectedHashtag} onHashtagSelect={setSelectedHashtag} />
-        <MessagesSidebar />
+     
       </div>
       
-      <FilterComponent isOpen={showFilter} onClose={() => setShowFilter(false)} />
-    </div>
   
   )
 }

@@ -103,18 +103,22 @@ export default function EditProfileContent() {
 
       <div className="space-y-6">
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium mb-2">Full Name</label>
+          <div className="text-gray-400">
+            <label className="block text-[16px] font-medium mb-2">Full Name</label>
             <Input
+            readOnly
               value={formData.fullName}
+              className="!text-[16px]  !bg-gray-100"
               onChange={(e) => handleInputChange("fullName", e.target.value)}
               placeholder="Malvika Wilson"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium mb-2">User Name</label>
+          <div className="text-gray-400">
+            <label className="block text-[16px] font-medium mb-2">User Name</label>
             <Input
+            readOnly
               value={formData.userName}
+              className="!text-[16px] !bg-gray-100"
               onChange={(e) => handleInputChange("userName", e.target.value)}
               placeholder="@malvikawill"
             />
@@ -122,9 +126,10 @@ export default function EditProfileContent() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Your Bio</label>
+          <label className="block text-[16px] font-medium mb-2">Your Bio</label>
           <Textarea
             value={formData.bio}
+           className="!text-[16px]"
             onChange={(e) => handleInputChange("bio", e.target.value)}
             rows={4}
             placeholder="Tell us about yourself..."
@@ -133,7 +138,7 @@ export default function EditProfileContent() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Account Type</label>
+            <label className="block text-[16px] font-medium mb-2">Account Type</label>
             <Select value={formData.accountType} onValueChange={(value) => handleInputChange("accountType", value)}>
               <SelectTrigger>
                 <SelectValue />
@@ -146,9 +151,9 @@ export default function EditProfileContent() {
             </Select>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Date of Birth</label>
+            <label className="block text-[16px] font-medium mb-2">Date of Birth</label>
             <div className="flex gap-2">
-              <Select value={formData.dateOfBirth.day} onValueChange={(value) => handleDateChange("day", value)}>
+              <Select  value={formData.dateOfBirth.day} onValueChange={(value) => handleDateChange("day", value)}>
                 <SelectTrigger className="w-20">
                   <SelectValue />
                 </SelectTrigger>
@@ -197,24 +202,25 @@ export default function EditProfileContent() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Email Address</label>
+            <label className="block text-[16px] font-medium mb-2">Email Address</label>
             <Input
               type="email"
               value={formData.email}
+             className="!text-[16px]"
               onChange={(e) => handleInputChange("email", e.target.value)}
               placeholder="malvikawillson@gmail.com"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Country</label>
+            <label className="block text-[16px] font-medium mb-2">Country</label>
             <Select value={formData.country} onValueChange={(value) => handleInputChange("country", value)}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="India">🇮🇳 India</SelectItem>
-                <SelectItem value="USA">🇺🇸 USA</SelectItem>
-                <SelectItem value="UK">🇬🇧 UK</SelectItem>
+                <SelectItem className="text-[16px]" value="India">🇮🇳 India</SelectItem>
+                <SelectItem className="text-[16px]" value="USA">🇺🇸 USA</SelectItem>
+                <SelectItem className="text-[16px]" value="UK">🇬🇧 UK</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -222,17 +228,19 @@ export default function EditProfileContent() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-2">City</label>
+            <label className="block text-[16px] font-medium mb-2">City</label>
             <Input
               value={formData.city}
+              className="!text-[16px]"
               onChange={(e) => handleInputChange("city", e.target.value)}
               placeholder="Mumbai"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-2">Your Locality</label>
+            <label className="block text-[16px] font-medium mb-2">Your Locality</label>
             <Input
               value={formData.locality}
+              className="!text-[16px]"
               onChange={(e) => handleInputChange("locality", e.target.value)}
               placeholder="Enter your locality"
             />
@@ -366,17 +374,19 @@ export default function EditProfileContent() {
   )
 
   const renderChangePassword = () => (
-    <div className="max-w-[100%] space-y-6">``
-      <div>
+    <div className="max-w-[100%] space-y-6">
+      <div className="bg-[#EFF8F4] p-4">
         <h3 className="text-lg font-semibold mb-4">Change Your Password</h3>
-        <div className="space-y-4">
-          <div>
+        <div className=" space-y-4">
+          <div className="flex gap-3">
+          <div className="w-1/2">
             <label className="block text-sm font-medium mb-2">New Password</label>
-            <Input type="password" placeholder="Enter new password" />
+            <Input type="password" placeholder="Enter new password" className="!bg-transparent !py-6 !text-[16px]" />
           </div>
-          <div>
+          <div className="w-1/2">
             <label className="block text-sm font-medium mb-2">Confirm New Password</label>
-            <Input type="password" placeholder="Confirm new password" />
+            <Input type="password" placeholder="Confirm new password" className="!bg-transparent !py-6 !text-[16px]" />
+          </div>
           </div>
           <Button className="w-full bg-purple-600 hover:bg-purple-700">Save Changes</Button>
         </div>
@@ -546,9 +556,9 @@ export default function EditProfileContent() {
   ]
 
   return (
-    <div className="flex min-h-screen gap-6 bg-gray-50">
+    <div className="flex  pb-6 gap-6 bg-gray-50">
       {/* Settings Sidebar */}
-      <div className="w-80 bg-white  p-6 ">
+      <div className="w-80  sticky top-0  bg-white  p-6 ">
         <div className="flex items-center gap-3 mb-8">
           <Button variant="ghost" size="sm" onClick={() => router.push("/profile")}>
             <ArrowLeft className="h-4 w-4" />

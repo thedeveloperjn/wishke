@@ -5,7 +5,9 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { ArrowLeft, Edit } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { PhoneCall ,ChatTeardropText } from "@phosphor-icons/react/dist/ssr";
 import Postedby from "./postedby"
+import { PhoneCallIcon } from "@phosphor-icons/react"
 interface VendorDetailContentProps {
   vendorId: number
 }
@@ -21,12 +23,12 @@ export default function VendorDetailContent({ vendorId }: VendorDetailContentPro
     price: "₹1.75 Lakh",
     oldPrice: "₹2.05 Lakh",
     subtitle: "Premium Quality",
-    mainImage: "/imagesstatic/sofa1.webp",
+    mainImage: "/imagesstatic/sofa1.png",
     thumbnails: [
-      "/jamie-parker.png",
-      "/jamie-parker.png",
-      "/jamie-parker.png",
-      "/jamie-parker.png",
+      "/imagesstatic/sofa2.png",
+      "/imagesstatic/sofa2.png",
+      "/imagesstatic/sofa2.png",
+      "/imagesstatic/sofa2.png",
     ],
     vendor: {
       name: "Samantha Rivers",
@@ -54,7 +56,7 @@ export default function VendorDetailContent({ vendorId }: VendorDetailContentPro
   return (
     <div
       ref={contentRef}
-      className={`flex-1 overflow-y-auto h-[calc(100vh-96px)] no-scrollbar w-full  bg-white transition-all duration-200 ${
+      className={`flex-1 overflow-y-auto  h-[calc(85vh)] pb-6 no-scrollbar w-full transition-all duration-200 ${
         isScrolled ? "rounded-b-lg" : "rounded-lg"
       }`}
       style={{
@@ -62,7 +64,8 @@ export default function VendorDetailContent({ vendorId }: VendorDetailContentPro
         borderTopRightRadius: isScrolled ? 0 : "0.5rem",
       }}
     >
-        <div className="flex items-center p-4 gap-3 mb-0">
+      <div className="p-4  bg-white ">
+        <div className="flex items-center  gap-3 mb-0">
               <Button variant="ghost" size="sm" onClick={() => router.back()}>
                 <ArrowLeft className="h-4 w-4" />
               </Button>
@@ -72,7 +75,7 @@ export default function VendorDetailContent({ vendorId }: VendorDetailContentPro
         
         {/* Main Product Area - Left Side (50% of vendor detail content) */}
         <div className="w-1/2 overflow-y-auto no-scrollbar">
-          <div className="p-4">
+          <div className="py-4 pb-8">
             {/* Header */}
             
 
@@ -131,13 +134,13 @@ export default function VendorDetailContent({ vendorId }: VendorDetailContentPro
             {/* Action Buttons */}
             <div className="flex gap-3 mb-8">
               <Button className="flex-1 bg-purple-600 hover:bg-purple-700 text-white rounded-lg py-3 font-medium">
-                📞 Contact
+                <PhoneCallIcon size={20} /> Contact
               </Button>
               <Button
                 variant="outline"
                 className="flex-1 border-purple-200 text-purple-600 rounded-lg py-3 font-medium"
               >
-                💬 Message
+                <ChatTeardropText size={20}/> Message
               </Button>
             </div>
 
@@ -195,10 +198,11 @@ export default function VendorDetailContent({ vendorId }: VendorDetailContentPro
           </div>
         </div>
       </div>
-      <div className="border-t border-gray-200 pt-6 mt-8">
-              <div className="grid grid-cols-2 gap-4 mb-6">
+      </div>
+      <div className="bg-white pt-6 mt-8 p-4">
+              <div className="flex gap-3">
                 {/* Product listed by - Left Column */}
-                <div>
+                <div className="w-full">
                   
 <Postedby avatar={vendor.vendor.avatar} name={vendor.vendor.name}   username={vendor.vendor.username} company={vendor.vendor.company} /> 
             
@@ -207,29 +211,22 @@ export default function VendorDetailContent({ vendorId }: VendorDetailContentPro
 
                 {/* Location - Right Column */}
                 <div>
-                  <h4 className="font-semibold mb-4 text-gray-900">Location</h4>
-                  <div className="bg-white border border-gray-200 rounded-lg p-2 h-24">
-                    <Image
-                      src="/placeholder.svg?height=80&width=200"
-                      alt="Location Map"
-                      width={200}
-                      height={80}
-                      className="rounded-md object-cover w-full h-full"
-                    />
+                  <h4 className="font-semibold mb-4 border-b pb-5 text-gray-900">Location</h4>
+                  <div className="bg-white  pt-2 overflow-hidden h-[325px] w-[350px] rounded-lg p-2 h-24">
+                  <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3719.1849989694943!2d81.6591832!3d21.2553351!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a28dd4e17a09c69%3A0xc94046f4512afde5!2sTechnolitics%20India!5e0!3m2!1sen!2sin!4v1685807905426!5m2!1sen!2sin"
+        width="100%"
+        height="450"
+        style={{ border: 0 }}
+        allowFullScreen
+        loading="lazy"
+        className="rounded-[8px]"
+        referrerPolicy="no-referrer-when-downgrade"
+      />
                   </div>
                 </div>
               </div>
 
-              {/* Contact Vendor - Full Width */}
-              <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-6 text-center text-white">
-                <h4 className="font-semibold mb-2 text-lg">Contact Vendor for More Details</h4>
-                <p className="text-purple-100 mb-4 text-sm">
-                  Get in touch with the vendor for pricing and availability
-                </p>
-                <Button className="bg-white text-purple-600 hover:bg-gray-50 px-8 py-3 font-medium rounded-lg">
-                  Contact Now
-                </Button>
-              </div>
             </div>
     </div>
   )

@@ -41,7 +41,7 @@ export default function MessagesSidebar() {
   return (
     <aside
       ref={sidebarRef}
-      className={`hidden w-[330px] flex-col bg-white p-4 lg:flex overflow-y-auto h-[calc(100vh-96px)] no-scrollbar shadow-sm transition-all duration-200 ${
+      className={`hidden w-[24%] flex-col bg-white p-4 lg:flex overflow-y-auto h-[calc(85vh)] no-scrollbar shadow-sm transition-all duration-200 ${
         isScrolled ? "rounded-b-lg" : "rounded-lg"
       }`}
       style={{

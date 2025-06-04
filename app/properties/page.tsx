@@ -13,54 +13,12 @@ export default function PropertiesPage() {
   const [showFilter, setShowFilter] = useState(false)
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-100 no-scrollbar">
-      <Header />
-      <div className="flex flex-1 p-4 gap-4 overflow-hidden no-scrollbar">
-        <Sidebar />
+    <div className="min-w-[51%] xl:max-w-[51%]">
+      
 
-        <main className="flex-1 overflow-y-auto h-[calc(100vh-96px)] no-scrollbar bg-white shadow-sm rounded-lg">
-          <div className="px-6 py-4">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <Building2 className="h-6 w-6 text-teal-500" />
-                <h1 className="text-2xl font-bold">Properties</h1>
-              </div>
-              <button
-                className="flex items-center gap-2 rounded-md px-3 py-1 text-sm font-medium text-muted-foreground hover:bg-muted/50"
-                onClick={() => setShowFilter(true)}
-              >
-                <span>Filter</span>
-                <Filter className="h-4 w-4" />
-              </button>
-            </div>
+        <main className="flex-1 overflow-y-auto  h-[calc(85vh)] pb-6 no-scrollbar  rounded-lg">
 
-            <div className="my-4 rounded-lg border bg-white p-4">
-              <div className="flex items-center gap-3">
-                <div className="relative h-10 w-10 overflow-hidden rounded-full">
-                  <Image src="/diverse-group-profile.png" alt="Profile" fill className="object-cover" />
-                </div>
-                <div className="flex-1">
-                  <input
-                    type="text"
-                    placeholder="Post a property..."
-                    className="w-full border-none bg-transparent outline-none"
-                  />
-                </div>
-                <button className="text-muted-foreground">
-                  <Smile className="h-5 w-5" />
-                </button>
-                <button className="rounded-md bg-teal-500 px-4 py-2 text-white">
-                  <div className="flex items-center gap-2">
-                    <span>Post</span>
-                    <Send className="h-4 w-4" />
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            <FeedTabs />
-
-            <div className="mt-4">
+     
               <PropertyPost
                 type="property"
                 title="3BHK Residential-Flat"
@@ -102,13 +60,10 @@ export default function PropertiesPage() {
                 likes={32}
                 comments={18}
               />
-            </div>
-          </div>
+           
         </main>
 
-        <MessagesSidebar />
-      </div>
-
+      
       <FilterModal isOpen={showFilter} onClose={() => setShowFilter(false)} type="property" />
     </div>
   )

@@ -4,23 +4,24 @@ import { useState ,useEffect, useRef } from "react"
 import Image from "next/image"
 import { Edit, MoreHorizontal, MapPin, Heart, MessageCircle, Share, Bookmark } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { PencilSimpleLine } from "@phosphor-icons/react/dist/ssr"
+import { PencilSimpleLine ,DotsThree,ShareFat } from "@phosphor-icons/react/dist/ssr"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import PropertyPost from "./property-post"
-import RequirementPost from "./requirement-post"
 import { useRouter } from "next/navigation"
-import ProfileReelsSection from "./profile-reel-section"
-import DynamicReels from "./dynamicreels"
-export default function ProfileContent() {
+import ProfileReelsSection from "@/components/profile-reel-section"
+import PropertyPost from "@/components/property-post"
+import RequirementPost from "@/components/requirement-post"
+import DynamicReels from "@/components/dynamicreels"
+export default function ProfilePage() {
+  const [activeSection, setActiveSection] = useState("home")
   const router = useRouter()
   const [activeTab, setActiveTab] = useState("posts")
   const [likedPosts, setLikedPosts] = useState<number[]>([])
 
   const profileData = {
     id: 1,
-    name: "Malvika Wilson",
-    username: "@malvikawill",
+    name: "Alex Carter",
+    username: "@alexcarter",
     location: "Mumbai, India",
     bio: "Adventurer | Coffee Lover | Tech Enthusiast | Sharing my journey one post at a time!",
     stats: {
@@ -28,15 +29,16 @@ export default function ProfileContent() {
       followers: "1.2k",
       following: 500,
     },
-    avatar: "/placeholder.svg?height=120&width=120&query=malvika profile",
-    coverImage: "/placeholder.svg?height=200&width=800&query=gradient background",
+    avatar: "/imagesstatic/3.jpg",
+    coverImage: "/imagesstatic/3.jpg",
   }
+
 
    const reelsData: ReelData[] = [
     {
       id: 1,
-      user: { name: "Malvika Wilson", image: "/imagesstatic/malvika.jpg" ,id:"@malvikawilson"},
-      videoUrl: "/property-1.mp4",
+      user: { name: "Alex Carter", image: "/imagesstatic/3.jpg" ,id:"@alexcarter"},
+      videoUrl: "/property-8.mp4",
       thumbnailUrl: "/luxury-lobby.png",
       caption: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
       likes: 9900,
@@ -45,8 +47,8 @@ export default function ProfileContent() {
     },
     {
       id: 2,
-      user: { name: "Malvika Wilson", image: "/imagesstatic/malvika.jpg" ,id:"@malvikawilson"},
-      videoUrl: "/property-2.mp4",
+      user: {name: "Alex Carter", image: "/imagesstatic/3.jpg" ,id:"@alexcarter"},
+      videoUrl: "/property-7.mp4",
       thumbnailUrl: "/luxury-bungalow-pool.png",
       caption: "Check out this amazing property in downtown!",
       likes: 5600,
@@ -55,8 +57,8 @@ export default function ProfileContent() {
     },
     {
       id: 3,
-      user: { name: "Malvika Wilson", image: "/imagesstatic/malvika.jpg" ,id:"@malvikawilson"},
-      videoUrl: "/property-3.mp4",
+      user: { name: "Alex Carter", image: "/imagesstatic/3.jpg" ,id:"@alexcarter"},
+      videoUrl: "/property-6.mp4",
       thumbnailUrl: "/luxury-tower-pool.png",
       caption: "Luxury living at its finest. 5 bedrooms, pool, views.",
       likes: 7800,
@@ -64,6 +66,44 @@ export default function ProfileContent() {
       shares: 67,
     },
     // Add more reels as needed
+  ]
+
+  const posts = [
+    {
+      id: 1,
+      type: "property",
+      content: {
+        title: "3BHK Residential-Bungalow",
+        location: "Malabar Hill, Mumbai",
+        price: "₹1.7L per Month",
+        description:
+          "For athletes, high altitude produces two contradictory effects on performance. For explosive events...",
+        image: "/placeholder.svg?height=300&width=500&query=luxury bungalow",
+      },
+      stats: { likes: 24, comments: 8, shares: 3 },
+      timestamp: "2 hours ago",
+    },
+    {
+      id: 2,
+      type: "reel",
+      content: {
+        title: "Property Tour - Modern Villa",
+        thumbnail: "/placeholder.svg?height=300&width=500&query=modern villa tour",
+        duration: "0:45",
+      },
+      stats: { likes: 156, comments: 23, shares: 12 },
+      timestamp: "1 day ago",
+    },
+    {
+      id: 3,
+      type: "post",
+      content: {
+        text: "Just closed another amazing property deal! 🏠✨ The real estate market in Mumbai is thriving. Grateful for all the trust my clients put in me.",
+        image: "/placeholder.svg?height=300&width=500&query=property handshake deal",
+      },
+      stats: { likes: 89, comments: 15, shares: 7 },
+      timestamp: "3 days ago",
+    },
   ]
 
   const comments = [
@@ -116,11 +156,11 @@ export default function ProfileContent() {
         location="Bandra, Juhu, or Andheri"
         description="I'm looking for a well-maintained apartment in a good locality with 24/7 security, covered parking, and modern amenities. Prefer a family-friendly community."
         timestamp="25 April at 9:42 AM"
-        authorName="Malvika Wilson"
-        authorImage="/imagesstatic/malvika.jpg"
+        authorName="Alex Carter"
+        authorImage="/imagesstatic/3.jpg"
         likes={32}
         comments={18}
-        userProfileUrl="/profile"
+        userProfileUrl="/userprofile"
       />
 
       <PropertyPost
@@ -130,12 +170,12 @@ export default function ProfileContent() {
         price="₹75K per Month"
         description="Discover your dream home in the heart of Andheri, Mumbai! This stunning 3BHK flat is located in a secure gated community with modern amenities and spacious rooms."
         timestamp="23 April at 10:23 AM"
-        authorName="Malvika Wilson"
-        authorImage="/imagesstatic/malvika.jpg"
+        authorName="Alex Carter"
+        authorImage="/imagesstatic/3.jpg"
         images={[{ type: "image", url: "/modern-apartment-exterior.png" }]}
         likes={654}
         comments={122}
-        userProfileUrl="/profile"
+        userProfileUrl="/userprofile"
       />
 
       {/* Project post with multiple images */}
@@ -147,8 +187,8 @@ export default function ProfileContent() {
         price="₹21 Cr - 40 Cr"
         description="For athletes, high altitude produces two contradictory effects on performance. For performance. For explosive events..."
         timestamp="24 April at 12:16 PM"
-         authorName="Malvika Wilson"
-        authorImage="/imagesstatic/malvika.jpg"
+        authorName="Alex Carter"
+        authorImage="/imagesstatic/3.jpg"
         images={[
           { type: "image", url: "/luxury-tower-pool.png" },
           { type: "image", url: "/modern-apartment-exterior.png" },
@@ -156,7 +196,7 @@ export default function ProfileContent() {
         ]}
         likes={76}
         comments={24}
-        userProfileUrl="/profile"
+        userProfileUrl="/userprofile"
       />
 
 
@@ -237,17 +277,13 @@ export default function ProfileContent() {
   }, [])
 
   return (
-    <div
-      ref={contentRef}
-      className={`flex-1 overflow-y-auto h-[calc(85vh)] pb-6 no-scrollbar transition-all duration-200 ${
-        isScrolled ? "rounded-b-lg" : "rounded-lg"
-      }`}
-      style={{
-        borderTopLeftRadius: isScrolled ? 0 : "0.5rem",
-        borderTopRightRadius: isScrolled ? 0 : "0.5rem",
-      }}
-    >
-      <div className="flex items-center gap-3  bg-white  p-4 pb-0">
+    <div className=" min-w-[51%] rounded-[12px]  overflow-y-auto h-[calc(85vh)] pb-6 no-scrollbar  xl:max-w-[51%]">
+     
+          
+      {/* Profile Header */}
+      <div className="relative bg-white p-4 rounded-[10px]  pb-8">
+    
+      <div className="flex items-center gap-3  pb-4">
         <button
           onClick={() => router.back()}
           className="p-2 rounded-full hover:bg-gray-100 transition"
@@ -266,12 +302,7 @@ export default function ProfileContent() {
         </button>
         <span className="text-[24px] font-semibold">{profileData.name}&apos;s Profile</span>
       </div>
-          
-      {/* Profile Header */}
-      <div className="relative bg-white p-4 rounded-[12px]  pb-8">
-    
-
-        <div className="h-48 bg-gradient-to-r from-[#C8FAD6] to-[#F2DEFF] rounded-lg relative overflow-hidden">
+        <div className="h-48 bg-gradient-to-r from-[#61F3F3] to-[#FED766] rounded-lg relative overflow-hidden">
         
           
         </div>
@@ -281,7 +312,7 @@ export default function ProfileContent() {
           <div className="flex flex-col gap-6">
             <div className="relative">
               <Image
-                src="/imagesstatic/malvika.jpg"
+                src="/imagesstatic/3.jpg"
                 alt={profileData.name}
                 width={150}
                 height={150}
@@ -300,15 +331,24 @@ export default function ProfileContent() {
                   </svg>
                 </div>
               </div>
+              <div className="absolute top-20 right-4 gap-2 flex">
               <Button
-            onClick={handleEditProfile}
-            className="absolute top-20 right-4 gap-2 bg-white text-[16px] text-purple-600 hover:bg-white border-[2px] border-purple-500"
+           
+            className=" bg-white text-[16px] text-gray-500 px-3 hover:bg-white border-[2px] border-gray-300"
             size="lg"
             suppressHydrationWarning={true}
           >
-            <PencilSimpleLine size={22}/>
-            Edit Profile
+            <ShareFat size={22}/>
           </Button>
+          <Button
+           
+            className="bg-white text-[16px] text-gray-500 px-3 hover:bg-white border-[2px] border-gray-300"
+            size="lg"
+            suppressHydrationWarning={true}
+          >
+            <DotsThree size={22}/>
+          </Button>
+          </div>
               <div className="flex items-center gap-2 text-gray-600 mb-2">
                 <MapPin className="h-4 w-4" />
                 <span className="text-sm">{profileData.location}</span>

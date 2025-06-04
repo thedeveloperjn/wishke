@@ -42,7 +42,7 @@ const Postedby = ({ avatar, name, username, company }: PostedbyProps) => {
   <div className="bg-[#F2DEFF80] relative  overflow-hidden rounded-lg p-10 text-center text-black">
   <div className=" absolute h-[500px] w-[500px] right-0 -mr-[250px] -mt-[370px] rounded-full bg-[#F2DEFF80]"> </div>
   <div className=" absolute h-[500px] w-[500px] -ml-[400px]  -mt-[120px] rounded-full bg-[#F2DEFF80]"> </div>
-    <h4 className="font-bold mb-2 flex relative text-center w-full z-[5]  text-[24px]">Contact Owner for More Details</h4>
+    <h4 className="font-bold mb-2 flex relative justify-center text-center w-full z-[5]  text-[24px]">Contact Owner for More Details</h4>
     <p className="text-gray-700 mb-6 text-[16px]">Get in touch with the owner</p>
     <div className="flex gap-3 justify-center">
       <Button className="bg-purple-600   px-8 py-4 font-medium hover:bg-purple-600 rounded-lg flex items-center gap-2">

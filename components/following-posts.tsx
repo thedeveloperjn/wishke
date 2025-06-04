@@ -4,23 +4,10 @@ import PropertyPost from "@/components/property-post"
 export default function FollowingPosts() {
   return (
     <div className="mt-4">
-      {/* Property post with single image */}
-      <PropertyPost
-        type="property"
-        title="3BHK Residential-Flat"
-        location="Andheri, Mumbai"
-        price="₹75K per Month"
-        description="Discover your dream home in the heart of Andheri, Mumbai! This stunning 3BHK flat is located in a secure gated community with modern amenities and spacious rooms."
-        timestamp="23 April at 10:23 AM"
-        authorName="Samantha Rivers"
-        authorImage="/stylish-profile-picture.png"
-        images={[{ type: "image", url: "/modern-apartment-exterior.png" }]}
-        likes={654}
-        comments={122}
-      />
 
-      {/* Project post with multiple images */}
-      <PropertyPost
+
+       {/* Project post with multiple images */}
+       <PropertyPost
       type="project"
         title="Project X • 3, 4, 5 BHK Flats • 5BHK Residential-Bungalow"
   
@@ -38,6 +25,22 @@ export default function FollowingPosts() {
         likes={76}
         comments={24}
       />
+      {/* Property post with single image */}
+      <PropertyPost
+        type="property"
+        title="3BHK Residential-Flat"
+        location="Andheri, Mumbai"
+        price="₹75K per Month"
+        description="Discover your dream home in the heart of Andheri, Mumbai! This stunning 3BHK flat is located in a secure gated community with modern amenities and spacious rooms."
+        timestamp="23 April at 10:23 AM"
+        authorName="Samantha Rivers"
+        authorImage="/stylish-profile-picture.png"
+        images={[{ type: "image", url: "/modern-apartment-exterior.png" }]}
+        likes={654}
+        comments={122}
+      />
+
+     
 
 
 

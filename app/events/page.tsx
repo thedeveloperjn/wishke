@@ -6,112 +6,119 @@ import Sidebar from "@/components/sidebar"
 import EventsContent from "@/components/events-content"
 import MessagesSidebar from "@/components/messages-sidebar"
 
-const sampleEvents = [
+export interface Event {
+  id: number
+  title: string
+  description: string
+  date: string
+  time: string
+  location: string
+  image: string
+  category: string
+  organizer: string
+  organizerImage: string
+  attendees: number
+  hashtags: string[]
+  fullDescription: string
+  venue: string
+  ticketPrice: string
+}
+
+export const sampleEvents: Event[] = [
   {
     id: 1,
-    title: "Join us for our Food Donation Drive!",
-    description: "Everyone is welcome to contribute—simply select the number of food packages you'd like to donate.",
-    date: "12 May 2025",
-    time: "11 AM - 7 PM",
-    location: "Green Avenue, Mumbai",
+    title: "Luxury Living Expo 2025 - Mumbai Edition",
+    description:
+      "Discover the latest trends in luxury real estate and premium lifestyle products at Mumbai's premier expo.",
+    date: "June 20-22, 2025",
+    time: "11:00 AM - 7:00 PM",
+    location: "Jio World Convention Centre, BKC, Mumbai",
     image: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=500&h=300&fit=crop",
     category: "Real Estate",
-    organizer: "Malvika Willson",
-    organizerImage: "/placeholder.svg?height=40&width=40",
-    attendees: 45,
-    hashtags: ["Community", "Donation", "RealEstate", "Mumbai", "SocialGood"],
+    organizer: "Symor Karos",
+    organizerImage: "/placeholder.svg?height=40&width=40&text=SK",
+    attendees: 2500,
+    hashtags: ["#LuxuryLiving", "#RealEstate", "#Mumbai", "#Expo2025"],
+    fullDescription: `Wherever you are in your career, you can still build it on your terms.
+
+Caroline A. Wanga didn't follow a traditional career path — she made her own. She rose from camp counselor to Target C-suite executive to president and CEO of Essence Ventures, building a career by chasing experiences, embracing failure and refusing to shrink when she was so fit expectations.
+
+In her upcoming memoir "I'm Highly Percent Sure," she shares the unfiltered lessons that shaped her journey and why she believes that, no matter where you are in your career, the real path to success.
+
+Now, in this exclusive event for Premium subscribers, Caroline is bringing those lessons to life to help you take control of your next move.
+
+Join us live on May 8 to learn how to:
+
+• Map your career around experiences, not job titles
+• Turn failure into your competitive advantage  
+• Move forward without negotiating who you are`,
+    venue: "Jio World Convention Centre, BKC, Mumbai",
+    ticketPrice: "₹2,500 - ₹15,000",
   },
   {
     id: 2,
-    title: "Participate in our Annual Health Fair!",
-    description: "Free health screenings and wellness workshops available for all community members.",
-    date: "15 June 2025",
-    time: "10 AM - 6 PM",
-    location: "Yellow Boulevard, Mumbai",
+    title: "PropTech Innovation Summit 2025",
+    description: "Explore cutting-edge technology solutions transforming the real estate industry.",
+    date: "July 15-16, 2025",
+    time: "9:00 AM - 6:00 PM",
+    location: "India Expo Centre, Greater Noida",
     image: "https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=500&h=300&fit=crop",
-    category: "Real Estate",
-    organizer: "Mark Russel",
-    organizerImage: "/placeholder.svg?height=40&width=40",
-    attendees: 78,
-    hashtags: ["Health", "Community", "Wellness", "RealEstate", "Mumbai"],
+    category: "Technology",
+    organizer: "Tech Innovators",
+    organizerImage: "/placeholder.svg?height=40&width=40&text=TI",
+    attendees: 1800,
+    hashtags: ["#PropTech", "#Innovation", "#RealEstate", "#Technology"],
+    fullDescription: `Wherever you are in your career, you can still build it on your terms.
+
+Caroline A. Wanga didn't follow a traditional career path — she made her own. She rose from camp counselor to Target C-suite executive to president and CEO of Essence Ventures, building a career by chasing experiences, embracing failure and refusing to shrink when she was so fit expectations.
+
+In her upcoming memoir "I'm Highly Percent Sure," she shares the unfiltered lessons that shaped her journey and why she believes that, no matter where you are in your career, the real path to success.
+
+Now, in this exclusive event for Premium subscribers, Caroline is bringing those lessons to life to help you take control of your next move.
+
+Join us live on May 8 to learn how to:
+
+• Map your career around experiences, not job titles
+• Turn failure into your competitive advantage  
+• Move forward without negotiating who you are`,
+  venue: "India Expo Centre, Greater Noida",
+    ticketPrice: "₹3,000 - ₹12,000",
   },
   {
     id: 3,
-    title: "Attend our Back-to-School Supply Drive!",
-    description: "Help us gather supplies for underprivileged students in our community.",
-    date: "30 August 2025",
-    time: "8 AM - 4 PM",
-    location: "Blue Lane, Mumbai",
+    title: "Sustainable Architecture Conference",
+    description: "Learn about eco-friendly building practices and sustainable design principles.",
+    date: "August 10-12, 2025",
+    time: "10:00 AM - 5:00 PM",
+    location: "Bangalore International Exhibition Centre",
     image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=500&h=300&fit=crop",
-    category: "Real State",
-    organizer: "Alex Carter",
-    organizerImage: "/placeholder.svg?height=40&width=40",
-    attendees: 32,
-    hashtags: ["Education", "Community", "BackToSchool", "RealEstate", "Mumbai"],
-  },
-  {
-    id: 4,
-    title: "Celebrate our Cultural Festival!",
-    description: "Enjoy food, music, and performances from various cultures in our diverse community.",
-    date: "22 September 2025",
-    time: "1 PM - 9 PM",
-    location: "Red Street, Mumbai",
-    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=500&h=300&fit=crop",
-    category: "Real State",
-    organizer: "Samantha Rivers",
-    organizerImage: "/placeholder.svg?height=40&width=40",
-    attendees: 156,
-    hashtags: ["Culture", "Festival", "Community", "RealEstate", "Mumbai"],
-  },
-  {
-    id: 5,
-    title: "Property Investment Seminar",
-    description: "Learn about the latest trends in real estate investment and market opportunities.",
-    date: "5 July 2025",
-    time: "2 PM - 5 PM",
-    location: "Business Center, Andheri",
-    image: "https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=500&h=300&fit=crop",
-    category: "Real State",
-    organizer: "Jordan Lee",
-    organizerImage: "/placeholder.svg?height=40&width=40",
-    attendees: 89,
-    hashtags: ["Investment", "RealEstate", "Seminar", "Business", "Mumbai"],
-  },
-  {
-    id: 6,
-    title: "Home Buyers Workshop",
-    description: "First-time home buyer workshop covering loans, legal processes, and market insights.",
-    date: "18 August 2025",
-    time: "10 AM - 3 PM",
-    location: "Community Hall, Bandra",
-    image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=500&h=300&fit=crop",
-    category: "Real State",
-    organizer: "Chris Morgan",
-    organizerImage: "/placeholder.svg?height=40&width=40",
-    attendees: 67,
-    hashtags: ["HomeBuying", "Workshop", "RealEstate", "FirstTime", "Mumbai"],
+    category: "Architecture",
+    organizer: "Green Building Council",
+    organizerImage: "/placeholder.svg?height=40&width=40&text=GBC",
+    attendees: 1200,
+    hashtags: ["#Sustainable", "#Architecture", "#GreenBuilding", "#EcoFriendly"],
+    fullDescription: `Wherever you are in your career, you can still build it on your terms.
+
+    Caroline A. Wanga didn't follow a traditional career path — she made her own. She rose from camp counselor to Target C-suite executive to president and CEO of Essence Ventures, building a career by chasing experiences, embracing failure and refusing to shrink when she was so fit expectations.
+    
+    In her upcoming memoir "I'm Highly Percent Sure," she shares the unfiltered lessons that shaped her journey and why she believes that, no matter where you are in your career, the real path to success.
+    
+    Now, in this exclusive event for Premium subscribers, Caroline is bringing those lessons to life to help you take control of your next move.
+    
+    Join us live on May 8 to learn how to:
+    
+    • Map your career around experiences, not job titles
+    • Turn failure into your competitive advantage  
+    • Move forward without negotiating who you are`,
+     venue: "Bangalore International Exhibition Centre",
+    ticketPrice: "₹1,500 - ₹8,000",
   },
 ]
 
+
 export default function EventsPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const contentRef = useRef<HTMLDivElement>(null)
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [showFilter, setShowFilter] = useState(false)
-  const [activeTab, setActiveTab] = useState("for-you")
-
-  useEffect(() => {
-    const content = contentRef.current
-    if (!content) return
-
-    const handleScroll = () => {
-      setIsScrolled(content.scrollTop > 0)
-    }
-
-    content.addEventListener("scroll", handleScroll)
-    return () => content.removeEventListener("scroll", handleScroll)
-  }, [])
-
+  
   const filteredEvents = sampleEvents.filter((event) => {
     const matchesSearch =
       !searchQuery ||
@@ -124,13 +131,9 @@ export default function EventsPage() {
   })
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F8F8FA] no-scrollbar">
-      <Header searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
-      <div className="flex flex-1 p-6 gap-6 overflow-hidden no-scrollbar">
-        <Sidebar />
+    <div className="min-w-[51%] xl:max-w-[51%]">
         <EventsContent events={filteredEvents} />
-        <MessagesSidebar />
-      </div>
+       
     </div>
   )
 }

@@ -18,22 +18,12 @@ export default function ChatPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F8F8FA] no-scrollbar">
-      <Header />
-      <div className="flex flex-1 p-6 gap-6 overflow-hidden no-scrollbar">
-        <Sidebar />
-
-        {/* Main Chat Content Area */}
-        <main className="flex-1 ">
-          <div className=" bg-white rounded-[12px]">
+    
+      
+          
             <ChatInterface selectedContactId={contactId} />
-          </div>
-        </main>
-
-        {/* Right Messages Sidebar */}
-        <MessagesSidebar selectedContactId={contactId} onContactSelect={handleContactSelect} />
-      </div>
-    </div>
+       
+      
   )
 }
 

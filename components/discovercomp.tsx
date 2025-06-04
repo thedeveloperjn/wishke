@@ -2,7 +2,6 @@
 
 import { useState,useEffect,useRef } from "react"
 import PropertyPost from "@/components/property-post"
-import ProjectPost from "@/components/project-post"
 import RequirementPost from "@/components/requirement-post"
 import HashtagNavigation from "@/components/hashtag-navigation"
 
@@ -52,7 +51,7 @@ export default function MainContent({ posts, selectedHashtag, onHashtagSelect }:
     return (
       <div
         ref={contentRef}
-        className={`flex-1 overflow-y-auto h-[calc(100vh-96px)] no-scrollbar  transition-all duration-200 ${
+        className={`flex-1 overflow-y-auto  h-[calc(85vh)] pb-6 no-scrollbar  transition-all duration-200 ${
           isScrolled ? "rounded-b-lg" : "rounded-lg"
         }`}
         style={{
@@ -91,12 +90,12 @@ export default function MainContent({ posts, selectedHashtag, onHashtagSelect }:
               )
             } else if (post.type === "project") {
               return (
-                <ProjectPost
-                  key={post.id}
+                <PropertyPost
+                key={post.id}
+                  type="project"
                   title={post.title}
-                  developer={post.developer!}
                   location={post.location!}
-                  priceRange={post.priceRange!}
+                  price={post.price!}
                   description={post.description}
                   timestamp={post.timestamp}
                   authorName={post.authorName}

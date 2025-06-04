@@ -1,356 +1,393 @@
 "use client"
 
-import { useState } from "react"
+import type React from "react"
+import Postedby from "@/components/postedby"
+import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Heart, MessageCircle, Share2, Map, Home, CheckCircle } from "lucide-react"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
+import {
+  ArrowLeft,
+  Heart,
+  ChatCircle,
+  Building,
+  ShareNetwork,
+  Ruler,
+  BookmarkSimple,
+  MapPin,
+  Buildings,
+  Bed,
+  Bathtub,
+  Wind,
+  Car,
+  Elevator,
+  ShareFat,
+  Shield,
+  PaperPlaneTilt,
+  Fire,
+  Lightning,
+  Drop,
+  Leaf,
+  CheckCircle,
+  Phone,
+  ChatTeardrop,
+  Couch,
+  SunHorizon,
+  CarSimple,
+  UserCircle,
+  ArrowsOut,
+  BuildingOffice,
+  ClockCountdown,
+  UsersThree,
+  Person,
+  ChefHat,
+  Clover,
+  FireExtinguisher,
+  SecurityCamera,
+  CarBattery,
+  Warehouse,
+  PhoneCall,
+  ChatTeardropText,
+} from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
-import Header from "@/components/header"
-import Sidebar from "@/components/sidebar"
-import MessagesSidebar from "@/components/messages-sidebar"
 
-export default function RequirementDetailPage() {
+interface ProjectDetailContentProps {
+  projectId: number
+}
+
+export default function ProjectDetailContent({ projectId }: ProjectDetailContentProps) {
   const router = useRouter()
-  const [activeTab, setActiveTab] = useState("description")
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [liked, setLiked] = useState(false)
-  const [likesCount, setLikesCount] = useState(16)
+  const [activeTab, setActiveTab] = useState("Description")
 
-  const handleLike = () => {
-    if (liked) {
-      setLikesCount(likesCount - 1)
-    } else {
-      setLikesCount(likesCount + 1)
+  // Refs for scroll sections
+  const descriptionRef = useRef<HTMLDivElement>(null)
+  const overviewRef = useRef<HTMLDivElement>(null)
+  const amenitiesRef = useRef<HTMLDivElement>(null)
+  const contactRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
+
+  // Mock project data matching the image
+  const project = {
+    id: projectId,
+    title: "Spacious 2BHK Flat",
+    priceRange: "₹30,000/Month",
+    location: "Mahalaxmi, Mumbai West",
+    likes: 1000,
+    comments: 24,
+    description:
+      "Find your new home in Mahalaxmi, Mumbai West! This cozy 2BHK flat is available for ₹30,000 per month. Enjoy a spacious layout in a lively neighborhood with easy access to transport, shops, and eateries. Perfect for families or professionals seeking a comfortable city retreat.",
+    specifications: {
+      category: "Residential",
+      propertyType: "Apartment",
+      lookingfor: "Rent",
+      bedrooms: "02",
+      bathrooms: "03",
+      balcony: "02",
+      furnishingType: "Semi Furnished",
+      facing: "East",
+      propertyStatus: "Ready to Move",
+      carParking: "02",
+      totalArea: "3200 sq ft",
+      buildupArea: "2700 sq ft",
+      carpetArea: "3200 sq ft",
+      totalFloors: "10",
+      availableFloor: "06",
+      ageOfProperty: "New",
+      preferredTenant: "Anyone",
+      genderPreference: "Anyone",
+      postedBy: "Owner",
+    },
+    amenities: [
+      { icon: Clover, name: "Garden" },
+      { icon: SecurityCamera, name: "24×7 Security" },
+      { icon: Elevator, name: "Fast Elevators" },
+      { icon: Warehouse, name: "Covered Parking" },
+      { icon: Lightning, name: "EV Charging" },
+      { icon: Drop, name: "24×7 Water Supply" },
+    ],
+    postedBy: {
+      name: "Mark Russel",
+      username: "@malvikawill",
+      company: "Mark Agency - Real State",
+      avatar: "/imagesstatic/malvika.jpg",
+    },
+  }
+
+  const tabs = [
+    { id: "Description", ref: descriptionRef },
+    { id: "Overview", ref: overviewRef },
+    { id: "Amenities", ref: amenitiesRef },
+    { id: "Contact", ref: contactRef },
+  ]
+
+  // Smooth scroll to section
+  const scrollToSection = (ref: React.RefObject<HTMLDivElement | null>, tabId: string) => {
+    setActiveTab(tabId)
+    ref.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    })
+  }
+
+  // Scroll spy functionality
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!contentRef.current) return
+
+      const container = contentRef.current
+      const scrollTop = container.scrollTop
+      const containerHeight = container.clientHeight
+
+      // Find which section is most visible
+      let activeSection = tabs[0].id
+      let maxVisibleArea = 0
+
+      tabs.forEach((tab) => {
+        const section = tab.ref.current
+        if (!section) return
+
+        // Get section position relative to the container
+        const sectionTop = section.offsetTop - container.offsetTop
+        const sectionHeight = section.offsetHeight
+        const sectionBottom = sectionTop + sectionHeight
+
+        // Calculate visible area of this section
+        const visibleTop = Math.max(sectionTop, scrollTop + 100) // 100px offset for sticky header
+        const visibleBottom = Math.min(sectionBottom, scrollTop + containerHeight)
+        const visibleArea = Math.max(0, visibleBottom - visibleTop)
+
+        // If this section has more visible area, make it active
+        if (visibleArea > maxVisibleArea) {
+          maxVisibleArea = visibleArea
+          activeSection = tab.id
+        }
+      })
+
+      setActiveTab(activeSection)
     }
+
+    const contentElement = contentRef.current
+    if (contentElement) {
+      contentElement.addEventListener("scroll", handleScroll)
+      // Call once to set initial state
+      handleScroll()
+      return () => contentElement.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
+
+  const toggleLike = () => {
     setLiked(!liked)
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-100">
-      <Header />
+    <div className="min-w-[51%] xl:max-w-[51%] w-full h-full bg-white rounded-lg overflow-hidden">
+      <div ref={contentRef} className="h-[calc(100vh-96px)] overflow-y-auto no-scrollbar">
+        <div className="p-6 pt-0">
+          {/* Header */}
+          <button
+            onClick={() => router.back()}
+            className="sticky top-0 py-4 flex items-center w-full bg-white z-[5] text-[20px] font-semibold gap-2 text-gray-900 hover:text-gray-900"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Requirement Detail
+          </button>
+          {/* Project Title and Price */}
+          <div className="mb-6 mt-4 flex justify-between">
+            <div>
+              <h1 className="text-[20px] font-bold text-gray-900 mb-2">{project.title}</h1>
+              <div className="flex items-center gap-2 text-gray-600 mb-2">
+                <MapPin size={16} />
+                <span className="text-[16px]">{project.location}</span>
+              </div>
+            </div>
+            <p className="text-[20px] font-bold text-gray-900">{project.priceRange}</p>
+          </div>
 
-      <div className="flex flex-1 p-4 gap-4 overflow-hidden no-scrollbar">
-        <Sidebar />
-
-        <main className="flex-1 overflow-y-auto h-[calc(100vh-96px)] no-scrollbar bg-white shadow-sm rounded-lg">
-          <div className="p-4">
-            {/* Back button */}
-            <div className="mb-4">
+          {/* Action Buttons */}
+          <div className="flex items-center justify-between mb-6 pb-4 border-b">
+            <div className="flex items-center gap-6">
               <button
-                onClick={() => router.back()}
-                className="flex items-center text-sm text-muted-foreground hover:text-foreground"
+                onClick={toggleLike}
+                className={`flex items-center gap-2 ${liked ? "text-red-500" : "text-gray-500"}`}
               >
-                <ArrowLeft className="h-4 w-4 mr-1" />
-                Back
+                <Heart size={20} weight={liked ? "fill" : "regular"} />
+                <span className="text-sm">{liked ? project.likes + 1 : project.likes} Likes</span>
+              </button>
+
+              <button className="flex items-center gap-2 text-gray-500">
+                <ChatCircle size={20} />
+                <span className="text-sm">{project.comments} Comments</span>
+              </button>
+
+              <button className="flex items-center gap-2 text-gray-500">
+                <PaperPlaneTilt size={20} />
+                <span className="text-sm">Message</span>
+              </button>
+
+              <button className="flex items-center gap-2 text-gray-500">
+                <ShareFat size={20} />
+                <span className="text-sm">Share</span>
               </button>
             </div>
 
-            {/* Requirement header */}
-            <div className="pb-4">
-              <h1 className="text-xl font-bold">Looking for 2/3 BHK Apartment</h1>
-              <div className="flex items-center text-sm text-muted-foreground mt-1">
-                <span className="flex items-center">
-                  <Map className="h-4 w-4 mr-1" />
-                  Bandra, Juhu, or Andheri
-                </span>
-                <span className="ml-auto font-medium text-base">₹50K - 80K per Month</span>
-              </div>
-            </div>
-
-            {/* Action buttons */}
-            <div className="flex border-b pb-4 mb-4">
-              <div className="flex gap-4">
-                <button
-                  className="flex items-center gap-1 text-muted-foreground hover:text-foreground"
-                  onClick={handleLike}
-                >
-                  <Heart className={`h-5 w-5 ${liked ? "fill-red-500 text-red-500" : ""}`} />
-                  <span className="text-sm">{likesCount} Likes</span>
-                </button>
-                <button className="flex items-center gap-1 text-muted-foreground hover:text-foreground">
-                  <MessageCircle className="h-5 w-5" />
-                  <span className="text-sm">24 Comments</span>
-                </button>
-                <button className="flex items-center gap-1 text-muted-foreground hover:text-foreground">
-                  <Share2 className="h-5 w-5" />
-                  <span className="text-sm">Share</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Tabs */}
-            <Tabs defaultValue="description" value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid grid-cols-3 bg-white border-b h-auto p-0">
-                <TabsTrigger
-                  value="description"
-                  className={`py-3 border-b-2 data-[state=active]:border-orange-500 data-[state=active]:text-orange-500 rounded-none`}
-                >
-                  Description
-                </TabsTrigger>
-                <TabsTrigger
-                  value="overview"
-                  className={`py-3 border-b-2 data-[state=active]:border-orange-500 data-[state=active]:text-orange-500 rounded-none`}
-                >
-                  Overview
-                </TabsTrigger>
-                <TabsTrigger
-                  value="contact"
-                  className={`py-3 border-b-2 data-[state=active]:border-orange-500 data-[state=active]:text-orange-500 rounded-none`}
-                >
-                  Contact
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="description" className="p-4">
-                <h3 className="font-bold mb-3">Description</h3>
-                <p className="text-sm text-muted-foreground mb-4">
-                  I'm looking for a well-maintained apartment in a good locality with 24/7 security, covered parking,
-                  and modern amenities. Prefer a family-friendly community with easy access to schools, hospitals, and
-                  shopping centers. The apartment should have good ventilation and natural light. Looking for a
-                  long-term rental agreement with a reputable owner or property manager.
-                </p>
-              </TabsContent>
-
-              <TabsContent value="overview" className="p-4">
-                <div className="p-4 rounded-lg bg-orange-50 border border-orange-100 mb-6">
-                  <div className="flex flex-col space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium">Property Type:</span>
-                      <span className="text-sm">2/3 BHK Apartment</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium">Budget Range:</span>
-                      <span className="text-sm">₹50K - 80K per Month</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium">Preferred Areas:</span>
-                      <span className="text-sm">Bandra, Juhu, or Andheri</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm font-medium">Move-in Timeline:</span>
-                      <span className="text-sm">Within 2 months</span>
-                    </div>
-                  </div>
-                </div>
-
-                <h3 className="font-bold mb-3">Overview</h3>
-
-                <div className="grid grid-cols-3 gap-6 mb-6">
-                  <div className="flex flex-col space-y-1">
-                    <span className="text-xs text-muted-foreground">Property Category</span>
-                    <div className="flex items-center">
-                      <Home className="h-4 w-4 mr-2 text-gray-500" />
-                      <span className="text-sm font-medium">Residential</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col space-y-1">
-                    <span className="text-xs text-muted-foreground">Property Type</span>
-                    <div className="flex items-center">
-                      <svg
-                        className="h-4 w-4 mr-2 text-gray-500"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M17 21H7C4.79086 21 3 19.2091 3 17V8.5L12 2L21 8.5V17C21 19.2091 19.2091 21 17 21Z"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      <span className="text-sm font-medium">Apartment</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col space-y-1">
-                    <span className="text-xs text-muted-foreground">Looking For</span>
-                    <div className="flex items-center">
-                      <svg
-                        className="h-4 w-4 mr-2 text-gray-500"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M14 9V7C14 5.89543 13.1046 5 12 5H6C4.89543 5 4 5.89543 4 7V17C4 18.1046 4.89543 19 6 19H12C13.1046 19 14 18.1046 14 17V15M9 12H20M20 12L17 9M20 12L17 15"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      <span className="text-sm font-medium">Rent</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-6 mb-6">
-                  <div className="flex flex-col space-y-1">
-                    <span className="text-xs text-muted-foreground">Bedrooms</span>
-                    <div className="flex items-center">
-                      <svg
-                        className="h-4 w-4 mr-2 text-gray-500"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M3 5V19M21 5V19M3 12H21M6 5H18M6 19H18"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      <span className="text-sm font-medium">2-3</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col space-y-1">
-                    <span className="text-xs text-muted-foreground">Bathrooms</span>
-                    <div className="flex items-center">
-                      <svg
-                        className="h-4 w-4 mr-2 text-gray-500"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M9 11V5C9 3.89543 9.89543 3 11 3H21C22.1046 3 23 3.89543 23 5V19C23 20.1046 22.1046 21 21 21H11C9.89543 21 9 20.1046 9 19V17M9 11H5M9 11C7.89543 11 7 11.8954 7 13C7 14.1046 7.89543 15 9 15H13M16 15L13 18M13 12L16 15"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      <span className="text-sm font-medium">2</span>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col space-y-1">
-                    <span className="text-xs text-muted-foreground">Furnishing Type</span>
-                    <div className="flex items-center">
-                      <svg
-                        className="h-4 w-4 mr-2 text-gray-500"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M9 11V5C9 3.89543 9.89543 3 11 3H21C22.1046 3 23 3.89543 23 5V19C23 20.1046 22.1046 21 21 21H11C9.89543 21 9 20.1046 9 19V17M9 11H5M9 11C7.89543 11 7 11.8954 7 13C7 14.1046 7.89543 15 9 15H13M16 15L13 18M13 12L16 15"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      <span className="text-sm font-medium">Semi Furnished</span>
-                    </div>
-                  </div>
-                </div>
-
-                <h3 className="font-bold mb-3">Required Amenities</h3>
-                <div className="grid grid-cols-2 gap-4 mb-4">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-orange-500" />
-                    <span className="text-sm">24x7 Security</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-orange-500" />
-                    <span className="text-sm">Covered Parking</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-orange-500" />
-                    <span className="text-sm">Power Backup</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-orange-500" />
-                    <span className="text-sm">Lift Access</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-orange-500" />
-                    <span className="text-sm">Children's Play Area</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-orange-500" />
-                    <span className="text-sm">Gym</span>
-                  </div>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="contact" className="p-4">
-                <div className="mb-6">
-                  <h3 className="font-bold mb-3">Posted by</h3>
-                  <div className="bg-orange-50 p-4 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="relative h-16 w-16 overflow-hidden rounded-full">
-                        <Image src="/alex-carter.png" alt="Alex Carter" fill className="object-cover" />
-                      </div>
-                      <div>
-                        <div className="flex items-center">
-                          <h4 className="font-bold text-lg">Alex Carter</h4>
-                          <span className="text-gray-500 text-sm ml-2">@alexcarter</span>
-                        </div>
-                        <p className="text-sm text-gray-600">Looking for property</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-orange-50 rounded-lg p-4 mb-6">
-                  <h3 className="font-bold mb-3 text-center">Contact Member for More Details</h3>
-                  <p className="text-center text-sm text-gray-600 mb-4">Get in touch with the requester</p>
-
-                  <div className="flex gap-4">
-                    <Button className="flex-1 bg-orange-500 hover:bg-orange-600">
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="mr-2"
-                      >
-                        <path
-                          d="M22 16.92V19.84C22 20.36 21.5 20.8 20.9 20.8C10.44 20.8 2 12.36 2 1.9C2 1.4 2.43 0.9 2.96 0.9H5.87C6.4 0.9 6.83 1.33 6.83 1.86C6.83 3.38 7.1 4.86 7.62 6.21C7.77 6.64 7.66 7.13 7.3 7.42L5.9 8.53C7.38 11.53 9.69 13.95 12.69 15.43L13.76 14.01C14.07 13.65 14.57 13.53 15 13.7C16.36 14.21 17.84 14.47 19.35 14.47C19.87 14.47 20.3 14.9 20.3 15.43"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      Contact
-                    </Button>
-                    <Button variant="outline" className="flex-1 border-orange-500 text-orange-500">
-                      <svg
-                        width="20"
-                        height="20"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="mr-2"
-                      >
-                        <path
-                          d="M8 10H8.01M12 10H12.01M16 10H16.01M3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V8C21 6.89543 20.1046 6 19 6H8L3 1V5Z"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                      Message
-                    </Button>
-                  </div>
-                </div>
-              </TabsContent>
-            </Tabs>
+            <button className="text-gray-500">
+              <BookmarkSimple size={20} />
+            </button>
           </div>
-        </main>
 
-        <MessagesSidebar />
+          {/* Sticky Tabs */}
+          <div className="sticky top-[60px] bg-white border-b mb-6 z-10">
+            <div className="flex gap-8">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  className={`pb-3 px-1 w-[25%] border-b-2 transition-colors ${
+                    activeTab === tab.id
+                      ? "border-purple-500 text-purple-600 font-medium"
+                      : "border-transparent text-gray-500 hover:text-gray-700"
+                  }`}
+                  onClick={() => scrollToSection(tab.ref, tab.id)}
+                >
+                  {tab.id}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* All Content Sections */}
+
+          {/* Description Section */}
+          <div ref={descriptionRef} className="space-y-4 mb-12">
+            <h3 className="text-xl font-semibold border-b pb-4 mb-6 text-gray-900">Description</h3>
+            <p className="text-gray-600 leading-relaxed">{project.description}</p>
+          </div>
+
+          {/* Overview Section */}
+          <div ref={overviewRef} className="space-y-6 mb-12">
+            <h3 className="text-xl font-semibold border-b pb-4 mb-6 text-gray-900">Overview</h3>
+
+            <div className="grid grid-cols-3 gap-6 px-4">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-gray-500">
+                  <Buildings size={22} />
+                  <span className="text-[16px]">Property Category</span>
+                </div>
+                <p className="font-[500] text-[16px]">{project.specifications.category}</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-gray-500">
+                  <Buildings size={22} />
+                  <span className="text-[16px]">Property Type</span>
+                </div>
+                <p className="font-[500] text-[16px]">{project.specifications.propertyType}</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-gray-500">
+                  <Bed size={22} />
+                  <span className="text-[16px]">Looking for</span>
+                </div>
+                <p className="font-[500] text-[16px]">{project.specifications.lookingfor}</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-gray-500">
+                  <Bed size={22} />
+                  <span className="text-[16px]">Bedrooms</span>
+                </div>
+                <p className="font-[500] text-[16px]">{project.specifications.bedrooms}</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-gray-500">
+                  <Bathtub size={22} />
+                  <span className="text-[16px]">Bathrooms</span>
+                </div>
+                <p className="font-[500] text-[16px]">{project.specifications.bathrooms}</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-gray-500">
+                  <Couch size={22} />
+                  <span className="text-[16px]">Furnishing Type</span>
+                </div>
+                <p className="font-[500] text-[16px]">{project.specifications.furnishingType}</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-gray-500">
+                  <Ruler size={22} />
+                  <span className="text-[16px]">Total Area</span>
+                </div>
+                <p className="font-[500] text-[16px]">{project.specifications.totalArea}</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-gray-500">
+                  <ArrowsOut size={22} />
+                  <span className="text-[16px]">Buildup Area</span>
+                </div>
+                <p className="font-[500] text-[16px]">{project.specifications.buildupArea}</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-gray-500">
+                  <ArrowsOut size={22} />
+                  <span className="text-[16px]">Carpet Area</span>
+                </div>
+                <p className="font-[500] text-[16px]">{project.specifications.carpetArea}</p>
+              </div>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-gray-500">
+                  <SunHorizon size={22} />
+                  <span className="text-[16px]">Facing</span>
+                </div>
+                <p className="font-[500] text-[16px]">{project.specifications.facing}</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-gray-500">
+                  <UsersThree size={22} />
+                  <span className="text-[16px]">Preferred Tenant</span>
+                </div>
+                <p className="font-[500] text-[16px]">{project.specifications.preferredTenant}</p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 text-gray-500">
+                  <UserCircle size={22} />
+                  <span className="text-[16px]">Posted By</span>
+                </div>
+                <p className="font-[500] text-[16px]">{project.specifications.postedBy}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Amenities Section */}
+          <div ref={amenitiesRef} className="space-y-6 mb-12">
+            <h3 className="text-xl font-semibold border-b pb-4 mb-6 text-gray-900">Amenities</h3>
+            <div className="grid grid-cols-3 gap-6 px-4">
+              {project.amenities.map((amenity, index) => (
+                <div key={index} className="flex items-center gap-3">
+                  <amenity.icon size={28} className="text-gray-700" />
+                  <span className="text-[16px] text-gray-700">{amenity.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Contact Section */}
+          <div ref={contactRef} className="space-y-4 mb-12">
+            <Postedby
+              avatar={project.postedBy.avatar || "/placeholder.svg"}
+              name={project.postedBy.name}
+              username={project.postedBy.username}
+              company={project.postedBy.company}
+            />
+          </div>
+        </div>
       </div>
     </div>
   )

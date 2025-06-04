@@ -51,7 +51,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
   return (
     <aside
       ref={sidebarRef}
-      className={`hidden w-[330px] flex-col  md:flex  overflow-y-auto h-[calc(100vh-96px)] no-scrollbar  transition-all duration-200 ${
+      className={`hidden w-[24%] flex-col  md:flex  overflow-y-auto h-[calc(100vh-96px)] no-scrollbar  transition-all duration-200 ${
         isScrolled ? "rounded-b-lg" : "rounded-lg"
       }`}
       style={{
@@ -61,6 +61,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
     >
       <div className="bg-white  p-4 mb-6 rounded-lg  p-3">
         {/* Profile header with image and name */}
+        <Link href="/profile" >
         <div className="bg-[#F8F8FA] gap-2 rounded-lg p-2">
         <div className="flex items-center gap-3 mb-4">
           <div className="relative h-[50px] w-[50px] overflow-hidden rounded-full flex-shrink-0">
@@ -91,6 +92,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
           </div>
         </div>
         </div>
+        </Link>
       </div>
 
       <nav className="bg-white rounded-lg p-4  !mb-10 space-y-2">

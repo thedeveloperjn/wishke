@@ -32,7 +32,7 @@ export default function MainContent() {
   return (
     <div
       ref={contentRef}
-      className={`flex-1 overflow-y-auto h-[calc(100vh-96px)] no-scrollbar  transition-all duration-200 ${
+      className={`flex-1 overflow-y-auto  h-[calc(85vh)] pb-6 no-scrollbar  transition-all duration-200 ${
         isScrolled ? "rounded-b-lg" : "rounded-lg"
       }`}
       style={{

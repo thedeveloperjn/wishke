@@ -19,21 +19,12 @@ export default function ProjectDetailPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#F8F8FA] no-scrollbar">
-    <Header />
-    <div className="flex flex-1 p-6 gap-6 overflow-hidden no-scrollbar">
-        <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} />
 
-        {/* Main Project Detail Content - Only in middle section */}
-        <main className="flex-1 min-h-[calc(100vh-4rem)]">
+        <main className="min-w-[51%] xl:max-w-[51%] flex-1 min-h-[calc(100vh-4rem)]">
           <div className="h-full">
             <ProjectDetailContent projectId={projectId} />
           </div>
         </main>
 
-        {/* Right Messages Sidebar */}
-        <MessagesSidebar />
-      </div>
-    </div>
   )
 }

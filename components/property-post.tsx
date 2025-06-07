@@ -298,7 +298,7 @@ export default function PropertyPost({
         </div>
       )}
 
-      <div className="flex items-center justify-between border-t pt-4 no-post-click">
+      <div className="hidden sm:flex items-center justify-between border-t pt-4 no-post-click">
         <div className="flex items-center gap-6">
           <button
             onClick={handleLike}

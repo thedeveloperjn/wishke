@@ -3,7 +3,7 @@ import PropertyPost from "@/components/property-post"
 
 export default function FollowingPosts() {
   return (
-    <div className="mt-4">
+    <div className="mt-0 sm:mt-4">
 
 
        {/* Project post with multiple images */}

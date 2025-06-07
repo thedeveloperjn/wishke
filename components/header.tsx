@@ -52,8 +52,8 @@ export default function Header() {
   useEffect(() => {
     setIsClient(true)
   }, [])
-
-  // Close dropdowns when clicking outside
+ 
+   
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
@@ -196,7 +196,7 @@ export default function Header() {
 <header className="sticky top-0 z-50 flex h-[85px] items-center justify-between bg-white px-4 md:px-6">
       <div className="container flex h-16 items-center justify-between px-4">
       {/* <div className="w-[60%] flex h-[85px] items-center justify-between  bg-white px-4 md:px-6"> */}
-      <div className="flex items-center z-[80] gap-2">
+      <div className="hidden sm:flex items-center z-[80] gap-2">
         <Image src="/whiskelogo.svg" alt="WISHKE Logo" width={160} height={60} />
       </div>
 
@@ -214,7 +214,7 @@ export default function Header() {
               suppressHydrationWarning={true}
               key={isClient ? "client" : "server"}
             />
-            <Filter className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+           
           </div>
 
           {/* Search Dropdown */}
@@ -447,7 +447,7 @@ export default function Header() {
 
          
           {/* Saved Properties */}
-          <div className="relative" ref={savedRef}>
+          <div className="relative hidden sm:block " ref={savedRef}>
             <Button variant="ghost" size="sm" onClick={() => setShowSaved(!showSaved)} suppressHydrationWarning={true}>
               
         <Bookmark className="h-6 w-6 text-muted-foreground" />
@@ -524,7 +524,7 @@ export default function Header() {
               <div className="hidden md:block">
                 <span className="text-sm font-medium">Malvika Willson</span>
               </div>
-              <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              <ChevronDown className="h-4 w-4 text-muted-foreground hidden sm:block " />
             </div>
           </Link>
           {showProfileDropdown && (

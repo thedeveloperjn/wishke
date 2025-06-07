@@ -41,7 +41,7 @@ export default function MainContent() {
       }}
     >
       <div>
-        <div className={`flex-1 px-4 py-6 mb-6 overflow-y-auto bg-white  no-scrollbar  transition-all duration-200 ${
+        <div className={`flex-1 py-2 sm:py-6 sm:mb-6 overflow-y-auto bg-white  no-scrollbar  transition-all duration-200 ${
           isScrolled ? "rounded-b-lg" : "rounded-lg"
         }`}>
           <StorySection />
@@ -49,13 +49,13 @@ export default function MainContent() {
        
        <AddPost />
 
-        <div className="border-b">
+        <div className="border-b bg-white">
           <div className="flex items-center justify-between">
             <div className="flex w-[100%]">
               <button 
                 className={` px-6 py-3 text-[16px] w-[33%] font-medium ${
                   activeTab === "for-you" 
-                    ? "border-b-[3px] border-purple-500 text-purple-500" 
+                    ? "border-b-[2px] sm:border-b-[3px] border-gray-900 sm:border-purple-500 text-gray-900 sm:text-purple-500" 
                     : "text-muted-foreground hover:text-foreground"
                 }`}
                 onClick={() => setActiveTab("for-you")}
@@ -65,7 +65,7 @@ export default function MainContent() {
               <button 
                 className={` px-6 py-3 text-[16px] w-[34%] font-medium ${
                   activeTab === "following" 
-                    ? "border-b-[3px] border-purple-500 text-purple-500" 
+                    ? "border-b-[2px] sm:border-b-[3px] border-gray-900 sm:border-purple-500 text-gray-900 sm:text-purple-500"  
                     : "text-muted-foreground hover:text-foreground"
                 }`}
                 onClick={() => setActiveTab("following")}
@@ -75,7 +75,7 @@ export default function MainContent() {
               <button 
                 className={` px-6 py-3 text-[16px] w-[33%] font-medium ${
                   activeTab === "connect" 
-                    ? " border-b-[3px] border-purple-500 text-purple-500" 
+                    ? "border-b-[2px] sm:border-b-[3px] border-gray-900 sm:border-purple-500 text-gray-900 sm:text-purple-500" 
                     : "text-muted-foreground hover:text-foreground"
                 }`}
                 onClick={() => setActiveTab("connect")}
@@ -93,7 +93,7 @@ export default function MainContent() {
           </div>
         </div>
 
-        <div className="mt-4">
+        <div className="mt-0 sm:mt-4">
           {activeTab === "for-you" && <ForYouPosts />}
           {activeTab === "following" && <FollowingPosts />}
           {activeTab === "connect" && <ConnectSection />}

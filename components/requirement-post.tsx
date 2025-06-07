@@ -123,7 +123,7 @@ export default function RequirementPost({
 
   return (
     <div 
-      className="rounded-lg bg-white p-4 mb-4 cursor-pointer"
+      className="rounded-lg bg-white p-4 mb:2 sm:mb-4 cursor-pointer"
       onClick={handlePostClick}
       ref={postRef}
     >
@@ -300,7 +300,7 @@ export default function RequirementPost({
         </>
       )}
 
-      <div className="flex items-center justify-between border-t pt-4 no-post-click">
+      <div className="hidden sm:flex items-center justify-between border-t pt-4 no-post-click">
         <div className="flex items-center gap-6">
           <button
             onClick={handleLike}

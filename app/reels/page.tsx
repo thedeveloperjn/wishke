@@ -351,7 +351,7 @@ export default function ReelsPage() {
               </div>
             </div>
             {activeReelId === reel.id && (
-              <div  className="absolute right-[33%] bottom-20 flex flex-col gap-6 items-center">
+              <div  className="absolute right-[20%] xl:right-[33%]  bottom-20 flex flex-col gap-6 items-center">
                 <button className="flex flex-col items-center" onClick={() => toggleLike(reel.id)}>
                   <Heart className={`h-7 w-7 ${liked[reel.id] ? "fill-red-500 text-red-500" : "text-white"}`} />
                   <span className="text-white text-xs mt-1">{formatNumber(reel.likes)}</span>

@@ -122,6 +122,88 @@ body {
 }
 
 .story-section {
-  gap: 1.5rem;
+  gap: 1.3rem;
 }
 
+@media (max-width:640px){
+  
+.story-section {
+  gap: 0.8rem;
+}
+}
+
+.reellike{
+  right: 33%;
+}
+
+
+@keyframes slide {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-slide {
+  animation: slide 10s linear infinite;
+}
+
+
+/* Background image animation */
+@keyframes slide-bg {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-slide-bg {
+  animation: slide-bg 10s linear infinite;
+}
+
+/* Right-to-left slide animation for steps */
+@keyframes slide-right {
+  0% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-left {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-right {
+  animation: slide-right 0.3s ease-out forwards;
+}
+
+.animate-slide-left {
+  animation: slide-left 0.3s ease-out forwards;
+}
+
+/* Ensure smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+
+@media (max-width:1110px){
+  .maxw200{
+    min-width: 230px !important;
+  }
+}

@@ -1,10 +1,10 @@
 "use client"
 
-import { useState } from "react"
-import { X, Upload, Edit2, ChevronDown } from "lucide-react"
+import { useState, useEffect, useRef } from "react"
+import { X, Upload, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { CaretCircleLeft, PencilSimpleIcon, PencilSimpleLineIcon } from "@phosphor-icons/react"
+import { CaretCircleLeft, PencilSimpleLineIcon } from "@phosphor-icons/react"
 
 interface LoginModalProps {
   isOpen: boolean
@@ -62,7 +62,7 @@ const countries: Country[] = [
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [currentStep, setCurrentStep] = useState(1)
   const [phoneNumber, setPhoneNumber] = useState("")
-  const [selectedCountry, setSelectedCountry] = useState<Country>(countries[0]) // Default to India
+  const [selectedCountry, setSelectedCountry] = useState<Country>(countries[0])
   const [showCountryDropdown, setShowCountryDropdown] = useState(false)
   const [otp, setOtp] = useState(["", "", "", ""])
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
@@ -97,9 +97,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
   const handleGoogleSignup = async () => {
     setIsGoogleLoading(true)
-
     try {
-      // Load Google Identity Services
       if (typeof window !== "undefined" && window.google) {
         window.google.accounts.id.initialize({
           client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || "YOUR_GOOGLE_CLIENT_ID",
@@ -108,16 +106,13 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           cancel_on_tap_outside: true,
         })
 
-        // Prompt the user to select a Google account
         window.google.accounts.id.prompt((notification: any) => {
           if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            // Fallback to popup if prompt is not displayed
             window.google.accounts.id.renderButton(document.getElementById("google-signin-button"), {
               theme: "outline",
               size: "large",
               width: "100%",
             })
-            // Trigger click programmatically
             setTimeout(() => {
               const button = document
                 .getElementById("google-signin-button")
@@ -129,13 +124,12 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           }
         })
       } else {
-        // Load Google Identity Services script if not loaded
         const script = document.createElement("script")
         script.src = "https://accounts.google.com/gsi/client"
         script.async = true
         script.defer = true
         script.onload = () => {
-          handleGoogleSignup() // Retry after script loads
+          handleGoogleSignup()
         }
         document.head.appendChild(script)
       }
@@ -147,9 +141,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
   const handleGoogleResponse = async (response: any) => {
     try {
-      // Decode the JWT token to get user info
       const userInfo = parseJwt(response.credential)
-
       if (userInfo) {
         const googleUser: GoogleUser = {
           name: userInfo.name,
@@ -158,8 +150,6 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           given_name: userInfo.given_name,
           family_name: userInfo.family_name,
         }
-
-        // Update form data with Google user info
         setFormData({
           ...formData,
           fullName: googleUser.name,
@@ -168,8 +158,6 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           userName: `@${googleUser.given_name?.toLowerCase() || googleUser.name.toLowerCase().replace(/\s+/g, "")}`,
           profilePicture: googleUser.picture,
         })
-
-        // Move to step 3 (register form)
         setCurrentStep(3)
       }
     } catch (error) {
@@ -179,7 +167,6 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     }
   }
 
-  // Helper function to parse JWT token
   const parseJwt = (token: string) => {
     try {
       const base64Url = token.split(".")[1]
@@ -198,21 +185,20 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   }
 
   const handleAppleSignup = () => {
-    // Simulate getting data from Apple
     setFormData({
       ...formData,
       fullName: "Malvika Willson",
       email: "malvika.willson@icloud.com",
     })
-    setCurrentStep(3) // Skip OTP for Apple signup
+    setCurrentStep(3)
   }
 
   const handleIDPasswordLogin = () => {
-    setCurrentStep(3) // Go to register form for ID & Password
+    setCurrentStep(3)
   }
 
   const handleCreateAccount = () => {
-    setCurrentStep(3) // Go directly to register form
+    setCurrentStep(3)
   }
 
   const handleOtpChange = (index: number, value: string) => {
@@ -220,8 +206,6 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       const newOtp = [...otp]
       newOtp[index] = value
       setOtp(newOtp)
-
-      // Auto focus next input
       if (value && index < 3) {
         const nextInput = document.getElementById(`otp-${index + 1}`)
         nextInput?.focus()
@@ -238,16 +222,15 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   }
 
   const handleFinalSubmit = () => {
-    // Complete the signup process
     console.log("Final form data:", formData)
     onClose()
   }
 
   const renderStep1 = () => (
-    <div className="w-[510px] bg-white shadow-xl rounded-xl p-8">
-      <div className="flex items-center justify-between mb-8">
-        <h2 className="text-2xl font-semibold">Sign In</h2>
-        <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+    <div className="modal-container w-[100vw] flex flex-col justify-center sm:w-[510px] bg-white shadow-xl rounded-t-[22px] sm:rounded-xl pb-[5px] sm:pb-8 p-8">
+      <div className="relative flex items-center justify-between mb-2 sm:mb-8">
+        <h2 className="text-2xl w-full text-center font-semibold">Sign In</h2>
+        <button onClick={onClose} className="absolute right-0 text-gray-400 hover:text-gray-600">
           <X className="h-6 w-6" />
         </button>
       </div>
@@ -255,55 +238,50 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
       <div className="space-y-4">
         <div>
           <label className="block text-sm text-gray-400 mb-3">Mobile Number</label>
-          <div className="flex">
-            {/* Country Flag Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setShowCountryDropdown(!showCountryDropdown)}
-                className="flex items-center justify-center px-3 py-3 border border-r-0 rounded-l-full bg-white transition-colors w-16"
-              >
-                <span className="text-xl">{selectedCountry.flag}</span>
-                <ChevronDown className="h-3 w-3 text-gray-400 ml-1" />
-              </button>
-
-              {/* Country Dropdown Menu */}
-              {showCountryDropdown && (
-                <div className="absolute top-full left-0 mt-1 bg-white border rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto no-scrollbar w-72">
-                  {countries.map((country) => (
-                    <button
-                      key={country.code}
-                      onClick={() => handleCountrySelect(country)}
-                      className="w-full flex items-center px-4 py-3 hover:bg-gray-50 transition-colors text-left"
-                    >
-                      <span className="text-lg mr-3">{country.flag}</span>
-                      <div className="flex-1">
-                        <div className="text-sm font-medium">{country.name}</div>
-                        <div className="text-xs text-gray-500">{country.prefix}</div>
-                      </div>
-                      <span className="text-sm text-gray-400">{country.prefix}</span>
-                    </button>
-                  ))}
-                </div>
-              )}
+          <div className="relative flex">
+            <div className="absolute h-full items-center flex">
+              <div className="relative h-[75%] flex items-center">
+                <button
+                  onClick={() => setShowCountryDropdown(!showCountryDropdown)}
+                  className="flex items-center justify-center px-3 py-3 h-[75%] border-r bg-transparent transition-colors w-16"
+                >
+                  <span className="text-xl">{selectedCountry.flag}</span>
+                  <ChevronDown className="h-3 w-3 text-gray-400 ml-1" />
+                </button>
+                {showCountryDropdown && (
+                  <div className="absolute top-full left-0 mt-1 bg-white border rounded-lg shadow-lg z-50 max-h-60 overflow-y-auto no-scrollbar w-72">
+                    {countries.map((country) => (
+                      <button
+                        key={country.code}
+                        onClick={() => handleCountrySelect(country)}
+                        className="w-full flex items-center px-4 py-3 hover:bg-gray-50 transition-colors text-left"
+                      >
+                        <span className="text-lg mr-3">{country.flag}</span>
+                        <div className="flex-1">
+                          <div className="text-sm font-medium">{country.name}</div>
+                          <div className="text-xs text-gray-500">{country.prefix}</div>
+                        </div>
+                        <span className="text-sm text-gray-400">{country.prefix}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center px-1 pl-3 pr-1 h-[100%] justify-center bg-transparent">
+                <p className="text-sm font-medium text-gray-500">{selectedCountry.prefix}</p>
+              </div>
             </div>
-
-            {/* Prefix Display */}
-            <div className="flex items-center px-1 pl-3 pr-1 border border-r-0   bg-white">
-              <span className="text-sm font-medium text-gray-500">{selectedCountry.prefix}</span>
-            </div>
-
-            {/* Phone Number Input */}
             <Input
               value={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
-              className="rounded-l-none rounded-r-full border-l-0  py-3 h-[54px] flex-1"
+              className="rounded-xl sm:rounded-full border py-3 pl-28 h-[54px] flex-1"
               placeholder="Enter mobile number"
             />
           </div>
         </div>
 
         <Button
-          className="w-full bg-[#02968A] hover:bg-[#02968A]/90 text-white py-6 space-y-2 rounded-full text-base"
+          className="continue-button w-full bg-[#02968A] hover:bg-[#02968A]/90 text-white py-6 space-y-2 rounded-xl sm:rounded-full text-base"
           onClick={handleContinueWithOTP}
         >
           Continue with OTP
@@ -313,7 +291,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
         <Button
           variant="outline"
-          className="w-full rounded-full  flex items-center justify-center gap-3  space-y-2 py-6 font-light text-base"
+          className="w-full rounded-xl sm:rounded-full flex items-center justify-center gap-3 space-y-2 py-6 font-light text-base"
           onClick={handleGoogleSignup}
           disabled={isGoogleLoading}
         >
@@ -342,12 +320,11 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           {isGoogleLoading ? "Signing in..." : "Continue with Google"}
         </Button>
 
-        {/* Hidden Google Sign-In button for fallback */}
         <div id="google-signin-button" style={{ display: "none" }}></div>
 
         <Button
           variant="outline"
-          className="w-full rounded-full flex items-center font-light justify-center gap-3  space-y-2 py-6 text-base"
+          className="w-full rounded-xl sm:rounded-full flex items-center font-light justify-center gap-3 space-y-2 py-6 text-base"
           onClick={handleAppleSignup}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -356,7 +333,11 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           Continue with Apple
         </Button>
 
-        <Button variant="outline" className="w-full rounded-full flex items-center font-light justify-center gap-3 py-6 text-base" onClick={handleIDPasswordLogin}>
+        <Button
+          variant="outline"
+          className="w-full rounded-xl sm:rounded-full flex items-center font-light justify-center gap-3 py-6 text-base"
+          onClick={handleIDPasswordLogin}
+        >
           Continue with ID & Password
         </Button>
 
@@ -372,23 +353,21 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         </div>
       </div>
 
-      {/* Overlay to close dropdown when clicking outside */}
       {showCountryDropdown && <div className="fixed inset-0 z-40" onClick={() => setShowCountryDropdown(false)} />}
     </div>
   )
+
   const renderStep2 = () => {
-    // Check if all four OTP digits are filled
-    const isOtpComplete = otp.every((digit) => digit.length === 1);
-  
+    const isOtpComplete = otp.every((digit) => digit.length === 1)
     return (
-      <div className="w-[510px] bg-white shadow-xl rounded-xl p-8">
+      <div className="modal-container w-[100vw] flex flex-col justify-center sm:w-[510px] bg-white shadow-xl rounded-t-[22px] sm:rounded-xl pb-[5px] sm:pb-8 p-8">
         <div className="flex items-center justify-between mb-8">
           <h2 className="text-2xl font-semibold">Enter OTP</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
             <X className="h-6 w-6" />
           </button>
         </div>
-  
+
         <div className="space-y-8">
           <div>
             <p className="text-base text-gray-600 mb-4">We've sent a 4-digit OTP to your mobile number.</p>
@@ -399,7 +378,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
               <PencilSimpleLineIcon size={20} className="text-gray-400" />
             </div>
           </div>
-  
+
           <div className="flex gap-4 justify-center">
             {otp.map((digit, index) => (
               <Input
@@ -407,36 +386,38 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 id={`otp-${index}`}
                 value={digit}
                 onChange={(e) => handleOtpChange(index, e.target.value)}
-                className="w-14 rounded-[10px] !border-gray-300  h-14 text-center text-xl font-medium"
+                className="w-14 rounded-[10px] !border-gray-300 h-14 text-center text-xl font-medium"
                 maxLength={1}
               />
             ))}
           </div>
-  <div className="w-full flex justify-center items-center">
-          <Button
-            className={`w-full max-w-[70%]  py-6 rounded-full text-base text-white ${
-              isOtpComplete ? "bg-[#02968A] hover:bg-[#02968A]/95" : "bg-gray-600"
-            }`}
-            onClick={handleVerifyOtp}
-            disabled={!isOtpComplete}
-          >
-            Verify OTP
-          </Button>
-  </div>
-          <div className="text-center mb-[100px]">
+          <div className="w-full flex justify-center items-center">
+            <Button
+              className={`w-full max-w-[70%] py-6 rounded-full text-base text-white ${
+                isOtpComplete ? "bg-[#02968A] hover:bg-[#02968A]/95" : "bg-gray-600"
+              }`}
+              onClick={handleVerifyOtp}
+              disabled={!isOtpComplete}
+            >
+              Verify OTP
+            </Button>
+          </div>
+          <div className="text-center mb-[100px] pb-6 sm:pb-0">
             <span className="text-sm text-gray-600">Didn't receive the OTP? </span>
             <button className="text-sm text-teal-600 hover:underline">Resend OTP</button>
           </div>
-  
-          <div className="text-center text-xs text-gray-400 mt-6">
+
+          <div className="text-center text-xs text-gray-400 mt-6 pb-6 sm:pb-0">
             <span>Terms & Conditions</span> • <span>Privacy Policy</span>
           </div>
         </div>
       </div>
-    );
-  };
+    )
+  }
+
   const renderStep3 = () => (
-    <div className="w-[520px] bg-white shadow-xl rounded-xl p-8 max-h-[90vh] overflow-y-auto no-scrollbar">
+    <div className="sm:max-h-[85vh] sm:flex sm:items-start sm:justify-center shadow-xl overflow-y-auto">
+    <div className="modal-container w-[100vw] sm:w-[600px] bg-white shadow-xl rounded-t-[22px] sm:rounded-xl p-8 min-h-[100vh]  overflow-y-none no-scrollbar">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h2 className="text-2xl font-semibold">Register</h2>
@@ -447,13 +428,13 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         </button>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-6 pb-4">
         <div>
           <label className="block text-base text-sm font-medium mb-2">Full Name</label>
           <Input
             value={formData.fullName}
             onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-            className="py-6 text-[16px]"
+            className="py-6 text-[16px] rounded-xl sm:rounded-full"
           />
         </div>
 
@@ -479,7 +460,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             placeholder="Enter your email address"
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="py-6"
+            className="py-6 rounded-xl sm:rounded-full"
           />
         </div>
 
@@ -489,7 +470,9 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             {["Male", "Female", "Other"].map((gender) => (
               <button
                 key={gender}
-                className={`flex px-6 w-[110px] text-center py-2  bg-gray-100 rounded-full w-auto text-base ${formData.gender === gender ? "bg-gray-200" : ""}`}
+                className={`flex px-6 w-[110px] text-center py-2 bg-gray-100 rounded-full w-auto text-base ${
+                  formData.gender === gender ? "bg-gray-200" : ""
+                }`}
                 onClick={() => setFormData({ ...formData, gender })}
               >
                 {gender}
@@ -510,7 +493,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           <Input
             value={formData.city}
             onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-            className="py-6"
+            className="py-6 rounded-xl sm:rounded-full"
           />
         </div>
 
@@ -520,7 +503,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             placeholder="Explore nearby properties and posts"
             value={formData.locality}
             onChange={(e) => setFormData({ ...formData, locality: e.target.value })}
-            className="py-6"
+            className="py-6 rounded-xl sm:rounded-full"
           />
         </div>
 
@@ -535,7 +518,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                 placeholder="••••••••"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="py-6"
+                className="py-6 rounded-xl sm:rounded-full"
               />
             </div>
 
@@ -547,7 +530,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                   placeholder="••••••••"
                   value={formData.confirmPassword}
                   onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  className="py-6"
+                  className="py-6 rounded-xl sm:rounded-full"
                 />
                 <div className="absolute right-4 top-1/2 -translate-y-1/2 w-3 h-3 bg-green-500 rounded-full"></div>
               </div>
@@ -556,17 +539,18 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         </div>
 
         <Button
-          className="w-full bg-[#02968A] rounded-full   text-white py-6 text-base mt-8 mb-4"
+          className="w-full bg-[#02968A] rounded-xl sm:rounded-full text-white py-6 text-base mt-8"
           onClick={handleRegisterContinue}
         >
           Continue
         </Button>
       </div>
     </div>
+    </div>
   )
 
   const renderStep4 = () => (
-    <div className="w-[510px] bg-white rounded-xl shadow-xl p-8 max-h-[90vh] overflow-y-auto no-scrollbar">
+    <div className="modal-container w-[100vw] flex flex-col justify-center sm:w-[510px] bg-white shadow-xl rounded-t-[22px] sm:rounded-xl pb-[55px] sm:pb-8 p-8">
       <div className="flex items-center justify-between mb-4">
         <div>
           <h2 className="text-xl font-semibold">Account Setup</h2>
@@ -579,7 +563,10 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
       <div className="space-y-6">
         <div className="text-center">
-          <div style={{outline:"2px dashed #d4d4d4",outlineOffset:"8px"}} className="w-[122px] h-[122px] mx-auto my-10 bg-gray-100  rounded-full flex items-center justify-center mb-6">
+          <div
+            style={{ outline: "2px dashed #d4d4d4", outlineOffset: "8px" }}
+            className="w-[122px] h-[122px] mx-auto my-10 bg-gray-100 rounded-full flex items-center justify-center mb-6"
+          >
             <Upload className="h-8 w-8 text-gray-400" />
           </div>
 
@@ -610,7 +597,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           <Input
             value={formData.accountName}
             onChange={(e) => setFormData({ ...formData, accountName: e.target.value })}
-            className="py-6 text-[16px]"
+            className="py-6 text-[16px] rounded-xl sm:rounded-full"
           />
         </div>
 
@@ -619,12 +606,14 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           <Input
             value={formData.userName}
             onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
-            className="py-6 text-[16px]"
+            className="py-6 text-[16px] rounded-xl sm:rounded-full"
           />
-          {/* <p className="text-xs text-green-600 mt-2">User Name Available</p> */}
         </div>
 
-        <Button className="w-full bg-[#02968A] rounded-full  text-white py-6 text-[16px]" onClick={handleFinalSubmit}>
+        <Button
+          className="w-full bg-[#02968A] rounded-xl sm:rounded-full text-white py-6 text-[16px]"
+          onClick={handleFinalSubmit}
+        >
           Submit
         </Button>
 
@@ -641,19 +630,31 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   )
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-white/30 backdrop-blur-[10px] " onClick={onClose} />
+    <div
+      className={`fixed inset-0 z-50 flex ${
+        currentStep === 3 ? "pt-[240px] sm:flex sm:items-center sm:justify-center  overflow-y-auto" : "items-end sm:items-center"
+      } justify-center sm:p-4`}
+    >
+      <div
+        className="sm:absolute fixed inset-0 block sm:hidden bg-cover bg-center animate-slide"
+        style={{
+          backgroundImage: `url('/imagesstatic/bg-collage.jpg')`,
+          backgroundRepeat: "repeat-x",
+        }}
+      >
+        <div className="absolute inset-0 sm:bg-white/30 sm:backdrop-blur-[10px]" onClick={onClose} />
+      </div>
       <div className="relative z-10">
         {currentStep === 1 && renderStep1()}
         {currentStep === 2 && renderStep2()}
         {currentStep === 3 && renderStep3()}
         {currentStep === 4 && renderStep4()}
       </div>
+      <div className="fixed inset-0 sm:bg-white/30 sm:backdrop-blur-[10px]" onClick={onClose} />
     </div>
   )
 }
 
-// Extend the Window interface to include Google Identity Services
 declare global {
   interface Window {
     google: {

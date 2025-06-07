@@ -100,6 +100,57 @@ export default function StorySection() {
       storyItems: [{ id: "7-1", type: "image", url: "/jamie-parker.png", duration: 15 }],
       timestamp: new Date(Date.now() - 1000 * 60 * 60 * 23.5).toISOString(), // 23.5 hours ago
     },
+    {
+      id: 8,
+      name: "John Manual",
+      image: "/imagesstatic/1.jpg",
+      storyItems: [
+        { id: "8-1", type: "image", url: "/luxury-lobby.png", duration: 15 },
+        { id: "8-2", type: "image", url: "/luxury-bungalow-pool.png", duration: 15 },
+      ],
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 23.8).toISOString(), // 23.8 hours ago
+    },
+    {
+      id: 9,
+      name: "Alex Carter",
+      image: "/imagesstatic/2.jpg",
+      storyItems: [
+        { id: "9-1", type: "video", url: "/property-2.mp4", duration: 15 },
+        { id: "9-2", type: "video", url: "/property-3.mp4", duration: 15 },
+      ],
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 23.85).toISOString(), // 23.85 hours ago
+    },
+    {
+      id: 10,
+      name: "Sam Taylor",
+      image: "/imagesstatic/3.jpg",
+      storyItems: [{ id: "10-1", type: "video", url: "/property-1.mp4", duration: 15 }],
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 23.86).toISOString(), // 23.86 hours ago
+    },
+    {
+      id: 11,
+      name: "Jordan Lee",
+      image: "/imagesstatic/4.jpg",
+      storyItems: [
+        { id: "11-1", type: "image", url: "/chris-morgan.png", duration: 15 },
+        { id: "11-2", type: "image", url: "/jamie-parker.png", duration: 15 },
+      ],
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 23.87).toISOString(), // 23.87 hours ago
+    },
+    {
+      id: 12,
+      name: "Chris Morgan",
+      image: "/imagesstatic/5.jpg",
+      storyItems: [{ id: "12-1", type: "image", url: "/chris-morgan.png", duration: 15 }],
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 23.88).toISOString(), // 23.88 hours ago
+    },
+    {
+      id: 13,
+      name: "Jamie Parker",
+      image: "/imagesstatic/6.jpg",
+      storyItems: [{ id: "13-1", type: "image", url: "/jamie-parker.png", duration: 15 }],
+      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 23.89).toISOString(), // 23.89 hours ago
+    },
   ]
 
   const [storiesData, setStoriesData] = useState(initialStoriesData)
@@ -144,7 +195,7 @@ export default function StorySection() {
   }, [processedStories, deletedStories])
 
   // Check if user has an active story
-  const hasActiveUserStory = useMemo(() => {
+  const hasActiveStory = useMemo(() => {
     if (!userStory) return false
 
     const now = new Date()
@@ -153,7 +204,7 @@ export default function StorySection() {
 
     return (
       !deletedStories.has(userStory.id) &&
-      userStoryProcessed?.storyItems.length! > 0 &&
+      userStoryProcessed?.storyItems.length > 0 &&
       new Date(userStory.timestamp) > twentyFourHoursAgo
     )
   }, [userStory, processedStories, deletedStories])
@@ -164,7 +215,7 @@ export default function StorySection() {
   }, [processedStories])
 
   // Check if ALL story items for a story have been viewed
-  const isStoryFullyViewed = (storyId: number) => {
+  const isStoryFullyViewed = (storyId) => {
     const story = processedStories.find((s) => s.id === storyId)
     if (!story) return false
 
@@ -188,7 +239,7 @@ export default function StorySection() {
     return index === -1 ? 0 : index
   }
 
-  // Sort stories: unviewed first, then fully viewed, and always put user story first
+  // Sort stories: user story first (if active), then unviewed stories, then fully viewed stories
   const sortedStories = useMemo(() => {
     // Separate stories into unviewed and fully viewed
     const unviewedStories = stories.filter((story) => !isStoryFullyViewed(story.id))
@@ -199,21 +250,21 @@ export default function StorySection() {
       (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     )
 
-    // Sort viewed stories by timestamp (newest first)
+    // Sort fully viewed stories by timestamp (newest first)
     const sortedFullyViewed = fullyViewedStories.sort(
       (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
     )
 
-    // Combine the arrays: unviewed first, then fully viewed
+    // Combine: unviewed first, then fully viewed
     const combinedStories = [...sortedUnviewed, ...sortedFullyViewed]
 
-    // If user has an active story, add it to the beginning of the array
-    if (hasActiveUserStory && processedUserStory) {
+    // If user has an active story, add it to the beginning
+    if (hasActiveStory && processedUserStory) {
       return [processedUserStory, ...combinedStories]
     }
 
     return combinedStories
-  }, [stories, hasActiveUserStory, processedUserStory])
+  }, [stories, hasActiveStory, processedUserStory])
 
   const handleStoryClick = (index: number, isUserStoryPlaceholder = false) => {
     if (isUserStoryPlaceholder) {
@@ -303,7 +354,7 @@ export default function StorySection() {
 
   const handleViewUserStory = () => {
     setPopoverOpen(false)
-    if (hasActiveUserStory) {
+    if (hasActiveStory) {
       handleStoryClick(0)
     }
   }
@@ -315,30 +366,28 @@ export default function StorySection() {
 
   return (
     <>
-      <div className=" flex overflow-x-auto no-scrollbar story-section">
-        {/* Always show "Your Story" first */}
+      <div className="flex overflow-x-auto no-scrollbar story-section">
         {userStory && (
           <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
             <PopoverTrigger asChild>
-              <div key="your-story" className="flex flex-col items-center gap-1 cursor-pointer relative">
+              <div key="your-story" className="flex flex-col pl-[0.8rem] sm:pl-[1.5rem] items-center gap-1 cursor-pointer relative">
                 <div className="relative">
                   <div
-                    className={`flex justify-center items-center relative h-[85px] w-[85px] rounded-full ${
-                      hasActiveUserStory && isStoryFullyViewed(userStory.id)
-                      ? "bg-gradient-to-r from-[#FFD78A]/30 to-[#F4762D]/30"
-                      : "bg-gradient-to-r from-[#FFD78A] to-[#F4762D]"
-                  } !p-[2px]`}
+                    className={`flex justify-center items-center relative h-[65px] w-[65px] sm:h-[85px] sm:w-[85px] rounded-full ${
+                      hasActiveStory && isStoryFullyViewed(userStory.id)
+                        ? "bg-gradient-to-r from-[#FFD78A]/30 to-[#F4762D]/30"
+                        : "bg-gradient-to-r from-[#FFD78A] to-[#F4762D]"
+                    } !p-[2px]`}
                   >
-                  
-                  <div className="relative flex justify-center items-center h-[100%] w-[100%]  rounded-full border-[3px] border-white overflow-hidden bg-white">
-                    <Image src={userStory.image || "/placeholder.svg"}
+                    <div className="relative flex justify-center items-center h-[100%] w-[100%] rounded-full border-[2px] sm:border-[3px] border-white overflow-hidden bg-white">
+                      <Image
+                        src={userStory.image || "/placeholder.svg"}
                         alt={userStory.name}
                         fill
-                        className="object-cover" />
-                  
+                        className="object-cover"
+                      />
                     </div>
                   </div>
-
                   <div className="absolute bottom-0 right-0 flex h-6 w-6 items-center justify-center rounded-full bg-teal-500 text-white z-10">
                     <Plus className="h-4 w-4" />
                   </div>
@@ -348,7 +397,7 @@ export default function StorySection() {
             </PopoverTrigger>
             <PopoverContent className="w-48 p-0 shadow-lg border-0 bg-white/90 backdrop-blur-md">
               <div className="py-1">
-                {hasActiveUserStory && (
+                {hasActiveStory && (
                   <button
                     className="flex w-full items-center px-4 py-2 text-sm hover:bg-muted/50"
                     onClick={handleViewUserStory}
@@ -374,29 +423,37 @@ export default function StorySection() {
           if (story.isUser) return null
 
           const isFullyViewed = isStoryFullyViewed(story.id)
-          const storyIndex = hasActiveUserStory ? index : index
+          const storyIndex = hasActiveStory ? index : index
 
           return (
             <div
               key={story.id}
-              className="flex flex-col items-center gap-1 cursor-pointer relative"
+              className="flex flex-col items-center gap-1 justify-between cursor-pointer relative"
               onClick={() => handleStoryClick(storyIndex)}
             >
               <div className="relative">
                 <div
-                  className={ `flex justify-center items-center relative h-[85px] w-[85px] rounded-full ${
+                  className={`flex justify-center items-center relative h-[65px] w-[65px] sm:h-[85px] sm:w-[85px] rounded-full ${
                     isFullyViewed
                       ? "bg-gradient-to-r from-[#FFD78A]/30 to-[#F4762D]/30"
                       : "bg-gradient-to-r from-[#FFD78A] to-[#F4762D]"
-                  } !p-[2px] `}
+                  } !p-[2px]`}
                 >
-                  <div className="relative  h-[81px] w-[81px]   overflow-hidden">
-                    <Image src={story.image || "/placeholder.svg"} alt={story.name} fill className="object-cover border-white border-[3px] rounded-full " />
+                   <div className="relative flex justify-center items-center h-[100%] w-[100%] rounded-full border-[2px] sm:border-[3px] border-white overflow-hidden bg-white">
+                   <Image
+                      src={story.image || "/placeholder.svg"}
+                      alt={story.name}
+                      fill
+                        className="object-cover"
+                    />
                   </div>
                 </div>
               </div>
-              <span className="text-[14px] text-[#637481] pt-2">{story.name}</span>
-            </div>
+              <span className="text-[13px] sm:text-[14px] text-[#637481] w-full pt-2 whitespace-nowrap overflow-hidden text-ellipsis">
+  {story.name}
+</span>
+
+              </div>
           )
         })}
       </div>

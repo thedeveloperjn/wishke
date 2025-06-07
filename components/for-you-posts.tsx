@@ -3,7 +3,7 @@ import RequirementPost from "@/components/requirement-post"
 
 export default function ForYouPosts() {
   return (
-    <div className="mt-4">
+    <div className="mt-0 sm:mt-4">
       {/* Property post with single image */}
       <PropertyPost
         type="property"

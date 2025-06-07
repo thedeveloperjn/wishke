@@ -51,7 +51,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
   return (
     <aside
       ref={sidebarRef}
-      className={`hidden w-[24%] flex-col  md:flex  overflow-y-auto h-[calc(100vh-96px)] no-scrollbar  transition-all duration-200 ${
+      className={`hidden w-auto xl:w-[24%] min-w-[80px] flex-col  md:flex  overflow-y-auto h-[calc(100vh-96px)] no-scrollbar  transition-all duration-200 ${
         isScrolled ? "rounded-b-lg" : "rounded-lg"
       }`}
       style={{
@@ -59,7 +59,7 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
         borderTopRightRadius: isScrolled ? 0 : "0.5rem",
       }}
     >
-      <div className="bg-white  p-4 mb-6 rounded-lg  p-3">
+      <div className="bg-white hidden xl:block  p-4 mb-6 rounded-lg  p-3">
         {/* Profile header with image and name */}
         <Link href="/profile" >
         <div className="bg-[#F8F8FA] gap-2 rounded-lg p-2">
@@ -98,70 +98,70 @@ export default function Sidebar({ activeSection, onSectionChange }: SidebarProps
       <nav className="bg-white rounded-lg p-4  !mb-10 space-y-2">
         <NavItem
           href="/"
-          icon={<MagnifyingGlass  size={24}/>}
+          icon={<MagnifyingGlass  className="min-w-6"  size={24}/>}
           label="Home"
           active={pathname === "/"}
           onClick={() => handleNavigation("/")}
         />
         <NavItem
           href="/discover"
-          icon={<Compass  size={24}/>}
+          icon={<Compass  className="min-w-6"  size={24}/>}
           label="Discover"
           active={pathname === "/discover"}
           onClick={() => handleNavigation("/discover")}
         />
         <NavItem
           href="/reels"
-          icon={<FilmReel size={24} />}
+          icon={<FilmReel className="min-w-6"  size={24} />}
           label="Reels"
           active={pathname === "/reels"}
           onClick={() => handleNavigation("/reels")}
         />
         <NavItem
           href="/properties"
-          icon={<Key size={24} />}
+          icon={<Key className="min-w-6"  size={24} />}
           label="Properties"
           active={pathname === "/properties"}
           onClick={() => handleNavigation("/properties")}
         />
         <NavItem
           href="/projects"
-          icon={<Buildings size={24} />}
+          icon={<Buildings className="min-w-6"  size={24} />}
           label="Projects"
           active={pathname === "/projects"}
           onClick={() => handleNavigation("/projects")}
         />
         <NavItem
           href="/requirements"
-          icon={<MagicWand size={24} /> }
+          icon={<MagicWand className="min-w-6"  size={24} /> }
           label="Requirements"
           active={pathname === "/requirements"}
           onClick={() => handleNavigation("/requirements")}
         />
         <NavItem
           href="/vendors"
-          icon={<Cube size={24} />}
+          icon={<Cube className="min-w-6"  size={24} />}
           label="Vendors"
           active={pathname === "/vendors"}
           onClick={() => handleNavigation("/vendors")}
         />
         <NavItem
           href="/portfolio"
-          icon={<UserCircleCheck size={24} />}
+          icon={<UserCircleCheck className="min-w-6"  size={24} />}
           label="Portfolios"
           active={pathname === "/portfolio"}
           onClick={() => handleNavigation("/portfolio")}
         />
         <NavItem
           href="/events"
-          icon={<CalendarDots size={24} />}
+          icon={<CalendarDots className="min-w-6" size={24} />}
           label="Events"
           active={pathname === "/events"}
           onClick={() => handleNavigation("/events")}
         />
         <NavItem
           href="/news"
-          icon={<Newspaper size={24} />}
+          icon={<Newspaper className="min-w-6" size={24} />}
           label="News"
           active={pathname === "/news"}
           onClick={() => handleNavigation("/news")}
@@ -194,7 +194,7 @@ function NavItem({ icon, label, active, href, onClick }: NavItemProps) {
       }}
     >
       {icon}
-      {label}
+     <p className="hidden xl:block hover:block">{label}</p> 
     </Link>
   )
 }

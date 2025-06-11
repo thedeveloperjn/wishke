@@ -1,16 +1,22 @@
 "use client"
 
-import { Search, Bell, MessageCircle, Settings, Filter, Clock, Calendar, TrendingUp, X, Bookmark ,ChevronDown, UserCircle } from "lucide-react"
+import { Search,  MessageCircle, Settings, Filter, Clock, Calendar, TrendingUp, X, Bookmark ,ChevronDown, UserCircle, AlignRight } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
-import { Gear, UserCircleIcon } from "@phosphor-icons/react"
+import { Gear, UserCircleIcon ,Bell} from "@phosphor-icons/react"
 import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import LoginModal from "./login-modal"
 import Link from "next/link"
-export default function Header() {
+
+interface HeaderProps {
+  isSidebarOpen: boolean
+  toggleSidebar: () => void
+}
+
+export default function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
   const [isClient, setIsClient] = useState(false)
   const [showSearchDropdown, setShowSearchDropdown] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
@@ -192,16 +198,18 @@ export default function Header() {
       
     
   return (
-
-<header className="sticky top-0 z-50 flex h-[85px] items-center justify-between bg-white px-4 md:px-6">
+    <header className="sticky top-0 z-50 flex h-[60px] sm:h-[85px] items-center justify-between bg-white sm:px-4 md:px-6">
       <div className="container flex h-16 items-center justify-between px-4">
-      {/* <div className="w-[60%] flex h-[85px] items-center justify-between  bg-white px-4 md:px-6"> */}
-      <div className="hidden sm:flex items-center z-[80] gap-2">
-        <Image src="/whiskelogo.svg" alt="WISHKE Logo" width={160} height={60} />
-      </div>
+        {/* Mobile sidebar toggle button - only shows below 640px */}
+        <div className="sm:hidden">
+          <button onClick={toggleSidebar}>
+            <AlignRight className="h-6 w-6" />
+          </button>
+        </div>
 
-    
-        {/* Search Bar */}
+        <div className="hidden sm:flex items-center z-[80] gap-2">
+          <Image src="/whiskelogo.svg" alt="WISHKE Logo" width={160} height={60} />
+        </div>
         <div className=" hidden flex-1 max-w-[570px] px-4 md:block" ref={searchRef}>
           <div className="relative">
             <Search className="absolute left-3 top-3 h-6 w-6 text-muted-foreground" />
@@ -284,7 +292,7 @@ export default function Header() {
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1 sm:gap-3">
           {/* Notifications */}
           <div className="relative" ref={notificationRef}>
             <Button
@@ -294,8 +302,8 @@ export default function Header() {
               onClick={() => setShowNotifications(!showNotifications)}
               suppressHydrationWarning={true}
             >
-             <Bell className="h-6 w-6 text-muted-foreground" />
-              <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 p-0 text-xs">15</Badge>
+             <Bell size={24} />
+              {/* <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-red-500 p-0 text-xs">15</Badge> */}
             </Button>
 
             {/* Notifications Dropdown */}
@@ -518,7 +526,7 @@ export default function Header() {
               className="flex items-center gap-2 cursor-pointer"
               onClick={() => setShowLoginModal(true)}
             >
-              <div className="relative h-10 w-10 overflow-hidden rounded-full">
+              <div className="relative h-7 w-7 sm:h-10 sm:w-10 overflow-hidden rounded-full">
                 <Image src="/imagesstatic/malvika.jpg" alt="Profile" fill className="object-cover" />
               </div>
               <div className="hidden md:block">

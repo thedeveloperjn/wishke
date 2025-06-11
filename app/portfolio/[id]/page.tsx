@@ -48,6 +48,7 @@ import {
   Warehouse,
   PhoneCall,
   ChatTeardropText,
+  ArrowsLeftRight,
 } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 
@@ -59,6 +60,11 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
   const router = useRouter()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [liked, setLiked] = useState(false)
+  const [likesCount, setLikesCount] = useState(0)
+  const [comments, setComments] = useState(0)
+  const [share, setShare] = useState(0)
+  const [shareout, setShareout] = useState(0)
+  const [bookmarked, setBookmarked] = useState(false)
   const [activeTab, setActiveTab] = useState("Description")
 
   // Refs for scroll sections
@@ -193,8 +199,9 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
     }
   }, [])
 
-  const toggleLike = () => {
+  const handleLike = () => {
     setLiked(!liked)
+    setLikesCount(prev => liked ? prev - 1 : prev + 1)
   }
 
   return (
@@ -223,7 +230,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
               </div>
             <div className="mb-6">
             <h1 className="text-[18px] font-bold text-gray-900 mb-2">Luxury Living Expo 2025 - Mumbai Edition</h1>
-            <p className="16px text-gray-600">Welcome to my real estate portfolio showcase. Over the past few years, I’ve had the privilege of working on diverse residential and commercial—transforming</p>
+            <p className="16px text-gray-600">Welcome to my real estate portfolio showcase. Over the past few years, I've had the privilege of working on diverse residential and commercial—transforming</p>
           </div>
 
           {/* Project Images - Horizontal Scroll */}
@@ -257,7 +264,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
         <h3 className="text-gray-900 font-[500]">About This Post:</h3>  
             <p className="text-gray-600 leading-relaxed">
            
-Welcome to my real estate portfolio showcase. Over the past few years, I’ve had the privilege of working on diverse residential and commercial projects—transforming empty lots into thriving living spaces and investment opportunities. This post highlights a few of my key achievements, properties I've handled, and links to explore more about each one. Whether you're looking for inspiration, collaboration, or consultation—this is a glimpse into what I bring to the real estate table.
+Welcome to my real estate portfolio showcase. Over the past few years, I've had the privilege of working on diverse residential and commercial projects—transforming empty lots into thriving living spaces and investment opportunities. This post highlights a few of my key achievements, properties I've handled, and links to explore more about each one. Whether you're looking for inspiration, collaboration, or consultation—this is a glimpse into what I bring to the real estate table.
 
             </p>
 
@@ -272,36 +279,50 @@ Welcome to my real estate portfolio showcase. Over the past few years, I’ve ha
           </div>
 
            {/* Action Buttons */}
-           <div className="flex items-center justify-between py-4 pb-6 border-t">
-            <div className="flex items-center gap-6">
-              <button
-                onClick={toggleLike}
-                className={`flex items-center gap-2 ${liked ? "text-red-500" : "text-gray-500"}`}
-              >
-                <Heart size={20} weight={liked ? "fill" : "regular"} />
-                <span className="text-sm">{liked ? project.likes + 1 : project.likes} Likes</span>
-              </button>
+           <div className="         flex items-center justify-between border-t pt-4 no-post-click">
+        <div className="flex items-center gap-4 sm:gap-6">
+          <button
+            onClick={handleLike}
+            className={`flex items-center gap-2 ${liked ? "text-red-500" : "text-gray-500"}`}
+          >
+            <Heart size={20} weight={liked ? "fill" : "regular"} />
+            <span className="text-sm flex gap-2">{likesCount} <span className="hidden sm:block">Likes</span></span>
+          </button>
 
-              <button className="flex items-center gap-2 text-gray-500">
-                <ChatCircle size={20} />
-                <span className="text-sm">{project.comments} Comments</span>
-              </button>
+          <button className="flex items-center gap-2 text-gray-500">
+            <ChatCircle size={20} />
+            <span className="text-sm flex gap-2">{comments}<span className="hidden sm:block">Comments</span></span>
+          </button>
 
-              <button className="flex items-center gap-2 text-gray-500">
-                <PaperPlaneTilt size={20} />
-                <span className="text-sm">Message</span>
-              </button>
+          <button className="block sm:hidden flex items-center gap-2 text-gray-500">
+            <ArrowsLeftRight size={20} />
+            <span className="text-sm flex gap-2">{share} <span className="hidden sm:block">Message</span></span>
+          </button>
+          <button className="flex items-center gap-2 text-gray-500">
+            <PaperPlaneTilt size={20} />
+            <span className="text-sm flex gap-2">{share} <span className="hidden sm:block">Message</span></span>
+          </button>
 
-              <button className="flex items-center gap-2 text-gray-500">
-                < ShareFat  size={20} />
-                <span className="text-sm">Share</span>
-              </button>
-            </div>
+          <button className="hidden sm:flex items-center gap-2 text-gray-500">
+            <ShareFat size={20} />
+            <span className="text-sm flex gap-2">{shareout}<span className="hidden sm:block">Share</span></span>
+          </button>
+        </div>
 
-            <button className="text-gray-500">
-              <BookmarkSimple   size={20} />
-            </button>
-          </div>
+        <button 
+          className="hidden sm:block text-gray-500"
+          onClick={(e) => {
+            e.stopPropagation()
+            setBookmarked(!bookmarked)
+          }}
+        >
+          <BookmarkSimple size={20} weight={bookmarked ? "fill" : "regular"} />
+        </button>
+        <button className="block sm:hidden flex items-center gap-2 text-gray-500">
+            <ShareFat size={20} />
+            <span className="text-sm"><span className="hidden sm:block">Share</span></span>
+          </button>
+      </div>
 
         </div>
       </div>

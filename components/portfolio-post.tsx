@@ -47,11 +47,11 @@ export default function PortfolioPost({
     <div className="rounded-lg bg-white p-4 mb-4">
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="relative h-12 w-12 overflow-hidden rounded-full">
+          <div className="relative h-8 sm:h-12 w-8  sm:w-12 overflow-hidden rounded-full">
             <Image src={authorImage || "/placeholder.svg"} alt={authorName} fill className="object-cover" />
           </div>
           <div>
-            <h3 className="text-[18px] font-bold">{authorName}</h3>
+            <h3 className="text-[16px] sm:text-[18px] font-bold">{authorName}</h3>
             <p className="text-[14px] text-muted-foreground">{timestamp}</p>
           </div>
         </div>

@@ -218,7 +218,7 @@ export default function StoryViewer({
       onTouchStart={handleMouseDown}
       onTouchEnd={handleMouseUp}
     >
-      <button onClick={onClose} className="absolute top-4 right-4 text-white z-50">
+      <button onClick={onClose} className="hidden sm:block absolute top-4 right-4 text-white z-50">
         <X className="h-6 w-6" />
       </button>
 
@@ -242,10 +242,10 @@ export default function StoryViewer({
         <ChevronRight className="h-8 w-8" />
       </button>
 
-      <div className="relative w-full max-w-[360px] h-[96vh] flex flex-col">
+      <div className="relative w-full sm:max-w-[360px] h-full max-h-[100%] flex flex-col">
         {/* Web View Header - Above Content */}
         {!isMobile && (
-          <div className="w-full py-2 space-y-4 z-50">
+          <div className="w-full z-50">
             <div className="flex items-center mb-2">
               <div className="relative h-8 w-8 overflow-hidden rounded-full border-2 border-white">
                 <Image src={story.image} alt={story.name} fill className="object-cover" />
@@ -284,7 +284,9 @@ export default function StoryViewer({
                     >
                       <MoreHorizontal className="h-5 w-5" />
                     </button>
+                  
                   </DropdownMenuTrigger>
+                  
                   <DropdownMenuContent align="end" className="w-56" onCloseAutoFocus={() => setIsPaused(false)}>
                     {isUserStory && (
                       <>
@@ -333,7 +335,7 @@ export default function StoryViewer({
             {isMobile && (
               <div className="absolute top-0 left-0 right-0 z-40">
                 <ProgressBars />
-                <div className="p-4 flex items-center">
+                <div className="p-2 pt-0 sm:p-4 flex items-center">
                   <div className="flex items-center mt-2">
                     <div className="relative h-10 w-10 overflow-hidden rounded-full border-2 border-white">
                       <Image src={story.image} alt={story.name} fill className="object-cover" />
@@ -344,7 +346,7 @@ export default function StoryViewer({
                       </p>
                     </div>
                   </div>
-                  <div className="ml-auto flex items-center gap-4">
+                  <div className="ml-auto flex items-center justify-center gap-4">
                     {isUserStory && (
                       <button
                         className="text-white relative"
@@ -401,19 +403,22 @@ export default function StoryViewer({
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
+                    <button onClick={onClose} className="relative text-white z-50">
+        <X className="h-6 w-6" />
+      </button>
                   </div>
                 </div>
               </div>
             )}
 
             {/* Content Area */}
-            <div className="h-full w-full rounded-[12px] overflow-hidden">
+            <div className="h-full w-full sm:rounded-[12px] overflow-hidden">
               {storyItem.type === "image" ? (
                 <Image
                   src={storyItem.url}
                   alt="Story"
                   fill
-                  className="rounded-[12px] overflow-hidden object-cover"
+                  className="sm:rounded-[12px] overflow-hidden object-cover"
                   priority
                 />
               ) : (
@@ -435,7 +440,7 @@ export default function StoryViewer({
         </AnimatePresence>
 
         {/* Bottom Controls (same for both web and mobile) */}
-        <div className="py-3 flex items-center gap-2">
+        <div className="py-1 sm:py-3 px-2 sm:py-0 absolute bottom-4 sm:relative h-auto  w-full flex items-center gap-2">
           <button className="w-10 h-10 flex items-center justify-center text-white border border-white bg-white/20 rounded-full">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path
@@ -447,7 +452,7 @@ export default function StoryViewer({
             </svg>
           </button>
 
-          <div className="flex-1 h-full px-2 border border-white bg-white/20 rounded-full flex items-center">
+          <div className="flex-1 h-[40px] px-2 border border-white bg-white/20 rounded-full flex items-center">
             <input
               type="text"
               placeholder="Comment..."

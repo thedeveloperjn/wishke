@@ -74,11 +74,30 @@ export default function EventsContent({ events }: EventsContentProps) {
 
       {/* Recent Events */}
       <div className="mb-4 p-4">
-        <h2 className="text-lg  border-b border-gray-200 pb-3 font-bold text-gray-900 mb-4">Recent Events</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <h2 className="text-lg border-b hidden sm:block border-gray-200 pb-3 font-bold text-gray-900 mb-4">Recent Events</h2>
+        {/* Mobile scroll container */}
+        <div className="md:hidden">
+          <div className="flex gap-4 overflow-x-auto no-scrollbar pb-4">
+            {events.slice(0, 4).map((event) => (
+              <Link 
+                key={event.id} 
+                href={`/events/${event.id}`}
+                className="flex-shrink-0"
+              >
+                <EventCard event={event} />
+              </Link>
+            ))}
+          </div>
+        </div>
+        {/* Desktop flex-wrap view */}
+        <div className="hidden md:flex flex-wrap gap-4">
           {events.slice(0, 4).map((event) => (
-            <Link key={event.id} href={`/events/${event.id}`}>
-            <EventCard key={event.id} event={event} />
+            <Link 
+              key={event.id} 
+              href={`/events/${event.id}`}
+              className="w-[calc(50%-8px)]"
+            >
+              <EventCard event={event} />
             </Link>
           ))}
         </div>
@@ -90,7 +109,7 @@ export default function EventsContent({ events }: EventsContentProps) {
       </div> */}
 
       {/* Upcoming Events */}
-      <div className="bg-white rounded-[12px]">
+      <div className="bg-white  rounded-[12px]">
         <UpcomingEvents events={events} />
       </div>
     </main>

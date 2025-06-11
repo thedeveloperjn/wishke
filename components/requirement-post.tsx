@@ -22,6 +22,8 @@ interface PropertyPostProps {
   images?: { type: "image" | "video"; url: string }[]
   likes: number
   comments: number
+  share?:number
+  shareout?:number
   userProfileUrl?: string
 }
 
@@ -37,6 +39,8 @@ export default function RequirementPost({
   images = [],
   likes,
   comments,
+  share = "210",
+  shareout ="120",
   userProfileUrl = "/userprofile",
 }: PropertyPostProps) {
   const router = useRouter()
@@ -123,14 +127,14 @@ export default function RequirementPost({
 
   return (
     <div 
-      className="rounded-lg bg-white p-4 mb:2 sm:mb-4 cursor-pointer"
+      className="rounded-lg bg-white p-4 mb-2 sm:mb-4 cursor-pointer"
       onClick={handlePostClick}
       ref={postRef}
     >
       <div className="mb-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div 
-            className="relative h-12 w-12 overflow-hidden rounded-full no-post-click"
+        <div 
+            className="relative h-8 sm:h-12 w-8  sm:w-12 overflow-hidden rounded-full no-post-click"
             onClick={handleUserProfileClick}
           >
             <Image 
@@ -146,12 +150,12 @@ export default function RequirementPost({
             onClick={handleUserProfileClick}
           >
             <div className="flex items-center gap-1">
-              <h3 className="text-[18px] font-bold">{authorName}</h3>
+              <h3 className="text-[16px] sm:text-[18px] font-bold">{authorName}</h3>
             </div>
-            <p className="text-[14px] text-muted-foreground">{timestamp}</p>
+            <p className="text-[12px] sm:text-[14px] text-muted-foreground">{timestamp}</p>
           </Link>
         </div>
-        <div className="relative dropdown-container" ref={dropdownRef}>
+        <div className="relative dropdown-container flex" ref={dropdownRef}>
           <button 
             className="text-muted-foreground hover:text-foreground no-post-click"
             onClick={toggleDropdown}
@@ -188,11 +192,20 @@ export default function RequirementPost({
               </div>
             </div>
           )}
+          <button 
+          className="block sm:hidden text-gray-500 "
+          onClick={(e) => {
+            e.stopPropagation()
+            setBookmarked(!bookmarked)
+          }}
+        >
+          <BookmarkSimple size={22} weight={bookmarked ? "fill" : "regular"} />
+        </button>
         </div>
       </div>
 
       <div className="mb-4" onClick={handleReadMore}>
-        <div className="mb-2 flex flex-wrap gap-2">
+        <div className="mb-2 flex flex-wrap gap-x-2 sm:gap-2">
           <span className="text-[16px] text-orange-500">Requirement</span>
           <span className="text-[16px] text-muted-foreground">•</span>
           <span className="text-[16px] text-muted-foreground">{title}</span>
@@ -300,34 +313,38 @@ export default function RequirementPost({
         </>
       )}
 
-      <div className="hidden sm:flex items-center justify-between border-t pt-4 no-post-click">
-        <div className="flex items-center gap-6">
+<div className="         flex items-center justify-between border-t pt-4 no-post-click">
+        <div className="flex items-center gap-4 sm:gap-6">
           <button
             onClick={handleLike}
             className={`flex items-center gap-2 ${liked ? "text-red-500" : "text-gray-500"}`}
           >
             <Heart size={20} weight={liked ? "fill" : "regular"} />
-            <span className="text-sm">{likesCount} Likes</span>
+            <span className="text-sm flex gap-2">{likesCount} <span className="hidden sm:block">Likes</span></span>
           </button>
 
           <button className="flex items-center gap-2 text-gray-500">
             <ChatCircle size={20} />
-            <span className="text-sm">{comments} Comments</span>
+            <span className="text-sm flex gap-2">{comments}<span className="hidden sm:block">Comments</span></span>
           </button>
 
+          <button className="block sm:hidden flex items-center gap-2 text-gray-500">
+            <ArrowsLeftRight size={20} />
+            <span className="text-sm flex gap-2">{share} <span className="hidden sm:block">Message</span></span>
+          </button>
           <button className="flex items-center gap-2 text-gray-500">
             <PaperPlaneTilt size={20} />
-            <span className="text-sm">Message</span>
+            <span className="text-sm flex gap-2">{share} <span className="hidden sm:block">Message</span></span>
           </button>
 
-          <button className="flex items-center gap-2 text-gray-500">
+          <button className="hidden sm:flex items-center gap-2 text-gray-500">
             <ShareFat size={20} />
-            <span className="text-sm">Share</span>
+            <span className="text-sm flex gap-2">{shareout}<span className="hidden sm:block">Share</span></span>
           </button>
         </div>
 
         <button 
-          className="text-gray-500"
+          className="hidden sm:block text-gray-500"
           onClick={(e) => {
             e.stopPropagation()
             setBookmarked(!bookmarked)
@@ -335,6 +352,10 @@ export default function RequirementPost({
         >
           <BookmarkSimple size={20} weight={bookmarked ? "fill" : "regular"} />
         </button>
+        <button className="block sm:hidden flex items-center gap-2 text-gray-500">
+            <ShareFat size={20} />
+            <span className="text-sm"><span className="hidden sm:block">Share</span></span>
+          </button>
       </div>
     </div>
   )

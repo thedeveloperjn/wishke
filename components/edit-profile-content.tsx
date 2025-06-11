@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { ArrowLeft, Camera, Settings, Bell, Lock, Shield, Trash2, LogOut } from "lucide-react"
+import { ArrowLeft, Camera, Settings, Bell, Lock, Shield, Trash2, LogOut, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation"
 export default function EditProfileContent() {
   const router = useRouter()
   const [activeSection, setActiveSection] = useState("edit-profile")
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false)
   const [formData, setFormData] = useState({
     fullName: "Malvika Wilson",
     userName: "@malvikawill",
@@ -378,7 +379,7 @@ export default function EditProfileContent() {
       <div className="bg-[#EFF8F4] p-4">
         <h3 className="text-lg font-semibold mb-4">Change Your Password</h3>
         <div className=" space-y-4">
-          <div className="flex gap-3">
+          <div className="flex flex-col md:flex-row gap-3">
           <div className="w-1/2">
             <label className="block text-sm font-medium mb-2">New Password</label>
             <Input type="password" placeholder="Enter new password" className="!bg-transparent !py-6 !text-[16px]" />
@@ -556,14 +557,36 @@ export default function EditProfileContent() {
   ]
 
   return (
-    <div className="flex  pb-6 gap-6 bg-gray-50">
-      {/* Settings Sidebar */}
-      <div className="w-80  sticky top-0  bg-white  p-6 ">
-        <div className="flex items-center gap-3 mb-8">
-          <Button variant="ghost" size="sm" onClick={() => router.push("/profile")}>
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-          <h2 className="text-lg font-semibold">Account Setting</h2>
+    <div className="flex pb-6 gap-6 bg-gray-50 relative min-h-screen">
+      {/* Settings Gear Icon - Only visible on mobile */}
+      <div className="md:hidden absolute top-6 right-6 z-10">
+        <button
+          onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+          className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+        >
+          <Settings className="h-6 w-6 text-gray-600" />
+        </button>
+      </div>
+
+      {/* Settings Sidebar - Slides in from right on mobile, sticky on web */}
+      <div 
+        className={`md:sticky md:top-0 h-screen md:h-[84vh] fixed top-0 right-0 w-80 bg-white p-6 transform rounded-xl transition-transform duration-300 z-[50] md:z-0 ease-in-out  ${
+          isSettingsOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'
+        }`}
+      >
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" onClick={() => router.push("/profile")} className="md:hidden">
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <h2 className="text-lg font-semibold">Account Setting</h2>
+          </div>
+          <button
+            onClick={() => setIsSettingsOpen(false)}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors md:hidden"
+          >
+            <X className="h-5 w-5 text-gray-600" />
+          </button>
         </div>
 
         <div className="space-y-2">
@@ -573,7 +596,10 @@ export default function EditProfileContent() {
               className={`w-full flex items-center gap-3 p-3 rounded-lg text-left transition-colors ${
                 activeSection === item.id ? "bg-purple-50 text-purple-600" : "text-gray-600 hover:bg-gray-50"
               }`}
-              onClick={() => setActiveSection(item.id)}
+              onClick={() => {
+                setActiveSection(item.id)
+                setIsSettingsOpen(false)
+              }}
             >
               <item.icon className="h-5 w-5" />
               {item.label}
@@ -595,13 +621,18 @@ export default function EditProfileContent() {
 
       {/* Main Content */}
       <div className="flex-1 p-6 rounded-[10px] bg-white">
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold">
-            {activeSection === "edit-profile" && "Edit Profile"}
-            {activeSection === "notifications" && "Notifications"}
-            {activeSection === "change-password" && "Change Password"}
-            {activeSection === "privacy-setting" && "Privacy Setting"}
-          </h1>
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Button variant="ghost" size="sm" onClick={() => router.push("/profile")} className="hidden md:flex">
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <h1 className="text-2xl font-bold">
+              {activeSection === "edit-profile" && "Edit Profile"}
+              {activeSection === "notifications" && "Notifications"}
+              {activeSection === "change-password" && "Change Password"}
+              {activeSection === "privacy-setting" && "Privacy Setting"}
+            </h1>
+          </div>
         </div>
 
         {activeSection === "edit-profile" && renderEditProfile()}
@@ -609,6 +640,14 @@ export default function EditProfileContent() {
         {activeSection === "change-password" && renderChangePassword()}
         {activeSection === "privacy-setting" && renderPrivacySettings()}
       </div>
+
+      {/* Overlay when settings is open - Only on mobile */}
+      {isSettingsOpen && (
+        <div 
+          className="md:hidden fixed inset-0 bg-black/20 z-40"
+          onClick={() => setIsSettingsOpen(false)}
+        />
+      )}
     </div>
   )
 }

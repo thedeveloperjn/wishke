@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { ArrowLeft, Heart, MessageCircle, Share2, Volume2, VolumeX, Play } from "lucide-react"
+import { PaperPlaneTiltIcon } from "@phosphor-icons/react/dist/ssr"
 
 interface ReelData {
   id: number
@@ -163,39 +164,16 @@ export default function DynamicReels({ reels }: { reels: ReelData[] }) {
     return num.toString()
   }
 
+  const handleComment = (reelId: number) => {
+    // Implementation of handleComment function
+  }
+
+  const handleShare = (reelId: number) => {
+    // Implementation of handleShare function
+  }
+
   return (
     <div className="relative min-h-screen">
-      {/* Thumbnail grid */}
-      <div className="grid grid-cols-3 bg-white rounded-[12px] gap-4 p-4">
-        {reels.map((reel) => (
-          <div
-            key={reel.id}
-            className="relative aspect-[4/6] cursor-pointer rounded-lg overflow-hidden"
-            onClick={() => setSelectedReel(reel)}
-          >
-            <Image
-              src={reel.thumbnailUrl}
-              alt={reel.caption}
-              fill
-              className="object-cover"
-            />
-            <div className="absolute flex bottom-0 left-0 gap-3 items-center right-0 pb-3 px-2 bg-gradient-to-t from-black/60 to-transparent">
-              <Image
-                src={reel.user.image}
-                alt={reel.user.name}
-                height={30}
-                width={30}
-                className="h-[35px] w-[35px] rounded-full object-cover"
-              />
-              <div className="flex flex-col">
-                <p className="text-white text-md leading-[16px]">{reel.user.name}</p>
-                <p className="text-gray-300 text-xs">{reel.user.id}</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
       {/* Modal for selected reel */}
       {selectedReel && (
         <div className="fixed inset-0 z-[60] flex justify-center items-center bg-black/90 backdrop-blur-[15px]">
@@ -204,19 +182,19 @@ export default function DynamicReels({ reels }: { reels: ReelData[] }) {
           </div>
           <button
             onClick={() => setSelectedReel(null)}
-            className="absolute top-6 left-[32%] text-white bg-[#ffffff]/10 p-2 rounded-full border-none"
+            className="absolute top-4 md:top-6 left-4 md:left-[32%] z-[100] text-white bg-[#ffffff]/10 p-2 rounded-full border-none"
           >
             <ArrowLeft className="h-6 w-6" />
           </button>
           <button
-            className="absolute top-4 right-4 text-white bg-transparent border-none"
+            className="absolute top-4 right-4 z-[100] text-white bg-transparent border-none"
             onClick={toggleMute}
           >
             {muted ? <VolumeX className="h-6 w-6" /> : <Volume2 className="h-6 w-6" />}
           </button>
           <div
             ref={containerRef}
-            className="h-full w-full max-w-[420px] overflow-y-auto snap-y snap-mandatory no-scrollbar"
+            className="h-full w-full relative z-[99] sm:absolute max-w-[420px] overflow-y-auto snap-y snap-mandatory no-scrollbar"
           >
             {getOrderedReels().map((reel) => (
               <div
@@ -233,6 +211,7 @@ export default function DynamicReels({ reels }: { reels: ReelData[] }) {
                       playsInline
                       onClick={() => togglePause(reel.id)}
                     />
+                    {/* Play/pause overlay */}
                     {pausedVideos[reel.id] && (
                       <div className="absolute inset-0 flex items-center justify-center">
                         <button
@@ -243,6 +222,7 @@ export default function DynamicReels({ reels }: { reels: ReelData[] }) {
                         </button>
                       </div>
                     )}
+                    {/* User info and caption */}
                     <div className="absolute bottom-0 left-0 right-0 p-4 pb-8 bg-gradient-to-t from-black/80 to-transparent">
                       <div className="flex items-center mb-2">
                         <div className="relative h-10 w-10 overflow-hidden rounded-full mr-2">
@@ -265,29 +245,76 @@ export default function DynamicReels({ reels }: { reels: ReelData[] }) {
                         <button className="text-gray-300 ml-1">See More</button>
                       </p>
                     </div>
+
+                    {/* Interaction buttons - always visible */}
+                    <div className="absolute right-4 bottom-[18%] flex flex-col gap-6 items-center">
+                      <button 
+                        className="flex flex-col items-center group" 
+                        onClick={() => toggleLike(reel.id)}
+                      >
+                        <Heart 
+                          className={`h-7 w-7 transition-all duration-300 ${
+                            liked[reel.id] 
+                              ? "fill-red-500 text-red-500 scale-110" 
+                              : "text-white group-hover:scale-110"
+                          }`} 
+                        />
+                        <span className="text-white text-xs mt-1">{formatNumber(reel.likes + (liked[reel.id] ? 1 : 0))}</span>
+                      </button>
+                      <button 
+                        className="flex flex-col items-center group"
+                        onClick={() => handleComment(reel.id)}
+                      >
+                        <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform duration-300" />
+                        <span className="text-white text-xs mt-1">{formatNumber(reel.comments)}</span>
+                      </button>
+                      <button 
+                        className="flex flex-col items-center group"
+                        onClick={() => handleShare(reel.id)}
+                      >
+                        <PaperPlaneTiltIcon className="h-7 w-7 text-white group-hover:scale-110 transition-transform duration-300" />
+                        <span className="text-white text-xs mt-1">{formatNumber(reel.shares)}</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
-                {activeReelId === reel.id && (
-                  <div className="absolute right-[33%] bottom-20 flex flex-col gap-6 items-center">
-                    <button className="flex flex-col items-center" onClick={() => toggleLike(reel.id)}>
-                      <Heart className={`h-7 w-7 ${liked[reel.id] ? "fill-red-500 text-red-500" : "text-white"}`} />
-                      <span className="text-white text-xs mt-1">{formatNumber(reel.likes)}</span>
-                    </button>
-                    <button className="flex flex-col items-center">
-                      <MessageCircle className="h-7 w-7 text-white" />
-                      <span className="text-white text-xs mt-1">{formatNumber(reel.comments)}</span>
-                    </button>
-                    <button className="flex flex-col items-center">
-                      <Share2 className="h-7 w-7 text-white" />
-                      <span className="text-white text-xs mt-1">{formatNumber(reel.shares)}</span>
-                    </button>
-                  </div>
-                )}
               </div>
             ))}
           </div>
         </div>
       )}
+
+      {/* Thumbnail grid */}
+      <div className="grid grid-cols-3 sm:grid-cols-4 sm:p-4 sm:gap-3 bg-white rounded-[12px]">
+        {reels.map((reel) => (
+          <div
+            key={reel.id}
+            className="relative aspect-square sm:aspect-[4/6] cursor-pointer overflow-hidden"
+            onClick={() => setSelectedReel(reel)}
+          >
+            <Image
+              src={reel.thumbnailUrl}
+              alt={reel.caption}
+              fill
+              className="object-cover"
+            />
+            <div className="absolute flex bottom-0 left-0 gap-3 items-center right-0 pb-3 px-2 bg-gradient-to-t from-black/60 to-transparent">
+              {/* <div className="relative h-8 w-8 rounded-full overflow-hidden">
+                <Image
+                  src={reel.user.image}
+                  alt={reel.user.name}
+                  fill
+                  className="object-cover"
+                />
+              </div> */}
+              <div className="flex flex-col">
+                {/* <p className="text-white text-sm leading-[16px]">{reel.user.name}</p> */}
+                <p className="text-gray-100 text-xs gap-2 flex"><Heart size={16}/> {formatNumber(reel.likes)} likes</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }

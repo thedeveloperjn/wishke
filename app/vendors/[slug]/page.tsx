@@ -12,7 +12,7 @@ export default function VendorDetailPage() {
   const [activeSection, setActiveSection] = useState("vendors")
 
   return (
-    <div className="max-w-[74%]">
+    <div className="w-full md:max-w-[74%]">
           <VendorDetailContent vendorId={vendorId} />
         </div>
      

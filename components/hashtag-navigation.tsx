@@ -42,7 +42,7 @@ export default function HashtagNavigation({ selectedHashtag, onHashtagSelect }: 
         className={cn(
           "whitespace-nowrap text-sm font-medium px-3 !py-6 rounded-none  flex-shrink-0",
           selectedHashtag === hashtag
-            ? "border-b-[2px] border-[#8E33FF] text-[#8E33FF]"
+            ? "border-b-[2px] border-[#8E33FF]  text-[#8E33FF]"
             : "text-[#909EAB] hover:text-gray-800 hover:bg-transparent ",
         )}
       >

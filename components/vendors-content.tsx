@@ -239,14 +239,14 @@ export default function VendorsContent() {
             className="outline-none border bg-transparent py-3 rounded-xl flex-1 px-10 text-gray-700 text-base"
           />
         </div>
-        <button onClick={() => setShowFilter(true)} className="text-gray-600 gap-2 hover:bg-[#EFF8F4] hover:text-[#01A76F] py-3 px-2 rounded-lg text-sm flex items-center ">
+        <button onClick={() => setShowFilter(true)} className="fixed bottom-0 left-0 w-[50%] shadow-t-lg shadow-none sm:w-auto flex justify-center z-[10] bg-white sm:relative text-gray-600 gap-2 hover:bg-[#EFF8F4] hover:text-[#01A76F] border-r sm:border-0 py-3 px-2 sm:rounded-lg text-sm flex items-center ">
           Filter
           <FunnelSimple size={18} />
         </button>
         <button
           ref={sortButtonRef}
           onClick={() => setShowSort(true)}
-          className="text-gray-600 hover:bg-[#EFF8F4] hover:text-[#01A76F] py-3 px-2 rounded-lg text-sm flex items-center gap-2 sort-button"
+          className="text-gray-600 hover:bg-[#EFF8F4] fixed bottom-0 right-0 sm:relative text-center flex justify-center z-[10] bg-white  w-[50%] sm:w-auto  hover:text-[#01A76F] py-3 px-2 sm:rounded-lg text-sm flex items-center gap-2 sort-button"
         >
           Sort by
           <ArrowsDownUp size={18} />
@@ -297,10 +297,10 @@ export default function VendorsContent() {
 {vendors.map((vendor) => (
   <div
     key={vendor.id}
-    className="bg-white overflow-hidden cursor-pointer hover:shadow-lg transition-shadow"
+    className="bg-white overflow-hidden cursor-pointer w-[48%] sm:w-auto hover:shadow-lg transition-shadow"
     onClick={() => handleVendorClick(vendor.id)}
   >
-    <div className="relative w-full h-[230px] w-[230px]">
+    <div className="relative w-full aspect-square  sm:h-[230px] w-full sm:w-[230px]">
       <Image
         src={vendor.image || "/placeholder.svg"}
         alt={vendor.title}
@@ -308,10 +308,10 @@ export default function VendorsContent() {
         className="object-cover rounded-lg"
       />
     </div>
-    <div className="space-y-1 mt-2 w-[230px]">
+    <div className="space-y-1 mt-2 w-full sm:w-[230px]">
       <div className="flex items-center mb-1 gap-2">
-        <span className="font-semibold text-lg">{vendor.price}</span>
-        <span className="text-[#909EAB] line-through">{vendor.oldPrice}</span>
+        <span className="font-semibold text-[16px] sm:text-lg">{vendor.price}</span>
+        <span className="text-[#909EAB] text-[14px] sm:text-[16px] line-through">{vendor.oldPrice}</span>
       </div>
       <div className="font-medium text-[#454F5B] text-[14px] leading-[20px] font-lighter mb-1">
         {vendor.title}
@@ -320,7 +320,7 @@ export default function VendorsContent() {
     </div>
   </div>
 ))}
-</div>yy
+</div>
 
       {/* Filter Popup */}
      

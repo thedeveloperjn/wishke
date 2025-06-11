@@ -108,7 +108,7 @@ export default function ProfileContent() {
     switch (activeTab) {
       case "posts":
         return (
-          <div className="space-y-6">
+          <div className="space-y-2 sm:space-y-6">
              
              <RequirementPost
         title="Looking for 2/3 BHK Apartment"
@@ -271,7 +271,7 @@ export default function ProfileContent() {
       <div className="relative bg-white p-4 rounded-[12px]  pb-8">
     
 
-        <div className="h-48 bg-gradient-to-r from-[#C8FAD6] to-[#F2DEFF] rounded-lg relative overflow-hidden">
+        <div className="h-36 md:h-48 bg-gradient-to-r from-[#C8FAD6] to-[#F2DEFF] rounded-lg relative overflow-hidden">
         
           
         </div>
@@ -285,7 +285,7 @@ export default function ProfileContent() {
                 alt={profileData.name}
                 width={150}
                 height={150}
-                className="rounded-full h-[150px] w-[150px] object-cover  border-4 border-white"
+                className="rounded-full h-[110px] w-[110px] sm:h-[150px] sm:w-[150px] object-cover  border-4 border-white"
                 priority
               />
   
@@ -302,7 +302,7 @@ export default function ProfileContent() {
               </div>
               <Button
             onClick={handleEditProfile}
-            className="absolute top-20 right-4 gap-2 bg-white text-[16px] text-purple-600 hover:bg-white border-[2px] border-purple-500"
+            className="absolute top-[72px] sm:top-20 right-0 sm:right-4 gap-2 bg-white text-[16px] text-purple-600 hover:bg-white border-[2px] border-purple-500"
             size="lg"
             suppressHydrationWarning={true}
           >
@@ -337,7 +337,7 @@ export default function ProfileContent() {
       </div>
 
       {/* Content Tabs */}
-      <div className="border-b bg-white mb-6 px-4">
+      <div className="border-b bg-white mb-2 sm:mb-6 px-4">
         <div className="flex gap-8">
           {[
             { id: "posts", label: "Posts" },

@@ -59,12 +59,12 @@ export default function MainContent({ posts, selectedHashtag, onHashtagSelect }:
           borderTopRightRadius: isScrolled ? 0 : "0.5rem",
         }}
       >
-      <div className="bg-white rounded-lg mb-6">
+      <div className="bg-white rounded-lg mb-0 sm:mb-6">
         <HashtagNavigation selectedHashtag={selectedHashtag} onHashtagSelect={onHashtagSelect} />
       </div>
 
       {/* Posts */}
-      <div className="space-y-6">
+      <div className=" space-y-2 sm:space-y-6">
         {posts.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500">No posts found matching your criteria.</p>

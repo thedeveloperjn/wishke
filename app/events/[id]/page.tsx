@@ -8,7 +8,7 @@ import Image from "next/image"
 import {  MessageCircle, Share, ArrowLeft } from "lucide-react"
 import Link from "next/link"
 import UpcomingEvents from "@/components/upcoming-events"
-import {Heart, BookmarkSimple ,CalendarDots , MapPinIcon, CalendarDot} from "@phosphor-icons/react"
+import {Heart, BookmarkSimple ,CalendarDots , MapPinIcon, CalendarDot, ArrowsLeftRight} from "@phosphor-icons/react"
 import { ShareFat } from "@phosphor-icons/react"
 import { ChatCircle } from "@phosphor-icons/react"
 import { PaperPlaneTilt } from "@phosphor-icons/react"
@@ -126,11 +126,19 @@ import { PaperPlaneTilt } from "@phosphor-icons/react"
   export default function EventDetailPage() {
     const [activeSection, setActiveSection] = useState("events")
     const [liked, setLiked] = useState(false)
+    const [likesCount, setLikesCount] = useState(0)
+    const [shareout, setShareout] = useState(0)
+    const [share, setShare] = useState(0)
+    const [comments, setComments] = useState(0)
+    const [bookmarked, setBookmarked] = useState(false)
     const params = useParams()
     const eventId = Number.parseInt(params.id as string)
     const event = sampleEvents.find((item) => item.id === eventId)
   
-    const toggleLike = () => setLiked(!liked)
+    const handleLike = () => {
+      setLiked(!liked)
+      setLikesCount(prev => liked ? prev - 1 : prev + 1)
+    }
 
     if (!event) {
       return <div>Event not found</div>
@@ -170,7 +178,8 @@ import { PaperPlaneTilt } from "@phosphor-icons/react"
             <div className="p-4 pb-0">
               <h1 className="text-[20px] font-bold text-gray-900 mb-2">{event.title}</h1>
 
-              <div className="flex text-[16px] items-center gap-2 text-gray-900 mb-2">
+              <div className="flex text-[16px] items-center gap-2 text-gray-700 mb-2">
+                <CalendarDots size={20} />
               June 20–22, 2025 (11:00 AM – 7:00 PM)
               </div>
 
@@ -182,51 +191,65 @@ import { PaperPlaneTilt } from "@phosphor-icons/react"
 
             {/* Event image */}
             <div className="px-4">
-              <div className="relative h-[400px] w-full rounded-lg overflow-hidden">
+              <div className="relative h-[280px] sm:h-[400px] w-full rounded-lg overflow-hidden">
                 <Image src={event.image || "/placeholder.svg"} alt={event.title} fill className="object-cover" />
               </div>
             </div>
 
             {/* Event description */}
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
               <div className="prose max-w-none mb-6">
                 <p className="text-gray-700 leading-relaxed whitespace-pre-line">{event.fullDescription}</p>
               </div>
 
-             <div className="flex items-center justify-between   border-t pt-4">
-            <div className="flex items-center gap-6">
-              <button
-                onClick={toggleLike}
-                className={`flex items-center gap-2 ${liked ? "text-red-500" : "text-gray-500"}`}
-              >
-                <Heart size={20} weight={liked ? "fill" : "regular"} />
-                <span className="text-sm">{liked ? event.attendees + 1 : event.attendees} Likes</span>
-              </button>
+              <div className="         flex items-center justify-between border-t pt-4 no-post-click">
+        <div className="flex items-center gap-4 sm:gap-6">
+          <button
+            onClick={handleLike}
+            className={`flex items-center gap-2 ${liked ? "text-red-500" : "text-gray-500"}`}
+          >
+            <Heart size={20} weight={liked ? "fill" : "regular"} />
+            <span className="text-sm flex gap-2">{likesCount} <span className="hidden sm:block">Likes</span></span>
+          </button>
 
-              <button className="flex items-center gap-2 text-gray-500">
-                <ChatCircle size={20} />
-                <span className="text-sm">{event.attendees} Comments</span>
-              </button>
+          <button className="flex items-center gap-2 text-gray-500">
+            <ChatCircle size={20} />
+            <span className="text-sm flex gap-2">{comments}<span className="hidden sm:block">Comments</span></span>
+          </button>
 
-              <button className="flex items-center gap-2 text-gray-500">
-                <PaperPlaneTilt size={20} />
-                <span className="text-sm">Message</span>
-              </button>
+          <button className="block sm:hidden flex items-center gap-2 text-gray-500">
+            <ArrowsLeftRight size={20} />
+            <span className="text-sm flex gap-2">{share} <span className="hidden sm:block">Message</span></span>
+          </button>
+          <button className="flex items-center gap-2 text-gray-500">
+            <PaperPlaneTilt size={20} />
+            <span className="text-sm flex gap-2">{share} <span className="hidden sm:block">Message</span></span>
+          </button>
 
-              <button className="flex items-center gap-2 text-gray-500">
-                < ShareFat  size={20} />
-                <span className="text-sm">Share</span>
-              </button>
-            </div>
+          <button className="hidden sm:flex items-center gap-2 text-gray-500">
+            <ShareFat size={20} />
+            <span className="text-sm flex gap-2">{shareout}<span className="hidden sm:block">Share</span></span>
+          </button>
+        </div>
 
-            <button className="text-gray-500">
-              <BookmarkSimple   size={20} />
-            </button>
-          </div>
+        <button 
+          className="hidden sm:block text-gray-500"
+          onClick={(e) => {
+            e.stopPropagation()
+            setBookmarked(!bookmarked)
+          }}
+        >
+          <BookmarkSimple size={20} weight={bookmarked ? "fill" : "regular"} />
+        </button>
+        <button className="block sm:hidden flex items-center gap-2 text-gray-500">
+            <ShareFat size={20} />
+            <span className="text-sm"><span className="hidden sm:block">Share</span></span>
+          </button>
+      </div>
             </div>
           </article>
           </div>
-          <div className="my-6">
+          <div className="mt-2 sm:my-6">
           <UpcomingEvents events={sampleEvents} />
           </div>
           </main>

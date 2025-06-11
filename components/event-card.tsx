@@ -24,14 +24,14 @@ interface EventCardProps {
 
 export default function EventCard({ event }: EventCardProps) {
   return (
-    <Card className="bg-white  overflow-hidden  transition-shadow border rounded-[8px]  ">
+    <Card className="bg-white  max-w-[320px] sm:max-w-full overflow-hidden transition-shadow border rounded-[8px]">
       <div className="relative">
         <Image
           src={event.image || "/placeholder.svg"}
           alt={event.title}
           width={400}
           height={240}
-          className="w-full h-60 object-cover"
+          className="w-full h-46 sm:h-60 object-cover"
           crossOrigin="anonymous"
         />
         <div className="absolute top-4 left-4">
@@ -42,7 +42,7 @@ export default function EventCard({ event }: EventCardProps) {
         </div>
       </div>
 
-      <div className="p-6">
+      <div className="p-4 sm:p-6">
         {/* Date and Time */}
         <div className="flex items-center gap-2 text-gray-500 mb-3">
           <CalendarDots className="w-4 h-4" />

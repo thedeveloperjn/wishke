@@ -47,6 +47,11 @@ import {
   Warehouse,
   PhoneCall,
   ChatTeardropText,
+  DotsThreeVertical,
+  PencilSimpleLine,
+  EyeSlash,
+  Trash,
+  ArrowsLeftRight,
 } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
 
@@ -58,7 +63,11 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
   const router = useRouter()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [liked, setLiked] = useState(false)
+  const [bookmarked, setBookmarked] = useState(false)
+  const [likesCount, setLikesCount] = useState(1000)
   const [activeTab, setActiveTab] = useState("Description")
+  const [showDropdown, setShowDropdown] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
 
   // Refs for scroll sections
   const descriptionRef = useRef<HTMLDivElement>(null)
@@ -176,22 +185,87 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
     }
   }, [])
 
-  const toggleLike = () => {
+  const handleLike = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (liked) {
+      setLikesCount(likesCount - 1)
+    } else {
+      setLikesCount(likesCount + 1)
+    }
     setLiked(!liked)
   }
+
+  const toggleDropdown = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setShowDropdown(!showDropdown)
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false)
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   return (
     <div className="min-w-[51%] xl:max-w-[51%] w-full h-full bg-white rounded-lg overflow-hidden">
       <div ref={contentRef} className="h-[calc(100vh-96px)] overflow-y-auto no-scrollbar">
         <div className="p-6 pt-0">
           {/* Header */}
-          <button
-            onClick={() => router.back()}
-            className="sticky top-0 py-4 flex items-center w-full bg-white z-[5] text-[20px] font-semibold gap-2 text-gray-900 hover:text-gray-900"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Requirement Detail
-          </button>
+          <div className="sticky top-0 py-4 flex items-center justify-between w-full bg-white z-[5]">
+            <button
+              onClick={() => router.back()}
+              className="flex items-center text-[20px] font-semibold gap-2 text-gray-900 hover:text-gray-900"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Requirement Detail
+            </button>
+            <div className="relative dropdown-container flex" ref={dropdownRef}>
+              <button 
+                className="text-muted-foreground hover:text-foreground"
+                onClick={toggleDropdown}
+              >
+                <DotsThreeVertical className="h-10 w-10 hover:bg-gray-100 p-2 rounded-[6px]" />
+              </button>
+              {showDropdown && (
+                <div className="absolute right-0 mt-2 w-56 rounded-[8px] bg-white shadow-lg z-10">
+                  <div className="py-1 px-4">
+                    <button 
+                      className="block w-full flex gap-3 py-3 text-[16px] text-gray-500 hover:text-gray-700 text-left"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <ArrowsLeftRight size={22}/> Matchings
+                    </button>
+                    <button 
+                      className="block w-full flex gap-3 py-3 text-[16px] text-gray-500 hover:text-gray-700 text-left"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <PencilSimpleLine size={22}/> Edit
+                    </button>
+                    <button 
+                      className="block w-full flex gap-3 py-3 text-[16px] text-gray-500 hover:text-gray-700 text-left"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <EyeSlash size={22} /> Hide Post
+                    </button>
+                    <button 
+                      className="block w-full flex gap-3 py-3 text-[16px] text-red-500 border-t hover:text-red-500 text-left"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Trash size={22} /> Delete Post
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Project Title and Price */}
           <div className="mb-6 mt-4 flex justify-between">
             <div>
@@ -205,35 +279,52 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-between mb-6 pb-4 border-b">
-            <div className="flex items-center gap-6">
+          <div className="flex items-center justify-between border-t pt-4">
+            <div className="flex items-center gap-4 sm:gap-6">
               <button
-                onClick={toggleLike}
+                onClick={handleLike}
                 className={`flex items-center gap-2 ${liked ? "text-red-500" : "text-gray-500"}`}
               >
                 <Heart size={20} weight={liked ? "fill" : "regular"} />
-                <span className="text-sm">{liked ? project.likes + 1 : project.likes} Likes</span>
+                <span className="text-sm flex gap-2">{likesCount} <span className="hidden sm:block">Likes</span></span>
               </button>
 
               <button className="flex items-center gap-2 text-gray-500">
                 <ChatCircle size={20} />
-                <span className="text-sm">{project.comments} Comments</span>
+                <span className="text-sm flex gap-2">{project.comments} <span className="hidden sm:block">Comments</span></span>
+              </button>
+
+              <button className="block sm:hidden flex items-center gap-2 text-gray-500">
+                <ArrowsLeftRight size={20} />
+                <span className="text-sm flex gap-2">210 <span className="hidden sm:block">Message</span></span>
               </button>
 
               <button className="flex items-center gap-2 text-gray-500">
                 <PaperPlaneTilt size={20} />
-                <span className="text-sm">Message</span>
+                <span className="text-sm flex gap-2">210 <span className="hidden sm:block">Message</span></span>
               </button>
 
-              <button className="flex items-center gap-2 text-gray-500">
+              <button className="hidden sm:flex items-center gap-2 text-gray-500">
                 <ShareFat size={20} />
-                <span className="text-sm">Share</span>
+                <span className="text-sm flex gap-2">120 <span className="hidden sm:block">Share</span></span>
               </button>
             </div>
 
-            <button className="text-gray-500">
-              <BookmarkSimple size={20} />
-            </button>
+            <div className="flex items-center gap-4">
+              <button 
+                className="hidden sm:block text-gray-500"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setBookmarked(!bookmarked)
+                }}
+              >
+                <BookmarkSimple size={20} weight={bookmarked ? "fill" : "regular"} />
+              </button>
+              <button className="block sm:hidden flex items-center gap-2 text-gray-500">
+                <ShareFat size={20} />
+                <span className="text-sm"><span className="hidden sm:block">Share</span></span>
+              </button>
+            </div>
           </div>
 
           {/* Sticky Tabs */}

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { FunnelSimple } from "@phosphor-icons/react/dist/ssr"
 import { Smile, Send, Filter } from "lucide-react"
 import StorySection from "@/components/story-section"
 import CategoryTabs from "@/components/category-tabs"
@@ -32,7 +33,7 @@ export default function MainContent() {
   return (
     <div
       ref={contentRef}
-      className={`flex-1 overflow-y-auto  h-[calc(85vh)] pb-6 no-scrollbar  transition-all duration-200 ${
+      className={`flex-1 overflow-y-auto h-[calc(93vh)]  sm:h-[calc(85vh)] pb-6 no-scrollbar  transition-all duration-200 ${
         isScrolled ? "rounded-b-lg" : "rounded-lg"
       }`}
       style={{
@@ -49,49 +50,62 @@ export default function MainContent() {
        
        <AddPost />
 
-        <div className="border-b bg-white">
-          <div className="flex items-center justify-between">
-            <div className="flex w-[100%]">
-              <button 
-                className={` px-6 py-3 text-[16px] w-[33%] font-medium ${
-                  activeTab === "for-you" 
-                    ? "border-b-[2px] sm:border-b-[3px] border-gray-900 sm:border-purple-500 text-gray-900 sm:text-purple-500" 
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={() => setActiveTab("for-you")}
-              >
-                For You
-              </button>
-              <button 
-                className={` px-6 py-3 text-[16px] w-[34%] font-medium ${
-                  activeTab === "following" 
-                    ? "border-b-[2px] sm:border-b-[3px] border-gray-900 sm:border-purple-500 text-gray-900 sm:text-purple-500"  
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={() => setActiveTab("following")}
-              >
-                Following
-              </button>
-              <button 
-                className={` px-6 py-3 text-[16px] w-[33%] font-medium ${
-                  activeTab === "connect" 
-                    ? "border-b-[2px] sm:border-b-[3px] border-gray-900 sm:border-purple-500 text-gray-900 sm:text-purple-500" 
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                onClick={() => setActiveTab("connect")}
-              >
-                Connect
-              </button>
-            </div>
-            <button
-              className="flex items-center gap-2 rounded-md px-3 py-1 text-sm font-medium text-muted-foreground hover:bg-muted/50"
-              onClick={() => setShowFilter(true)}
-            >
-              <span>Filter</span>
-              <Filter className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
+       <div className="border-b bg-white relative">
+  <div className="flex items-center justify-between relative">
+    <div className="flex w-full relative">
+      <div
+        className={`absolute bottom-0 h-[2px] sm:h-[3px] bg-gray-900 sm:bg-purple-500 transition-all duration-300 ease-in-out`}
+        style={{
+          width: '33.33%',
+          transform:
+            activeTab === 'for-you'
+              ? 'translateX(0%)'
+              : activeTab === 'following'
+              ? 'translateX(100%)'
+              : 'translateX(200%)',
+        }}
+      />
+      <button
+        className={`px-6 py-3 text-[14px] sm:text-[16px] w-[33.33%] font-medium ${
+          activeTab === 'for-you'
+            ? 'text-gray-900 sm:text-purple-500'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        onClick={() => setActiveTab('for-you')}
+      >
+        For You
+      </button>
+      <button
+        className={`px-6 py-3 text-[14px] sm:text-[16px] w-[33.33%] font-medium ${
+          activeTab === 'following'
+            ? 'text-gray-900 sm:text-purple-500'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        onClick={() => setActiveTab('following')}
+      >
+        Following
+      </button>
+      <button
+        className={`px-6 py-3 text-[14px] sm:text-[16px] w-[33.33%] font-medium ${
+          activeTab === 'connect'
+            ? 'text-gray-900 sm:text-purple-500'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+        onClick={() => setActiveTab('connect')}
+      >
+        Connect
+      </button>
+    </div>
+    <button
+      className="flex items-center gap-2  border-l px-4  px-3 py-1 text-sm font-medium text-muted-foreground hover:bg-muted/50"
+      onClick={() => setShowFilter(true)}
+    >
+      <span className="hidden sm:block">Filter</span>
+      <FunnelSimple size={20}/>
+    </button>
+  </div>
+</div>
+
 
         <div className="mt-0 sm:mt-4">
           {activeTab === "for-you" && <ForYouPosts />}

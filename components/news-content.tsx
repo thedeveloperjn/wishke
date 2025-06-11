@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from "react";
 import NewsCard from "./news-card";
 import Link from "next/link";
 import { link } from "fs";
-
+import { MoreHorizontal } from  "lucide-react"
 
  interface NewsItem {
   id: number
@@ -114,7 +114,6 @@ const otherNews: NewsItem[] = [
     description: "Mumbai's Sunset Gathering is here: Over 128,000 Members are Uniting to Celebrate the Twilight Beauty.",
     image: "/news.png",
     source: "Times Now",
-    content: "Mumbai's Sunset Gathering is here: Over 128,000 Members are Uniting to Celebrate the Twilight Beauty.",
     author: "Times Now",
     content: `Real estate market shows promising growth with significant returns expected in the fourth quarter. Industry experts predict a bullish trend continuing into the next fiscal year.
 
@@ -131,7 +130,6 @@ const otherNews: NewsItem[] = [
     4. Infrastructure Development: Ongoing infrastructure projects are enhancing connectivity and increasing property values in previously underserved areas.
     
     Experts recommend conducting thorough due diligence before making investment decisions, considering factors such as location, developer credibility, and long-term growth potential.`,
-       
     authorImage: "/placeholder.svg?height=40&width=40",
     publishedAt: "3 hours ago",
     likes: 0,
@@ -144,7 +142,6 @@ const otherNews: NewsItem[] = [
     description: "Mystic Moonlight Gala in Mumbai: A Night of Stars, Gourmet Delights, and Mesmerizing Performances.",
     image: "/news.png",
     source: "Mint",
-    content: "Mystic Moonlight Gala in Mumbai: A Night of Stars, Gourmet Delights, and Mesmerizing Performances.",
     author: "Mint",
     content: `Real estate market shows promising growth with significant returns expected in the fourth quarter. Industry experts predict a bullish trend continuing into the next fiscal year.
 
@@ -161,7 +158,6 @@ const otherNews: NewsItem[] = [
     4. Infrastructure Development: Ongoing infrastructure projects are enhancing connectivity and increasing property values in previously underserved areas.
     
     Experts recommend conducting thorough due diligence before making investment decisions, considering factors such as location, developer credibility, and long-term growth potential.`,
-       
     authorImage: "/placeholder.svg?height=40&width=40",
     publishedAt: "4 hours ago",
     likes: 0,
@@ -193,24 +189,43 @@ export default function NewsContent() {
         borderTopRightRadius: isScrolled ? 0 : "0.5rem",
       }}
     >
-      <div className="bg-white rounded-[12px] p-4">
-        <h2  className="text-lg  border-b border-gray-200 pb-3 font-bold text-gray-900 mb-4">Hot News</h2>
-        <div className="flex gap-3 flex-wrap pb-2">
-        {hotNews.map((news) => (
-              <Link className="bg-white rounded-lg border  w-[49%] flex-shrink-0 overflow-hidden" key={news.id} href={`/news/${news.id}`}>
+      <div className="bg-white rounded-[12px] p-4 px-2 sm:p-4">
+        <h2 className="text-lg border-b border-gray-200 pb-3 font-bold text-gray-900 mb-4">Hot News</h2>
+        {/* Mobile scroll container */}
+        <div className="md:hidden">
+          <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
+            {hotNews.map((news) => (
+              <Link 
+                className="bg-white rounded-lg border flex-shrink-0 w-[300px] overflow-hidden" 
+                key={news.id} 
+                href={`/news/${news.id}`}
+              >
                 <NewsCard news={news} />
               </Link>
             ))}
+          </div>
+        </div>
+        {/* Desktop flex-wrap view */}
+        <div className="hidden md:flex flex-wrap gap-3">
+          {hotNews.map((news) => (
+            <Link 
+              className="bg-white rounded-lg border w-[calc(50%-6px)] overflow-hidden" 
+              key={news.id} 
+              href={`/news/${news.id}`}
+            >
+              <NewsCard news={news} />
+            </Link>
+          ))}
         </div>
       </div>
-      <div className="bg-white rounded-[12px] p-4 mt-6">
+      <div className="bg-white rounded-[12px] p-4 mt-2 sm:mt-6">
         <h2  className="text-lg  border-b border-gray-200 pb-3 font-bold text-gray-900 mb-4">Other News</h2>
         <div className="space-y-0">
           {hotNews.map((news, idx) => (
             <Link href={`/news/${news.id}`} key={news.id}>
             <div
               key={news.id}
-              className={`flex gap-3 items-start p-3   transition-colors ${idx !== otherNews.length - 1 ? " border-b border-gray-100" : ""}`}
+              className={`flex gap-3 items-start p-1 py-3 sm:p-3   transition-colors ${idx !== otherNews.length - 1 ? " border-b border-gray-100" : ""}`}
             >
               <img
                 src={news.image}
@@ -220,6 +235,15 @@ export default function NewsContent() {
               <div className="flex-1 min-w-0">
                 <h4 className="font-medium text-gray-900 text-[16px] line-clamp-1">{news.title}</h4>
                 <p className="text-[14px] text-gray-600 line-clamp-2">{news.description}</p>
+              </div>
+              <div>
+              <button 
+            className="text-muted-foreground hover:text-foreground no-post-click"
+            // onClick={toggleDropdown}
+          >
+            
+            <MoreHorizontal className="  h-8 w-8 sm:h-10 sm:w-10 text-green-600 hover:bg-gray-100 p-2 rounded-[6px]" />
+          </button>
               </div>
             </div>
             </Link>

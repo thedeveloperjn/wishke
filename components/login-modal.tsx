@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { X, Upload, ChevronDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { CaretCircleLeft, PencilSimpleLineIcon } from "@phosphor-icons/react"
+import { CaretCircleLeft, CaretLeft, PencilSimpleLineIcon } from "@phosphor-icons/react"
 
 interface LoginModalProps {
   isOpen: boolean
@@ -66,6 +66,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [showCountryDropdown, setShowCountryDropdown] = useState(false)
   const [otp, setOtp] = useState(["", "", "", ""])
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const [formData, setFormData] = useState({
     fullName: "",
     day: "16",
@@ -83,6 +84,15 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     userName: "",
     profilePicture: "",
   })
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640)
+    }
+    checkMobile()
+    window.addEventListener("resize", checkMobile)
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
 
   if (!isOpen) return null
 
@@ -218,7 +228,11 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   }
 
   const handleRegisterContinue = () => {
-    setCurrentStep(4)
+    setCurrentStep(isMobile ? 4 : 4)
+  }
+
+  const handlePasswordContinue = () => {
+    setCurrentStep(5)
   }
 
   const handleFinalSubmit = () => {
@@ -417,213 +431,365 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
   const renderStep3 = () => (
     <div className="sm:max-h-[85vh] sm:flex sm:items-start sm:justify-center shadow-xl overflow-y-auto">
-    <div className="modal-container w-[100vw] sm:w-[600px] bg-white shadow-xl rounded-t-[22px] sm:rounded-xl p-8 min-h-[100vh]  overflow-y-none no-scrollbar">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className="text-2xl font-semibold">Register</h2>
-          <p className="text-base text-gray-600 mt-2">Please Enter Your Personal Information</p>
+      <div className="modal-container w-[100vw] sm:w-[600px] bg-white shadow-xl rounded-t-[0] sm:rounded-xl sm:p-8 min-h-[100vh] overflow-y-none no-scrollbar">
+        <div className="p-6 sm:p-0 bg-[#F4F6F8] sm:bg-white flex items-center justify-between mb-6">
+          <button onClick={() => setCurrentStep(2)} className="block sm:hidden text-gray-400 hover:text-gray-600">
+            <CaretLeft className="h-6 w-6" />
+          </button>
+          <div className="block sm:hidden">
+            <h1 className="text-[18px] font-semibold">Personal Information</h1>
+          </div>
+          <p className="text-[16px] text-gray-500 font-semibold block sm:hidden">1/3</p>
+          <div className="hidden sm:block">
+            <h2 className="text-2xl font-semibold">Register</h2>
+            <p className="text-base text-gray-600 mt-2">Please Enter Your Personal Information</p>
+          </div>
+          <button onClick={onClose} className="hidden sm:block text-gray-400 hover:text-gray-600">
+            <X className="h-6 w-6" />
+          </button>
         </div>
-        <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-          <X className="h-6 w-6" />
-        </button>
+
+        <div className="p-8 pt-0 sm:p-0 space-y-6 pb-4">
+          <div>
+            <label className="block text-base text-sm font-medium mb-2">Full Name</label>
+            <Input
+              value={formData.fullName}
+              onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+              className="py-6 text-[16px] rounded-xl sm:rounded-full"
+            />
+          </div>
+
+          <div>
+            <label className="block text-base text-sm font-medium mb-2">Email Address</label>
+            <Input
+              type="email"
+              placeholder="Enter your email address"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              className="py-6 rounded-xl sm:rounded-full"
+            />
+          </div>
+
+          <div>
+            <label className="block text-base text-sm font-medium mb-2">Date of Birth</label>
+            <div className="flex sm:gap-3">
+              <select className="flex-1 p-3 border bg-white rounded-l-md sm:rounded-md text-base" value={formData.day}>
+                <option>16</option>
+              </select>
+              <select className="flex-1 p-3 border bg-white sm:rounded-md text-base" value={formData.month}>
+                <option>March</option>
+              </select>
+              <select className="flex-1 p-3 border bg-white rounded-r-md sm:rounded-md text-base" value={formData.year}>
+                <option>2001</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-base text-sm font-medium mb-2">Gender</label>
+            <div className="flex gap-3">
+              {["Male", "Female", "Other"].map((gender) => (
+                <button
+                  key={gender}
+                  className={`flex px-6 w-[110px] text-center py-2 bg-gray-100 rounded-full w-auto text-base ${
+                    formData.gender === gender ? "bg-green-50 text-green-400 sm:bg-green-500 sm:text-white " : ""
+                  }`}
+                  onClick={() => setFormData({ ...formData, gender })}
+                >
+                  {gender}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-base text-sm font-medium mb-2">Country</label>
+            <select className="w-full p-3 border rounded-md text-base" value={formData.country}>
+              <option>🇮🇳 India</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-base text-sm font-medium mb-2">City</label>
+            <Input
+              value={formData.city}
+              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+              className="py-6 rounded-xl sm:rounded-full"
+            />
+          </div>
+
+          <div>
+            <label className="block text-base text-sm font-medium mb-2">Choose Your Locality</label>
+            <Input
+              placeholder="Explore nearby properties and posts"
+              value={formData.locality}
+              onChange={(e) => setFormData({ ...formData, locality: e.target.value })}
+              className="py-6 rounded-xl sm:rounded-full"
+            />
+          </div>
+
+          {!isMobile && (
+            <div className="pt-6 border-t">
+              <h3 className="text-xl font-medium mb-6">Create Your Password</h3>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-base text-sm font-medium mb-2">Password</label>
+                  <Input
+                    type="password"
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    className="py-6 rounded-xl sm:rounded-full"
+                  />
+                </div>
+                <div>
+                  <label className="block text-base text-sm font-medium mb-2">Confirm Password</label>
+                  <div className="relative">
+                    <Input
+                      type="password"
+                      placeholder="••••••••"
+                      value={formData.confirmPassword}
+                      onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                      className="py-6 rounded-xl sm:rounded-full"
+                    />
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 w-3 h-3 bg-green-500 rounded-full"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <Button
+            className="w-full bg-[#02968A] rounded-xl sm:rounded-full text-white py-6 text-base mt-8"
+            onClick={handleRegisterContinue}
+          >
+            Continue
+          </Button>
+        </div>
       </div>
+    </div>
+  )
 
-      <div className="space-y-6 pb-4">
-        <div>
-          <label className="block text-base text-sm font-medium mb-2">Full Name</label>
-          <Input
-            value={formData.fullName}
-            onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-            className="py-6 text-[16px] rounded-xl sm:rounded-full"
-          />
-        </div>
-
-        <div>
-          <label className="block text-base text-sm font-medium mb-2">Date of Birth</label>
-          <div className="flex gap-3">
-            <select className="flex-1 p-3 border rounded-md text-base" value={formData.day}>
-              <option>16</option>
-            </select>
-            <select className="flex-1 p-3 border rounded-md text-base" value={formData.month}>
-              <option>March</option>
-            </select>
-            <select className="flex-1 p-3 border rounded-md text-base" value={formData.year}>
-              <option>2001</option>
-            </select>
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-base text-sm font-medium mb-2">Email Address</label>
-          <Input
-            type="email"
-            placeholder="Enter your email address"
-            value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="py-6 rounded-xl sm:rounded-full"
-          />
-        </div>
-
-        <div>
-          <label className="block text-base text-sm font-medium mb-2">Gender</label>
-          <div className="flex gap-3">
-            {["Male", "Female", "Other"].map((gender) => (
-              <button
-                key={gender}
-                className={`flex px-6 w-[110px] text-center py-2 bg-gray-100 rounded-full w-auto text-base ${
-                  formData.gender === gender ? "bg-gray-200" : ""
-                }`}
-                onClick={() => setFormData({ ...formData, gender })}
-              >
-                {gender}
+  const renderStep4 = () => {
+    if (!isMobile) {
+      return (
+        <div className="sm:max-h-[85vh] sm:flex sm:items-start sm:justify-center shadow-xl overflow-y-auto">
+          <div className="modal-container w-[100vw] sm:w-[600px] bg-white shadow-xl rounded-t-[22px] sm:rounded-xl p-8 min-h-[100vh] overflow-y-none no-scrollbar">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-xl font-semibold">Account Setup</h2>
+                <p className="text-sm text-gray-600 mt-2">Setup Your Account Information</p>
+              </div>
+              <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+                <X className="h-5 w-5" />
               </button>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-base text-sm font-medium mb-2">Country</label>
-          <select className="w-full p-3 border rounded-md text-base" value={formData.country}>
-            <option>🇮🇳 India</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-base text-sm font-medium mb-2">City</label>
-          <Input
-            value={formData.city}
-            onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-            className="py-6 rounded-xl sm:rounded-full"
-          />
-        </div>
-
-        <div>
-          <label className="block text-base text-sm font-medium mb-2">Choose Your Locality</label>
-          <Input
-            placeholder="Explore nearby properties and posts"
-            value={formData.locality}
-            onChange={(e) => setFormData({ ...formData, locality: e.target.value })}
-            className="py-6 rounded-xl sm:rounded-full"
-          />
-        </div>
-
-        <div className="pt-6 border-t">
-          <h3 className="text-xl font-medium mb-6">Create Your Password</h3>
-
-          <div className="space-y-4">
-            <div>
-              <label className="block text-base text-sm font-medium mb-2">Password</label>
-              <Input
-                type="password"
-                placeholder="••••••••"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                className="py-6 rounded-xl sm:rounded-full"
-              />
             </div>
 
-            <div>
-              <label className="block text-base text-sm font-medium mb-2">Confirm Password</label>
-              <div className="relative">
+            <div className="space-y-6">
+              <div className="text-center">
+                <div
+                  style={{ outline: "2px dashed #d4d4d4", outlineOffset: "8px" }}
+                  className="w-[122px] h-[122px] mx-auto my-10 bg-gray-100 rounded-full flex items-center justify-center mb-6"
+                >
+                  <Upload className="h-8 w-8 text-gray-400" />
+                </div>
+                <p className="text-base text-[16px] font-medium mb-1">Update Profile Image</p>
+                <p className="text-[14px] text-gray-400">PNG, JPG or JPEG</p>
+              </div>
+
+              <div>
+                <p className="text-base font-medium mb-2">Account Type</p>
+                <div className="flex gap-3">
+                  <button
+                    className="flex-1 py-2 px-2 max-w-[122px] rounded-full text-[16px] bg-[#42C86B] text-white"
+                    onClick={() => setFormData({ ...formData, accountType: "Individual" })}
+                  >
+                    Individual
+                  </button>
+                  <button
+                    className="flex-1 py-2 max-w-[122px] px-2 bg-gray-100 text-gray-600 rounded-full text-[16px]"
+                    onClick={() => setFormData({ ...formData, accountType: "Business" })}
+                  >
+                    Business
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-base text-sm font-medium mb-2">Account Name</p>
                 <Input
-                  type="password"
-                  placeholder="••••••••"
-                  value={formData.confirmPassword}
-                  onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
-                  className="py-6 rounded-xl sm:rounded-full"
+                  value={formData.accountName}
+                  onChange={(e) => setFormData({ ...formData, accountName: e.target.value })}
+                  className="py-6 text-[16px] rounded-xl sm:rounded-full"
                 />
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 w-3 h-3 bg-green-500 rounded-full"></div>
+              </div>
+
+              <div>
+                <p className="text-base text-[sm] font-medium mb-2">User Name</p>
+                <Input
+                  value={formData.userName}
+                  onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
+                  className="py-6 text-[16px] rounded-xl sm:rounded-full"
+                />
+              </div>
+
+              <Button
+                className="w-full bg-[#02968A] rounded-xl sm:rounded-full text-white py-6 text-[16px]"
+                onClick={handleFinalSubmit}
+              >
+                Submit
+              </Button>
+
+              <div className="flex items-center justify-center">
+                <button
+                  className="text-[16px] text-[#656565] flex items-center justify-center gap-3"
+                  onClick={() => setCurrentStep(3)}
+                >
+                  <CaretCircleLeft size={24} /> Back to Previous
+                </button>
               </div>
             </div>
           </div>
         </div>
+      )
+    } else {
+      return (
+        <div className="max-h-screen sm:max-h-[85vh] sm:flex sm:items-start sm:justify-center shadow-xl overflow-y-auto">
+          <div className="modal-container w-[100vw] sm:w-[600px] bg-white shadow-xl rounded-t-[0] sm:rounded-xl sm:p-8 min-h-[100vh] overflow-y-none no-scrollbar">
+            <div className="relative p-6 sm:p-0 bg-[#F4F6F8] sm:bg-white flex justify-between mb-6">
+              <button onClick={() => setCurrentStep(3)} className="block sm:hidden text-gray-400 hover:text-gray-600">
+                <CaretLeft className="h-6 w-6" />
+              </button>
+              <div className="block sm:hidden">
+                <h1 className="text-[18px] font-semibold">Create Password</h1>
+              </div>
+              <p className="text-[16px] text-gray-500 font-semibold block sm:hidden">2/3</p>
+            </div>
 
-        <Button
-          className="w-full bg-[#02968A] rounded-xl sm:rounded-full text-white py-6 text-base mt-8"
-          onClick={handleRegisterContinue}
-        >
-          Continue
-        </Button>
-      </div>
-    </div>
-    </div>
-  )
+            <div className="p-8 pt-0 sm:pt-0 space-y-6 pb-4">
+              <div>
+                <label className="block text-base text-sm font-medium mb-2">Password</label>
+                <Input
+                  type="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="py-6 rounded-xl sm:rounded-full"
+                />
+              </div>
+              <div>
+                <label className="block text-base text-sm font-medium mb-2">Confirm Password</label>
+                <div className="relative">
+                  <Input
+                    type="password"
+                    placeholder="••••••••"
+                    value={formData.confirmPassword}
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                    className="py-6 rounded-xl sm:rounded-full"
+                  />
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2 w-3 h-3 bg-green-500 rounded-full"></div>
+                </div>
+              </div>
 
-  const renderStep4 = () => (
-    <div className="modal-container w-[100vw] flex flex-col justify-center sm:w-[510px] bg-white shadow-xl rounded-t-[22px] sm:rounded-xl pb-[55px] sm:pb-8 p-8">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h2 className="text-xl font-semibold">Account Setup</h2>
-          <p className="text-sm text-gray-600 mt-2">Setup Your Account Information</p>
-        </div>
-        <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-          <X className="h-5 w-5" />
-        </button>
-      </div>
+              <Button
+                className="w-full bg-[#02968A] rounded-xl sm:rounded-full text-white py-6 text-base mt-8"
+                onClick={handlePasswordContinue}
+              >
+                Continue
+              </Button>
 
-      <div className="space-y-6">
-        <div className="text-center">
-          <div
-            style={{ outline: "2px dashed #d4d4d4", outlineOffset: "8px" }}
-            className="w-[122px] h-[122px] mx-auto my-10 bg-gray-100 rounded-full flex items-center justify-center mb-6"
-          >
-            <Upload className="h-8 w-8 text-gray-400" />
+              <div className="flex items-center justify-center">
+                <p className="text-[14px] text-gray-400 text-center">The password you create here will help you log in to your profile later, if you wish to continue using this method.</p>
+              </div>
+            </div>
           </div>
-
-          <p className="text-base text-[16px] font-medium mb-1">Update Profile Image</p>
-          <p className="text-[14px] text-gray-400">PNG, JPG or JPEG</p>
         </div>
+      )
+    }
+  }
 
-        <div>
-          <p className="text-base font-medium mb-2">Account Type</p>
-          <div className="flex gap-3">
-            <button
-              className="flex-1 py-2 px-2 max-w-[122px] rounded-full text-[16px] bg-[#42C86B] text-white"
-              onClick={() => setFormData({ ...formData, accountType: "Individual" })}
-            >
-              Individual
-            </button>
-            <button
-              className="flex-1 py-2 max-w-[122px] px-2 bg-gray-100 text-gray-600 rounded-full text-[16px]"
-              onClick={() => setFormData({ ...formData, accountType: "Business" })}
-            >
-              Business
-            </button>
-          </div>
-        </div>
-
-        <div>
-          <p className="text-base text-sm font-medium mb-2">Account Name</p>
-          <Input
-            value={formData.accountName}
-            onChange={(e) => setFormData({ ...formData, accountName: e.target.value })}
-            className="py-6 text-[16px] rounded-xl sm:rounded-full"
-          />
-        </div>
-
-        <div>
-          <p className="text-base text-[sm] font-medium mb-2">User Name</p>
-          <Input
-            value={formData.userName}
-            onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
-            className="py-6 text-[16px] rounded-xl sm:rounded-full"
-          />
-        </div>
-
-        <Button
-          className="w-full bg-[#02968A] rounded-xl sm:rounded-full text-white py-6 text-[16px]"
-          onClick={handleFinalSubmit}
-        >
-          Submit
-        </Button>
-
-        <div className="flex items-center justify-center">
-          <button
-            className="text-[16px] text-[#656565] flex items-center justify-center gap-3"
-            onClick={() => setCurrentStep(3)}
-          >
-            <CaretCircleLeft size={24} /> Back to Previous
+  const renderStep5 = () => (
+    <div className="sm:max-h-[85vh] sm:flex sm:items-start sm:justify-center shadow-xl overflow-y-auto">
+      <div className="modal-container w-[100vw] sm:w-[600px] bg-white shadow-xl rounded-t-[0] sm:rounded-xl sm:p-8 min-h-[100vh] overflow-y-none no-scrollbar">
+        <div className="p-6 sm:p-0 bg-[#F4F6F8] sm:bg-white flex items-center justify-between mb-6">
+          <button onClick={() => setCurrentStep(4)} className="block sm:hidden text-gray-400 hover:text-gray-600">
+            <CaretLeft className="h-6 w-6" />
           </button>
+          <div className="block sm:hidden">
+            <h1 className="text-[18px] font-semibold">Account Setup</h1>
+          </div>
+          <p className="text-[16px] text-gray-500 font-semibold block sm:hidden">3/3</p>
+          <div className="hidden sm:block">
+            <h2 className="text-2xl font-semibold">Account Setup</h2>
+            <p className="text-base text-gray-600 mt-2">Set up your Account Information</p>
+          </div>
+          <button onClick={onClose} className="hidden sm:block text-gray-400 hover:text-gray-600">
+            <X className="h-6 w-6" />
+          </button>
+        </div>
+        <div className="p-8 space-y-6">
+          <div className="text-center">
+            <div
+              style={{ outline: "2px dashed #d4d4d4", outlineOffset: "8px" }}
+              className="w-[122px] h-[122px] mx-auto my-10 bg-gray-100 rounded-full flex items-center justify-center mb-6"
+            >
+              <Upload className="h-8 w-8 text-gray-400" />
+            </div>
+            <p className="text-base text-[16px] font-medium mb-1">Update Profile Image</p>
+            <p className="text-[14px] text-gray-400">PNG, JPG or JPEG</p>
+          </div>
+
+          <div>
+            <p className="text-base font-medium mb-2">Account Type</p>
+            <div className="flex gap-3">
+              <button
+                className="flex-1 py-2 px-2 max-w-[122px] rounded-full text-[16px] bg-green-50 text-green-400 sm:bg-green-500 sm:text-white "
+                onClick={() => setFormData({ ...formData, accountType: "Individual" })}
+              >
+                Individual
+              </button>
+              <button
+                className="flex-1 py-2 max-w-[122px] px-2 bg-gray-50 text-gray-600 rounded-full text-[16px]"
+                onClick={() => setFormData({ ...formData, accountType: "Business" })}
+              >
+                Business
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <p className="text-base text-sm font-medium mb-2">Account Name</p>
+            <Input
+              value={formData.accountName}
+              onChange={(e) => setFormData({ ...formData, accountName: e.target.value })}
+              className="py-6 text-[16px] rounded-xl sm:rounded-full"
+            />
+          </div>
+
+          <div>
+            <p className="text-base text-[sm] font-medium mb-2">User Name</p>
+            <Input
+              value={formData.userName}
+              onChange={(e) => setFormData({ ...formData, userName: e.target.value })}
+              className="py-6 text-[16px] rounded-xl sm:rounded-full"
+            />
+          </div>
+
+          <Button
+            className="w-full bg-[#02968A] rounded-xl sm:rounded-full text-white py-6 text-[16px]"
+            onClick={handleFinalSubmit}
+          >
+            Submit
+          </Button>
+
+          <div className="hidden sm:block flex items-center justify-center">
+            <button
+              className="text-[16px] text-[#656565] flex items-center justify-center gap-3"
+              onClick={() => setCurrentStep(4)}
+            >
+              <CaretCircleLeft size={24} /> Back to Previous
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -632,7 +798,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   return (
     <div
       className={`fixed inset-0 z-50 flex ${
-        currentStep === 3 ? "pt-[240px] sm:flex sm:items-center sm:justify-center  overflow-y-auto" : "items-end sm:items-center"
+        [3, 4, 5].includes(currentStep) ? " sm:flex sm:items-center sm:justify-center overflow-y-auto" : "items-end sm:items-center"
       } justify-center sm:p-4`}
     >
       <div
@@ -649,6 +815,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         {currentStep === 2 && renderStep2()}
         {currentStep === 3 && renderStep3()}
         {currentStep === 4 && renderStep4()}
+        {isMobile && currentStep === 5 && renderStep5()}
       </div>
       <div className="fixed inset-0 sm:bg-white/30 sm:backdrop-blur-[10px]" onClick={onClose} />
     </div>
@@ -660,11 +827,19 @@ declare global {
     google: {
       accounts: {
         id: {
-          initialize: (config: any) => void
-          prompt: (callback?: (notification: any) => void) => void
-          renderButton: (element: HTMLElement, config: any) => void
+          initialize: (config: {
+            client_id: string;
+            callback: (response: any) => void;
+            auto_select?: boolean;
+            cancel_on_tap_outside?: boolean;
+          }) => void;
+          prompt: (callback?: (notification: { isNotDisplayed: () => boolean; isSkippedMoment: () => boolean }) => void) => void;
+          renderButton: (element: HTMLElement | null, config: { theme: string; size: string; width: string }) => void;
         }
       }
     }
   }
 }
+
+
+

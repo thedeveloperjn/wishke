@@ -5,9 +5,9 @@ import { useParams } from "next/navigation"
 
 
 import Image from "next/image"
-import {  MessageCircle, Share, ArrowLeft } from "lucide-react"
+import {  MessageCircle, Share, ArrowLeft,MoreHorizontal, MoreVertical } from "lucide-react"
 import Link from "next/link"
-import {Heart, BookmarkSimple } from "@phosphor-icons/react"
+import {Heart, BookmarkSimple, ArrowsLeftRight } from "@phosphor-icons/react"
 import { ShareFat } from "@phosphor-icons/react"
 import { ChatCircle } from "@phosphor-icons/react"
 import { PaperPlaneTilt } from "@phosphor-icons/react"
@@ -182,11 +182,19 @@ const otherNews: NewsItem[] = [
 export default function NewsDetailPage() {
   const [activeSection, setActiveSection] = useState("news")
   const [liked, setLiked] = useState(false)
+  const [bookmarked, setBookmarked] = useState(false)
+  const [likesCount, setLikesCount] = useState(0)
+  const [comments, setComments] = useState(0)
+  const [share, setShare] = useState(0)
+  const [shareout, setShareout] = useState(0)
   const params = useParams()
   const newsId = Number.parseInt(params.id as string)
   const news = hotNews.find((item) => item.id === newsId)
 
-  const toggleLike = () => setLiked(!liked)
+  const handleLike = () => {
+    setLiked(!liked)
+    setLikesCount(prev => liked ? prev - 1 : prev + 1)
+  }
 
   if (!news) {
     return <div>News not found</div>
@@ -205,20 +213,29 @@ export default function NewsDetailPage() {
           {/* Article content */}
           <article className=" overflow-hidden">
             {/* Article image */}
+            <div className="flex justify-between items-center">
             <div className="flex items-center gap-3 mb-4">
                 <Image
                   src={news.authorImage || "/placeholder.svg"}
                   alt={news.author}
                   width={40}
                   height={40}
-                  className="rounded-full h-[40px] w-[40px] object-cover"
+                  className="rounded-full h-[34px] w-[34px] sm:h-[40px] sm:w-[40px] object-cover"
                 />
                 <div>
-                  <p className="font-semibold text-[20px] text-gray-900">{news.author}</p>
-                  <p className="text-sm text-[14px] text-gray-500">{news.publishedAt}</p>
+                  <p className="font-semibold text-[16px] sm:text-[20px] text-gray-900">{news.author}</p>
+                  <p className="text-[13px] sm:text-[14px] text-gray-500">{news.publishedAt}</p>
                 </div>
               </div>
-            <div className="relative rounded-[8px] overflow-hidden h-[300px] w-full">
+              <button 
+            className="text-muted-foreground hover:text-foreground no-post-click"
+            // onClick={toggleDropdown}
+          >
+            
+            <MoreVertical className="items-start  h-10 w-10 text-green-600 hover:bg-gray-100 p-2 rounded-[6px]" />
+          </button>
+          </div>
+            <div className="relative rounded-[8px] overflow-hidden h-[240px] sm:h-[300px] w-full">
               <Image src={news.image || "/placeholder.svg"} alt={news.title} fill className="object-cover" />
             </div>
 
@@ -236,56 +253,80 @@ export default function NewsDetailPage() {
               </div>
 
               {/* Engagement bar */}
-             <div className="flex items-center justify-between mb-1  border-t pt-4">
-            <div className="flex items-center gap-6">
-              <button
-                onClick={toggleLike}
-                className={`flex items-center gap-2 ${liked ? "text-red-500" : "text-gray-500"}`}
-              >
-                <Heart size={20} weight={liked ? "fill" : "regular"} />
-                <span className="text-sm">{liked ? news.likes + 1 : news.likes} Likes</span>
-              </button>
+             
+              <div className="         flex items-center justify-between border-t pt-4 no-post-click">
+        <div className="flex items-center gap-4 sm:gap-6">
+          <button
+            onClick={handleLike}
+            className={`flex items-center gap-2 ${liked ? "text-red-500" : "text-gray-500"}`}
+          >
+            <Heart size={20} weight={liked ? "fill" : "regular"} />
+            <span className="text-sm flex gap-2">{likesCount} <span className="hidden sm:block">Likes</span></span>
+          </button>
 
-              <button className="flex items-center gap-2 text-gray-500">
-                <ChatCircle size={20} />
-                <span className="text-sm">{news.comments} Comments</span>
-              </button>
+          <button className="flex items-center gap-2 text-gray-500">
+            <ChatCircle size={20} />
+            <span className="text-sm flex gap-2">{comments}<span className="hidden sm:block">Comments</span></span>
+          </button>
 
-              <button className="flex items-center gap-2 text-gray-500">
-                <PaperPlaneTilt size={20} />
-                <span className="text-sm">Message</span>
-              </button>
+          <button className="block sm:hidden flex items-center gap-2 text-gray-500">
+            <ArrowsLeftRight size={20} />
+            <span className="text-sm flex gap-2">{share} <span className="hidden sm:block">Message</span></span>
+          </button>
+          <button className="flex items-center gap-2 text-gray-500">
+            <PaperPlaneTilt size={20} />
+            <span className="text-sm flex gap-2">{share} <span className="hidden sm:block">Message</span></span>
+          </button>
 
-              <button className="flex items-center gap-2 text-gray-500">
-                < ShareFat  size={20} />
-                <span className="text-sm">Share</span>
-              </button>
-            </div>
+          <button className="hidden sm:flex items-center gap-2 text-gray-500">
+            <ShareFat size={20} />
+            <span className="text-sm flex gap-2">{shareout}<span className="hidden sm:block">Share</span></span>
+          </button>
+        </div>
 
-            <button className="text-gray-500">
-              <BookmarkSimple   size={20} />
-            </button>
-          </div>
+        <button 
+          className="hidden sm:block text-gray-500"
+          onClick={(e) => {
+            e.stopPropagation()
+            setBookmarked(!bookmarked)
+          }}
+        >
+          <BookmarkSimple size={20} weight={bookmarked ? "fill" : "regular"} />
+        </button>
+        <button className="block sm:hidden flex items-center gap-2 text-gray-500">
+            <ShareFat size={20} />
+            <span className="text-sm"><span className="hidden sm:block">Share</span></span>
+          </button>
+      </div>
             </div>
           </article>
           </div>
-          <div className="bg-white rounded-[12px] p-4 mt-6">
-        <h2  className="text-lg  border-b border-gray-200 pb-3 font-bold text-gray-900 mb-4">Related News</h2>
+          <div className="bg-white rounded-[12px] p-4 mt-2 sm:mt-6">
+        <h2  className="text-lg  border-b border-gray-200 pb-3 font-bold text-gray-900 mb-4">Other News</h2>
         <div className="space-y-0">
           {hotNews.map((news, idx) => (
             <Link href={`/news/${news.id}`} key={news.id}>
             <div
               key={news.id}
-              className={`flex gap-3 items-start p-3   transition-colors ${idx !== otherNews.length - 1 ? " border-b border-gray-100" : ""}`}
+              className={`flex gap-3 items-start p-1 py-3 sm:p-3   transition-colors ${idx !== otherNews.length - 1 ? " border-b border-gray-100" : ""}`}
             >
               <img
                 src={news.image}
                 alt={news.title}
-                className="w-[110px] h-[70px] object-cover rounded-md flex-shrink-0"
+                className="w-[80px] h-[60px] object-cover rounded-md flex-shrink-0"
               />
               <div className="flex-1 min-w-0">
                 <h4 className="font-medium text-gray-900 text-[16px] line-clamp-1">{news.title}</h4>
                 <p className="text-[14px] text-gray-600 line-clamp-2">{news.description}</p>
+              </div>
+              <div>
+              <button 
+            className="text-muted-foreground hover:text-foreground no-post-click"
+            // onClick={toggleDropdown}
+          >
+            
+            <MoreHorizontal className="  h-8 w-8 sm:h-10 sm:w-10 text-green-600 hover:bg-gray-100 p-2 rounded-[6px]" />
+          </button>
               </div>
             </div>
             </Link>

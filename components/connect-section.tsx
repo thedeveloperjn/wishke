@@ -63,10 +63,15 @@ export default function ConnectSection() {
           <button className="text-purple-500 text-sm">View All</button>
         </div>
 
-        <div className="grid grid-cols-4 gap-2">
+        <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
           {friendRequests.map((request) => (
-            <div key={request.id} className=" rounded-lg ">
-              <div className="flex flex-col">
+            <div key={request.id} className="flex-shrink-0 w-[170px]">
+              <div className="flex flex-col relative">
+                <button className="absolute top-2 right-2 z-10 sm:hidden bg-black/10 rounded-lg p-1.5 hover:bg-black/30 transition-colors">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 4L4 12M4 4L12 12" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
                 <div className="relative h-[170px] w-[170px] overflow-hidden mb-3">
                   <Image
                     src={request.image || "/placeholder.svg"}
@@ -75,42 +80,42 @@ export default function ConnectSection() {
                     className="object-cover rounded-[6px]"
                   />
                 </div>
-                <h3 className="font-medium  mb-1">{request.name}</h3>
-                <div className="flex  mb-3">
+                <h3 className="font-medium mb-1">{request.name}</h3>
+                <div className="flex mb-3">
                   <div className="flex -space-x-2">
                     <div className="h-5 w-5 rounded-full">
-                    <Image
-                    src="/imagesstatic/1.jpg"
-                    alt={request.name}
-                    height={5}
-                    width={5}
-                    className="object-cover rounded-full border border-white h-5 w-5"
-                  />
+                      <Image
+                        src="/imagesstatic/1.jpg"
+                        alt={request.name}
+                        height={5}
+                        width={5}
+                        className="object-cover rounded-full border border-white h-5 w-5"
+                      />
                     </div>
                     <div className="h-5 w-5">
-                    <Image
-                    src="/imagesstatic/2.jpg"
-                    alt={request.name}
-                    height={5}
-                    width={5}
-                    className="object-cover rounded-full border border-white h-5 w-5"
-                  />
+                      <Image
+                        src="/imagesstatic/2.jpg"
+                        alt={request.name}
+                        height={5}
+                        width={5}
+                        className="object-cover rounded-full border border-white h-5 w-5"
+                      />
                     </div>
                     <div className="h-5 w-5 rounded-full">
-                    <Image
-                    src="/imagesstatic/3.jpg"
-                    alt={request.name}
-                    height={5}
-                    width={5}
-                    className="object-cover rounded-full border border-white h-5 w-5"
-                  />
+                      <Image
+                        src="/imagesstatic/3.jpg"
+                        alt={request.name}
+                        height={5}
+                        width={5}
+                        className="object-cover rounded-full border border-white h-5 w-5"
+                      />
                     </div>
                   </div>
                   <span className="text-xs text-gray-500 ml-1">{request.mutualFriends} Mutual Friends</span>
                 </div>
                 <div className="flex gap-2 w-full">
-                  <button className="w-full py-1.5 text-xs text-gray-900 bg-[#F4F6F8] rounded-md">Ignore</button>
-                  <button className="w-full py-1.5 text-xs text-white bg-purple-500 rounded-md">Accept</button>
+                  <button className="hidden sm:block w-full py-1.5 text-xs text-gray-900 bg-[#F4F6F8] rounded-md">Ignore</button>
+                  <button className="w-full py-1.5 text-xs text-white bg-[#8E33FF] rounded-md">Accept</button>
                 </div>
               </div>
             </div>
@@ -138,9 +143,16 @@ export default function ConnectSection() {
                   )}
                 </div>
               </div>
-              <div className="flex gap-2">
-                <button className="px-3 py-1 text-xs bg-[#F4F6F8] rounded-[6px] text-[gray-500] hover:text-gray-700">Remove</button>
-                <button className="px-3 py-1 text-xs text-white rounded-[6px] bg-purple-500">Add Friend</button>
+              <div className="flex items-center gap-2">
+                <button className="hidden sm:block px-3 py-1 text-xs bg-[#F4F6F8] rounded-[6px] text-[gray-500] hover:text-gray-700">Remove</button>
+                <div className="flex items-center gap-2">
+                  <button className="px-3 py-1 text-xs text-[#8E33FF] rounded-[6px] bg-[#8E33FF]/10">Add Friend</button>
+                  <button className="sm:hidden p-1.5  rounded-lg hover:bg-black/5 transition-colors">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 4L4 12M4 4L12 12" stroke="black" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </button>
+                </div>
               </div>
             </div>
           ))}

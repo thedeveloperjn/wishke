@@ -3,11 +3,13 @@
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Heart, MessageCircle, Share2, Volume2, VolumeX, Play } from "lucide-react"
+import { ArrowLeft, Heart, MessageCircle, Share2, Volume2, VolumeX, Play, X } from "lucide-react"
 import MainContent from "@/components/main-content"
 import Header from "@/components/header"
 import Sidebar from "@/components/sidebar"
 import MessagesSidebar from "@/components/messages-sidebar"
+import { PaperPlaneTiltIcon } from "@phosphor-icons/react/dist/ssr"
+
 interface ReelData {
   id: number
   user: {
@@ -19,6 +21,15 @@ interface ReelData {
   likes: number
   comments: number
   shares: number
+  commentsList?: {
+    id: number
+    user: {
+      name: string
+      image: string
+    }
+    text: string
+    timestamp: string
+  }[]
 }
 
 export default function ReelsPage() {
@@ -26,10 +37,14 @@ export default function ReelsPage() {
   const [liked, setLiked] = useState<Record<number, boolean>>({})
   const [muted, setMuted] = useState(false)
   const [pausedVideos, setPausedVideos] = useState<Record<number, boolean>>({})
+  const [showCommentModal, setShowCommentModal] = useState<number | null>(null)
+  const [showShareModal, setShowShareModal] = useState<number | null>(null)
+  const [newComment, setNewComment] = useState("")
   const videoRefs = useRef<Record<number, HTMLVideoElement | null>>({})
   const reelRefs = useRef<Record<number, HTMLDivElement | null>>({})
   const [activeReelId, setActiveReelId] = useState<number | null>(1)
   const containerRef = useRef<HTMLDivElement>(null)
+  const commentInputRef = useRef<HTMLTextAreaElement>(null)
 
   const reels: ReelData[] = [
     {
@@ -264,6 +279,57 @@ export default function ReelsPage() {
     return num.toString()
   }
 
+  const handleComment = (reelId: number) => {
+    setShowCommentModal(reelId)
+    // Focus comment input after modal opens
+    setTimeout(() => {
+      commentInputRef.current?.focus()
+    }, 100)
+  }
+
+  const handleShare = (reelId: number) => {
+    setShowShareModal(reelId)
+  }
+
+  const submitComment = (reelId: number) => {
+    if (!newComment.trim()) return
+
+    // Here you would typically make an API call to save the comment
+    // For now, we'll just update the UI
+    const updatedReels = reels.map(reel => {
+      if (reel.id === reelId) {
+        return {
+          ...reel,
+          comments: reel.comments + 1,
+          commentsList: [
+            ...(reel.commentsList || []),
+            {
+              id: Date.now(),
+              user: {
+                name: "You",
+                image: "/jamie-parker.png" // Replace with actual user image
+              },
+              text: newComment,
+              timestamp: new Date().toISOString()
+            }
+          ]
+        }
+      }
+      return reel
+    })
+
+    setNewComment("")
+    setShowCommentModal(null)
+  }
+
+  const shareOptions = [
+    { name: "Copy Link", icon: "🔗" },
+    { name: "WhatsApp", icon: "💬" },
+    { name: "Facebook", icon: "📘" },
+    { name: "Twitter", icon: "🐦" },
+    { name: "Email", icon: "📧" }
+  ]
+
   return (
     
     <div className="relative min-h-screen">
@@ -284,21 +350,21 @@ export default function ReelsPage() {
       </div>
         <button
           onClick={() => router.push("/")}
-          className="absolute top-6 left-[32%]  text-white bg-[#ffffff]/10 p-2 rounded-full border-none"
+          className="absolute top-4 md:top-6 left-4 md:left-[32%] z-[100]  text-white bg-[#ffffff]/10 p-2 rounded-full border-none"
         >
           <ArrowLeft className="h-6 w-6" />
         </button>
 
         {/* Mute button */}
         <button
-          className="absolute top-4 right-4  text-white bg-transparent border-none"
+          className="absolute top-4 right-4  z-[100] text-white bg-transparent border-none"
           onClick={toggleMute}
         >
           {muted ? <VolumeX className="h-6 w-6" /> : <Volume2 className="h-6 w-6" />}
         </button>
 
         {/* Scrollable reels */}
-        <div ref={containerRef} className="h-full w-full max-w-[420px] overflow-y-auto snap-y snap-mandatory no-scrollbar">
+        <div ref={containerRef} className="h-full w-full relative z-[99] sm:absolute max-w-[420px] overflow-y-auto snap-y snap-mandatory no-scrollbar">
           {reels.map((reel) => (
             <div key={reel.id}
             ref={(el) => handleReelRef(reel.id, el)}
@@ -348,29 +414,124 @@ export default function ReelsPage() {
                     <button className="text-gray-300 ml-1">See More</button>
                   </p>
                 </div>
+
+                {/* Interaction buttons - moved inside the video container and always visible */}
+                <div className="absolute right-4 bottom-[18%] flex flex-col gap-6 items-center">
+                  <button 
+                    className="flex flex-col items-center group" 
+                    onClick={() => toggleLike(reel.id)}
+                  >
+                    <Heart 
+                      className={`h-7 w-7 transition-all duration-300 ${
+                        liked[reel.id] 
+                          ? "fill-red-500 text-red-500 scale-110" 
+                          : "text-white group-hover:scale-110"
+                      }`} 
+                    />
+                    <span className="text-white text-xs mt-1">{formatNumber(reel.likes + (liked[reel.id] ? 1 : 0))}</span>
+                  </button>
+                  <button 
+                    className="flex flex-col items-center group"
+                    onClick={() => handleComment(reel.id)}
+                  >
+                    <MessageCircle className="h-7 w-7 text-white group-hover:scale-110 transition-transform duration-300" />
+                    <span className="text-white text-xs mt-1">{formatNumber(reel.comments)}</span>
+                  </button>
+                  <button 
+                    className="flex flex-col items-center group"
+                    onClick={() => handleShare(reel.id)}
+                  >
+                    <PaperPlaneTiltIcon className="h-7 w-7 text-white group-hover:scale-110 transition-transform duration-300" />
+                    <span className="text-white text-xs mt-1">{formatNumber(reel.shares)}</span>
+                  </button>
+                </div>
               </div>
             </div>
-            {activeReelId === reel.id && (
-              <div  className="absolute right-[20%] xl:right-[33%]  bottom-20 flex flex-col gap-6 items-center">
-                <button className="flex flex-col items-center" onClick={() => toggleLike(reel.id)}>
-                  <Heart className={`h-7 w-7 ${liked[reel.id] ? "fill-red-500 text-red-500" : "text-white"}`} />
-                  <span className="text-white text-xs mt-1">{formatNumber(reel.likes)}</span>
-                </button>
-                <button className="flex flex-col items-center">
-                  <MessageCircle className="h-7 w-7 text-white" />
-                  <span className="text-white text-xs mt-1">{formatNumber(reel.comments)}</span>
-                </button>
-                <button className="flex flex-col items-center">
-                  <Share2 className="h-7 w-7 text-white" />
-                  <span className="text-white text-xs mt-1">{formatNumber(reel.shares)}</span>
-                </button>
-              </div>
-            )}
           </div>
           ))}
            
         </div>
       </div>
+
+      {/* Comment Modal */}
+      {showCommentModal && (
+        <div className="fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm flex items-end">
+          <div className="bg-white w-full rounded-t-2xl p-4 max-h-[80vh] flex flex-col">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold">Comments</h3>
+              <button onClick={() => setShowCommentModal(null)}>
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto mb-4">
+              {reels.find(r => r.id === showCommentModal)?.commentsList?.map(comment => (
+                <div key={comment.id} className="flex gap-3 mb-4">
+                  <div className="relative h-8 w-8 rounded-full overflow-hidden">
+                    <Image
+                      src={comment.user.image}
+                      alt={comment.user.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">{comment.user.name}</p>
+                    <p className="text-sm text-gray-600">{comment.text}</p>
+                    <p className="text-xs text-gray-400">{new Date(comment.timestamp).toLocaleDateString()}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <textarea
+                ref={commentInputRef}
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+                placeholder="Add a comment..."
+                className="flex-1 border rounded-lg p-2 resize-none"
+                rows={2}
+              />
+              <button
+                onClick={() => submitComment(showCommentModal)}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                disabled={!newComment.trim()}
+              >
+                Post
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Share Modal */}
+      {showShareModal && (
+        <div className="fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm flex items-end">
+          <div className="bg-white w-full rounded-t-2xl p-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold">Share to</h3>
+              <button onClick={() => setShowShareModal(null)}>
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            <div className="grid grid-cols-4 gap-4">
+              {shareOptions.map((option) => (
+                <button
+                  key={option.name}
+                  className="flex flex-col items-center gap-2 p-4 hover:bg-gray-100 rounded-lg"
+                  onClick={() => {
+                    // Here you would implement the actual sharing functionality
+                    console.log(`Sharing to ${option.name}`)
+                    setShowShareModal(null)
+                  }}
+                >
+                  <span className="text-2xl">{option.icon}</span>
+                  <span className="text-sm">{option.name}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }          

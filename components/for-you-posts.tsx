@@ -22,9 +22,9 @@ export default function ForYouPosts() {
       {/* Project post with multiple images */}
       <PropertyPost
       type="project"
-        title="Project X • 3, 4, 5 BHK Flats • 5BHK Residential-Bungalow"
+        title=" 3, 4, 5 BHK Flats"
   
-        location="Godrej Evenue 11, Mahalaxmi, Mumbai South"
+        location=" Mumbai South"
         price="₹21 Cr - 40 Cr"
         description="For athletes, high altitude produces two contradictory effects on performance. For performance. For explosive events..."
         timestamp="24 April at 12:16 PM"

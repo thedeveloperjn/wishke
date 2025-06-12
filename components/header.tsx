@@ -10,6 +10,7 @@ import { useEffect, useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import LoginModal from "./login-modal"
 import Link from "next/link"
+import { FunnelSimpleIcon } from "@phosphor-icons/react/dist/ssr"
 
 interface HeaderProps {
   isSidebarOpen: boolean
@@ -308,8 +309,8 @@ export default function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
 
             {/* Notifications Dropdown */}
             {showNotifications && (
-              <div className="absolute top-full right-0 mt-2 w-96 bg-white rounded-lg shadow-lg border max-h-[100vh] overflow-hidden">
-                <div className="p-4 border-b">
+              <div className="absolute -top-[50%] sm:top-full z-[10] -right-[100%] sm:right-0 mt-2 w-[100vw] sm:w-96 bg-white rounded-lg shadow-lg border h-[100vh] sm:h-auto max-h-[100vh] overflow-hidden">
+                <div className="p-4 pb-0 border-b">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold">Notifications</h3>
                     <button onClick={() => setShowNotifications(false)}>
@@ -318,12 +319,12 @@ export default function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
                   </div>
 
                   {/* Tabs */}
-                  <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-2">
                     {["All", "Requests", "My Posts", "Mentions"].map((tab) => (
                       <button
                         key={tab}
                         onClick={() => setActiveNotificationTab(tab)}
-                        className={`text-sm pb-2 border-b-2 transition-colors ${
+                        className={`text-sm pb-4 border-b-2 px-2 transition-colors ${
                           activeNotificationTab === tab
                             ? "text-purple-600 border-purple-600"
                             : "text-gray-500 border-transparent hover:text-gray-700"
@@ -332,11 +333,11 @@ export default function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
                         {tab}
                       </button>
                     ))}
-                    <Filter className="h-4 w-4 text-gray-400 ml-auto" />
+                    <FunnelSimpleIcon size={24} className="mb-4  text-gray-400 ml-auto" />
                   </div>
                 </div>
 
-                <div className="max-h-96 overflow-y-auto">
+                <div className="max-h-[100vh] overflow-y-auto no-scrollbar sm:max-h-96 overflow-y-auto">
                   {/* Today Section */}
                   <div className="p-4">
                     <h4 className="text-xs font-medium text-gray-500 uppercase tracking-wide mb-3">TODAY</h4>

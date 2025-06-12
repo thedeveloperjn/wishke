@@ -285,11 +285,11 @@ export default function DynamicReels({ reels }: { reels: ReelData[] }) {
       )}
 
       {/* Thumbnail grid */}
-      <div className="grid grid-cols-3 sm:grid-cols-4 sm:p-4 sm:gap-3 bg-white rounded-[12px]">
+      <div className="grid grid-cols-3 p-2 gap-2 sm:grid-cols-4 sm:p-4 sm:gap-3 bg-white rounded-[12px]">
         {reels.map((reel) => (
           <div
             key={reel.id}
-            className="relative aspect-square sm:aspect-[4/6] cursor-pointer overflow-hidden"
+            className="relative  aspect-[4/6] rounded-[8px] sm:rounded-[12px] cursor-pointer overflow-hidden"
             onClick={() => setSelectedReel(reel)}
           >
             <Image

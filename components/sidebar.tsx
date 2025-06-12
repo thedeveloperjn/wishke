@@ -4,7 +4,7 @@ import type React from "react"
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { MagnifyingGlass, Compass, FilmReel, Key, Buildings, MagicWand, Cube, UserCircleCheck, Newspaper, CalendarDots, X } from "@phosphor-icons/react/dist/ssr"
+import { MagnifyingGlass, Compass, FilmReel, Key, Buildings, MagicWand, Cube, UserCircleCheck, Newspaper, CalendarDots, X, SealCheck } from "@phosphor-icons/react/dist/ssr"
 import { usePathname, useRouter } from "next/navigation"
 import { Home, Film, Building2, FolderKanban, FileText, Users, Briefcase, Calendar, CheckCircle } from "lucide-react"
 
@@ -112,7 +112,7 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps = {}) 
                 <div className="flex flex-col">
                   <div className="flex items-center gap-1">
                     <h3 className="text-lg font-bold">Malvika Willson</h3>
-                    <CheckCircle className="h-5 w-5 text-teal-500" />
+                    <SealCheck size={22} weight="fill" className="text-green-500" />
                   </div>
                   <p className="text-sm text-muted-foreground">@malvikawill</p>
                 </div>

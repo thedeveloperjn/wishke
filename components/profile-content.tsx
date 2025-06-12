@@ -4,7 +4,7 @@ import { useState ,useEffect, useRef } from "react"
 import Image from "next/image"
 import { Edit, MoreHorizontal, MapPin, Heart, MessageCircle, Share, Bookmark } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { PencilSimpleLine } from "@phosphor-icons/react/dist/ssr"
+import { PencilSimpleLine, SealCheck } from "@phosphor-icons/react/dist/ssr"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import PropertyPost from "./property-post"
@@ -239,7 +239,7 @@ export default function ProfileContent() {
   return (
     <div
       ref={contentRef}
-      className={`flex-1 overflow-y-auto h-[calc(85vh)] pb-6 no-scrollbar transition-all duration-200 ${
+      className={`flex-1 overflow-y-auto h-[94vh] sm:h-[calc(85vh)] pb-6 no-scrollbar transition-all duration-200 ${
         isScrolled ? "rounded-b-lg" : "rounded-lg"
       }`}
       style={{
@@ -247,7 +247,7 @@ export default function ProfileContent() {
         borderTopRightRadius: isScrolled ? 0 : "0.5rem",
       }}
     >
-      <div className="flex items-center gap-3  bg-white  p-4 pb-0">
+      <div className="flex items-center gap-3  bg-white  p-0 sm:p-4 pb-0">
         <button
           onClick={() => router.back()}
           className="p-2 rounded-full hover:bg-gray-100 transition"
@@ -268,7 +268,7 @@ export default function ProfileContent() {
       </div>
           
       {/* Profile Header */}
-      <div className="relative bg-white p-4 rounded-[12px]  pb-8">
+      <div className="relative bg-white p-3 sm:p-4 rounded-[12px]  pb-8">
     
 
         <div className="h-36 md:h-48 bg-gradient-to-r from-[#C8FAD6] to-[#F2DEFF] rounded-lg relative overflow-hidden">
@@ -294,10 +294,8 @@ export default function ProfileContent() {
               <div className="flex items-center gap-2 mb-2">
                 <h1 className="text-2xl font-bold">{profileData.name}</h1>
                 
-                <div className="h-6 w-6 bg-blue-500 rounded-full flex items-center justify-center">
-                  <svg className="h-4 w-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                <div className=" flex items-center justify-center">
+                  <SealCheck size={22} weight="fill" className="text-green-500" />
                 </div>
               </div>
               <Button
@@ -309,7 +307,7 @@ export default function ProfileContent() {
             <PencilSimpleLine size={22}/>
             Edit Profile
           </Button>
-              <div className="flex items-center gap-2 text-gray-600 mb-2">
+              <div className="flex items-center gap-2 text-gray-600 mb-0 sm:mb-2">
                 <MapPin className="h-4 w-4" />
                 <span className="text-sm">{profileData.location}</span>
               </div>
@@ -337,8 +335,16 @@ export default function ProfileContent() {
       </div>
 
       {/* Content Tabs */}
-      <div className="border-b bg-white mb-2 sm:mb-6 px-4">
-        <div className="flex gap-8">
+      <div className="border-b bg-white mb-0 sm:mb-6 px-4">
+        <div className="flex relative">
+          {/* Animated underline - moved before the buttons for proper layering */}
+          <div 
+            className="absolute bottom-0 h-[2px] bg-gray-900 sm:bg-purple-500 transition-all duration-300 ease-in-out z-10"
+            style={{
+              width: '25%',
+              transform: `translateX(${['posts', 'reels', 'comments', 'likes'].indexOf(activeTab) * 100}%)`
+            }}
+          />
           {[
             { id: "posts", label: "Posts" },
             { id: "reels", label: "Reels" },
@@ -347,10 +353,10 @@ export default function ProfileContent() {
           ].map((tab) => (
             <button
               key={tab.id}
-              className={`pb-3 px-1 border-b-2 w-[25%] transition-colors ${
+              className={`pb-3 px-1 w-[25%] transition-colors relative z-20 ${
                 activeTab === tab.id
-                  ? "border-purple-500 text-purple-600 font-medium"
-                  : "border-transparent text-gray-500 hover:text-gray-700"
+                  ? "text-gray-900 sm:text-purple-600 font-medium"
+                  : "text-gray-500 hover:text-gray-700"
               }`}
               onClick={() => setActiveTab(tab.id)}
               suppressHydrationWarning

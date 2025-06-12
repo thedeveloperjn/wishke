@@ -103,7 +103,7 @@ export default function EditProfileContent() {
         </div>
 
       <div className="space-y-6">
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="text-gray-400">
             <label className="block text-[16px] font-medium mb-2">Full Name</label>
             <Input
@@ -137,7 +137,7 @@ export default function EditProfileContent() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-[16px] font-medium mb-2">Account Type</label>
             <Select value={formData.accountType} onValueChange={(value) => handleInputChange("accountType", value)}>
@@ -201,7 +201,7 @@ export default function EditProfileContent() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-[16px] font-medium mb-2">Email Address</label>
             <Input
@@ -227,7 +227,7 @@ export default function EditProfileContent() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-[16px] font-medium mb-2">City</label>
             <Input
@@ -559,10 +559,10 @@ export default function EditProfileContent() {
   return (
     <div className="flex pb-6 gap-6 bg-gray-50 relative min-h-screen">
       {/* Settings Gear Icon - Only visible on mobile */}
-      <div className="md:hidden absolute top-6 right-6 z-10">
+      <div className="md:hidden absolute top-3 right-6 z-10">
         <button
           onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-          className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          className="p-2 hover:bg-gray-100 bg-gray-100 rounded-md transition-colors"
         >
           <Settings className="h-6 w-6 text-gray-600" />
         </button>
@@ -570,7 +570,7 @@ export default function EditProfileContent() {
 
       {/* Settings Sidebar - Slides in from right on mobile, sticky on web */}
       <div 
-        className={`md:sticky md:top-0 h-screen md:h-[84vh] fixed top-0 right-0 w-80 bg-white p-6 transform rounded-xl transition-transform duration-300 z-[50] md:z-0 ease-in-out  ${
+        className={`md:sticky md:top-0 h-[94vh] sm:h-[calc(85vh)] fixed top-0 right-0 w-80 bg-white p-6 transform rounded-xl transition-transform duration-300 z-[50] md:z-0 ease-in-out  ${
           isSettingsOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'
         }`}
       >
@@ -620,8 +620,8 @@ export default function EditProfileContent() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 rounded-[10px] bg-white">
-        <div className="mb-6 flex items-center justify-between">
+      <div className="flex-1 p-4 sm:p-6 rounded-[10px] bg-white">
+        <div className="mb-4 sm:mb-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" onClick={() => router.push("/profile")} className="hidden md:flex">
               <ArrowLeft className="h-4 w-4" />
@@ -644,10 +644,11 @@ export default function EditProfileContent() {
       {/* Overlay when settings is open - Only on mobile */}
       {isSettingsOpen && (
         <div 
-          className="md:hidden fixed inset-0 bg-black/20 z-40"
+          className="md:hidden fixed inset-0  bg-black/20 z-40"
           onClick={() => setIsSettingsOpen(false)}
         />
       )}
+      
     </div>
   )
 }

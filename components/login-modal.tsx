@@ -797,7 +797,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex ${
+      className={`fixed inset-0 z-[9999] flex ${
         [3, 4, 5].includes(currentStep) ? " sm:flex sm:items-center sm:justify-center overflow-y-auto" : "items-end sm:items-center"
       } justify-center sm:p-4`}
     >

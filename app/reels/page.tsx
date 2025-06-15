@@ -370,7 +370,7 @@ export default function ReelsPage() {
             ref={(el) => handleReelRef(reel.id, el)}
             data-reel-id={reel.id}> 
             <div
-              className="relative w-full h-[95vh] my-10 mx-auto snap-center rounded-[12px] overflow-hidden"
+              className="relative w-full max-h-[100%] h-[94vh] sm:h-[95vh] sm:my-10 mx-auto snap-center sm:rounded-[12px] overflow-hidden"
             >
               <div className="absolute inset-0 flex items-center justify-center bg-black">
                 <video

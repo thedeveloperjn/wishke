@@ -26,12 +26,13 @@ export default function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
   const [activeNotificationTab, setActiveNotificationTab] = useState("All")
   const [searchQuery, setSearchQuery] = useState("")
   const [showLoginModal, setShowLoginModal] = useState(false)
+  const [headerStyle, setHeaderStyle] = useState<'relative' | 'sticky'>('relative')
+  const [lastScrollY, setLastScrollY] = useState(0)
   const searchRef = useRef<HTMLDivElement>(null)
   const profileDropdownRef = useRef<HTMLDivElement>(null)
   const notificationRef = useRef<HTMLDivElement>(null)
   const savedRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
-
 
   const handleProfileMouseEnter = () => {
     setShowProfileDropdown(true)
@@ -54,8 +55,6 @@ export default function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
     }
   }, [])
 
-
-
   useEffect(() => {
     setIsClient(true)
   }, [])
@@ -77,6 +76,28 @@ export default function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
     document.addEventListener("mousedown", handleClickOutside)
     return () => document.removeEventListener("mousedown", handleClickOutside)
   }, [])
+
+  useEffect(() => {
+    const controlHeader = () => {
+      const currentScrollY = window.scrollY
+      
+      if (currentScrollY <= 100) {
+        // At the top of the page
+        setHeaderStyle('relative')
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling up
+        setHeaderStyle('sticky')
+      } else {
+        // Scrolling down
+        setHeaderStyle('relative')
+      }
+      
+      setLastScrollY(currentScrollY)
+    }
+
+    window.addEventListener('scroll', controlHeader)
+    return () => window.removeEventListener('scroll', controlHeader)
+  }, [lastScrollY])
 
   const recentSearches = ["malabar hill", "3bhk flat", "bungalow adheri east", "independent house in mumbai"]
 
@@ -194,12 +215,13 @@ export default function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
     console.log(`${action} notification ${notificationId}`)
   }
 
-
- 
-      
-    
   return (
-    <header className="sticky top-0 z-50 flex h-[60px] sm:h-[85px] items-center justify-between bg-white sm:px-4 md:px-6">
+    <header 
+      className={`${headerStyle === 'relative' ? 'relative' : 'sticky top-0'} 
+        z-50 flex h-[60px] sm:h-[85px] items-center justify-between bg-white sm:px-4 md:px-6 
+        transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) transform
+        ${headerStyle === 'sticky' ? 'translate-y-0' : lastScrollY > 100 ? '-translate-y-full' : 'translate-y-0'}`}
+    >
       <div className="container flex h-16 items-center justify-between px-4">
         {/* Mobile sidebar toggle button - only shows below 640px */}
         <div className="sm:hidden">
@@ -309,7 +331,7 @@ export default function Header({ isSidebarOpen, toggleSidebar }: HeaderProps) {
 
             {/* Notifications Dropdown */}
             {showNotifications && (
-              <div className="absolute -top-[50%] sm:top-full z-[10] -right-[100%] sm:right-0 mt-2 w-[100vw] sm:w-96 bg-white rounded-lg shadow-lg border h-[100vh] sm:h-auto max-h-[100vh] overflow-hidden">
+              <div className="absolute -top-[50%] sm:top-full z-[60] -right-[100%] sm:right-0 mt-2 w-[100vw] sm:w-96 bg-white rounded-lg shadow-lg border h-[100vh] sm:h-auto max-h-[100vh] overflow-hidden">
                 <div className="p-4 pb-0 border-b">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold">Notifications</h3>

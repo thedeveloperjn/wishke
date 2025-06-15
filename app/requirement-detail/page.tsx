@@ -216,9 +216,9 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
   return (
     <div className="min-w-[51%] xl:max-w-[51%] w-full h-full bg-white rounded-lg overflow-hidden">
       <div ref={contentRef} className="h-[calc(100vh-96px)] overflow-y-auto no-scrollbar">
-        <div className="p-6 pt-0">
+        <div className="sm:p-6 pt-0">
           {/* Header */}
-          <div className="sticky top-0 py-4 flex items-center justify-between w-full bg-white z-[5]">
+          <div className="fixed sm:sticky top-0 p-3 sm:py-4 flex items-center justify-between w-full bg-white z-[50]">
             <button
               onClick={() => router.back()}
               className="flex items-center text-[20px] font-semibold gap-2 text-gray-900 hover:text-gray-900"
@@ -267,7 +267,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           </div>
 
           {/* Project Title and Price */}
-          <div className="mb-6 mt-4 flex justify-between">
+          <div className="mb-6 mt-4 p-4 sm:p-0 flex justify-between">
             <div>
               <h1 className="text-[20px] font-bold text-gray-900 mb-2">{project.title}</h1>
               <div className="flex items-center gap-2 text-gray-600 mb-2">
@@ -279,7 +279,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-between border-t pt-4">
+          <div className="flex items-center p-4 pb-6 sm:p-0 justify-between border-t pt-4">
             <div className="flex items-center gap-4 sm:gap-6">
               <button
                 onClick={handleLike}
@@ -328,12 +328,12 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           </div>
 
           {/* Sticky Tabs */}
-          <div className="sticky top-[60px] bg-white border-b mb-6 z-10">
-            <div className="flex gap-8">
+          <div className="sticky top-[15px] sm:top-[60px] max-w-[100%] overflow-x-auto no-scrollbar  bg-white border-b mb-2 sm:mb-6 z-10">
+            <div className="flex gap-0 sm:gap-8">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
-                  className={`pb-3 px-1 w-[25%] border-b-2 transition-colors ${
+                  className={`pb-3 px-2 sm:px-1 w-[25%] border-b-2 transition-colors ${
                     activeTab === tab.id
                       ? "border-purple-500 text-purple-600 font-medium"
                       : "border-transparent text-gray-500 hover:text-gray-700"
@@ -349,16 +349,16 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           {/* All Content Sections */}
 
           {/* Description Section */}
-          <div ref={descriptionRef} className="space-y-4 mb-12">
+          <div ref={descriptionRef} className="space-y-4 p-4 sm:p-0 mb-12">
             <h3 className="text-xl font-semibold border-b pb-4 mb-6 text-gray-900">Description</h3>
             <p className="text-gray-600 leading-relaxed">{project.description}</p>
           </div>
 
           {/* Overview Section */}
-          <div ref={overviewRef} className="space-y-6 mb-12">
+          <div ref={overviewRef} className="space-y-6 p-4 sm:p-0 mb-12">
             <h3 className="text-xl font-semibold border-b pb-4 mb-6 text-gray-900">Overview</h3>
 
-            <div className="grid grid-cols-3 gap-6 px-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 sm:gap-6 px-0 sm:px-4">
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-gray-500">
                   <Buildings size={22} />
@@ -367,7 +367,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
                 <p className="font-[500] text-[16px]">{project.specifications.category}</p>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-4 ">
                 <div className="flex items-center gap-2 text-gray-500">
                   <Buildings size={22} />
                   <span className="text-[16px]">Property Type</span>
@@ -457,9 +457,9 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           </div>
 
           {/* Amenities Section */}
-          <div ref={amenitiesRef} className="space-y-6 mb-12">
+          <div ref={amenitiesRef} className="space-y-6 mb-12 p-4 sm:p-0">
             <h3 className="text-xl font-semibold border-b pb-4 mb-6 text-gray-900">Amenities</h3>
-            <div className="grid grid-cols-3 gap-6 px-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 px-2 sm:px-4">
               {project.amenities.map((amenity, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <amenity.icon size={28} className="text-gray-700" />
@@ -470,7 +470,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           </div>
 
           {/* Contact Section */}
-          <div ref={contactRef} className="space-y-4 mb-12">
+          <div ref={contactRef} className="space-y-4 mb-12 p-4 sm:p-0">
             <Postedby
               avatar={project.postedBy.avatar || "/placeholder.svg"}
               name={project.postedBy.name}

@@ -33,6 +33,18 @@ body{
     --radius: 0.5rem;
   }
 
+  :root {
+    --vh: 1vh;
+  }
+  
+  .min-h-screen-safe {
+    min-height: calc(var(--vh, 1vh) * 100);
+  }
+  
+  .h-94vh-safe {
+    height: calc(var(--vh, 1vh) * 94);
+  }
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;

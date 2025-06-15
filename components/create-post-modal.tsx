@@ -9,6 +9,7 @@ import {
   Newspaper,
   Image as ImageIcon,
   Package,
+  CaretLeft,
 } from "@phosphor-icons/react/dist/ssr"
 
 interface CreatePostModalProps {
@@ -28,6 +29,20 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
   const [listedBy, setListedBy] = useState("Dealer")
   const [facing, setFacing] = useState("East")
   const [registrationRequired, setRegistrationRequired] = useState(false)
+
+  // Handle body overflow when modal is open/closed
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    
+    // Cleanup function to reset overflow when component unmounts
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
 
   // Sync activeTab with category prop when it changes
   useEffect(() => {
@@ -63,18 +78,26 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
   }
 
   return (
-    <div className="fixed inset-0 bg-white/30 backdrop-blur-[15px] flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-hidden">
+    <div className="fixed inset-0 z-[101] bg-white/30 backdrop-blur-[15px] h-full flex items-center justify-center z-50 sm:p-4">
+      <div className="bg-white sm:rounded-2xl shadow-xl w-full md:max-w-3xl h-full sm:max-h-[90vh] overflow-hidden">
         {/* Header */}
+        <div className="block p-4 shadow-sm max-w-full sm:hidden flex justify-between">
+        <button onClick={onClose} className="text-gray-400  hover:text-gray-600">
+            <CaretLeft size={24} />
+          </button>
+          <button className="text-[15px] text-[#8E33FF]">
+            Create Post
+          </button>
+        </div>
         <div className="flex items-center justify-between p-6 pb-2 border-gray-200">
-          <h2 className="text-2xl font-semibold text-gray-900">Create New Post</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          <h2 className="text-[22px] sm:text-2xl font-semibold text-gray-900">New {activeTab} Post</h2>
+          <button onClick={onClose} className="hidden sm:block text-gray-400 hover:text-gray-600">
             <X size={24} />
           </button>
         </div>
 
         {/* Category Tabs */}
-        <div className="px-6 py-4 border-b border-gray-200">
+        <div className="hidden sm:block px-6 py-4 border-b border-gray-200">
           <div className="flex gap-2 overflow-x-auto">
             {categories.map((cat) => (
               <button
@@ -95,8 +118,8 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
         </div>
 
         {/* Scrollable Content */}
-        <div className="max-h-[60vh] overflow-y-auto">
-          <div className="p-6 space-y-6">
+        <div className="max-h-[84%] pb-10 sm:max-h-[60vh] overflow-y-auto">
+          <div className="p-4 sm:p-6 space-y-6">
             {/* Properties Form */}
             {activeTab === "Properties" && (
               <>
@@ -118,7 +141,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                 </div>
                 <div>
                   <label className="block text-base font-medium text-gray-900 mb-2">Property Category</label>
-                  <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500">
+                  <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500 bg-transparent">
                     <option>Select Property Category</option>
                     <option>Apartment</option>
                     <option>Villa</option>
@@ -162,7 +185,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                     ))}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid  grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">Bedroom</label>
                     <input
@@ -180,10 +203,10 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">Furnishing Type</label>
-                    <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500">
+                    <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500 bg-transparent">
                       <option>Select Furnishing Type</option>
                       <option>Fully Furnished</option>
                       <option>Semi Furnished</option>
@@ -192,7 +215,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                   </div>
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">Property Status</label>
-                    <select className="w-full p-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500">
+                    <select className="w-full p-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500 bg-transparent">
                       <option>Select Property Status</option>
                       <option>Ready to Move</option>
                       <option>Under Construction</option>
@@ -218,7 +241,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                     ))}
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2  md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">Total Area</label>
                     <div className="flex relative">
@@ -265,7 +288,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                     </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">Maintenance</label>
                     <div className="flex relative">
@@ -308,7 +331,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                     ))}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">Length</label>
                     <div className="flex relative">
@@ -340,10 +363,10 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                     </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 gap-2 sm:gap-6">
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">Country</label>
-                    <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px]">
+                    <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] bg-transparent">
                       <option>India</option>
                       <option>USA</option>
                       <option>UK</option>
@@ -351,7 +374,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                   </div>
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">City</label>
-                    <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px]">
+                    <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] bg-transparent">
                       <option>Mumbai</option>
                       <option>Delhi</option>
                       <option>Bangalore</option>
@@ -450,19 +473,19 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                 </div>
                 <div>
                   <h3 className="text-base font-medium text-gray-900 mb-4">Upload Photos/Video</h3>
-                  <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50">
-                    <div className="flex items-center justify-center gap-6">
-                      <div className="flex flex-col items-center justify-center w-24 h-24 bg-white rounded-lg border-2 border-dashed border-gray-300">
+                  <div className="border-1 border border-gray-300 rounded-lg p-4 sm:p-6">
+                    <div className="flex items-center gap-4">
+                      <div className="flex flex-col items-center justify-center w-24 h-24 bg-[#F4F6F8] rounded-lg ">
                         <Camera className="w-6 h-6 text-gray-400 mb-1" />
                       </div>
                       <div className="w-24 h-24 rounded-lg overflow-hidden relative">
                         <img
-                          src="/placeholder.svg?height=96&width=96"
+                          src="/luxury-lobby.png"
                           alt="Property"
                           className="w-full h-full object-cover"
                         />
-                        <button className="absolute top-1 right-1 w-5 h-5 bg-gray-600 bg-opacity-70 rounded-full flex items-center justify-center">
-                          <X className="w-3 h-3 text-white" />
+                        <button className="absolute top-1 right-1 w-5 h-5 border-2 border-white rounded-full flex items-center justify-center">
+                          <X className="w-3 h-3 font-bold text-white" />
                         </button>
                       </div>
                     </div>
@@ -492,7 +515,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                 </div>
                 <div>
                   <label className="block text-base font-medium text-gray-900 mb-2">Property Category</label>
-                  <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500">
+                  <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500 bg-transparent">
                     <option>Select Property Category</option>
                     <option>Apartment</option>
                     <option>Villa</option>
@@ -536,7 +559,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                     ))}
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">Bedroom</label>
                     <input
@@ -554,7 +577,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 gap-2 sm:gap-6">
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">Min Budget</label>
                     <input
@@ -572,10 +595,10 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 gap-2 sm:gap-6">
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">Country</label>
-                    <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px]">
+                    <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] bg-transparent">
                       <option>India</option>
                       <option>USA</option>
                       <option>UK</option>
@@ -583,7 +606,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                   </div>
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">City</label>
-                    <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px]">
+                    <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] bg-transparent">
                       <option>Mumbai</option>
                       <option>Delhi</option>
                       <option>Bangalore</option>
@@ -646,7 +669,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                 </div>
                 <div>
                   <label className="block text-base font-medium text-gray-900 mb-2">Event Type</label>
-                  <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500">
+                  <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500 bg-transparent">
                     <option>Select Event Type</option>
                     <option>Exhibition</option>
                     <option>Conference</option>
@@ -655,10 +678,10 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                     <option>Networking</option>
                   </select>
                 </div>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 gap-2 sm:gap-6">
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">Country</label>
-                    <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500">
+                    <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500 bg-transparent">
                       <option>India</option>
                       <option>USA</option>
                       <option>UK</option>
@@ -666,26 +689,26 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                   </div>
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">City</label>
-                    <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500">
+                    <select className="w-full p-3 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500 bg-transparent">
                       <option>Mumbai</option>
                       <option>Delhi</option>
                       <option>Bangalore</option>
                     </select>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 gap-2 sm:gap-6">
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">Start Date & Time</label>
                     <input
                       type="datetime-local"
-                      className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500"
+                      className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500 bg-transparent"
                     />
                   </div>
                   <div>
                     <label className="block text-base font-medium text-gray-900 mb-2">End Date & Time</label>
                     <input
                       type="datetime-local"
-                      className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500"
+                      className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500 bg-transparent"
                     />
                   </div>
                 </div>
@@ -732,7 +755,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                 </div>
                 <div>
                   <label className="block text-base font-medium text-gray-900 mb-2">Status</label>
-                  <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500">
+                  <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500 bg-transparent">
                     <option>Select Event Status</option>
                     <option>Upcoming</option>
                     <option>Ongoing</option>
@@ -786,7 +809,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                 </div>
                 <div>
                   <label className="block text-base font-medium text-gray-900 mb-2">News Status</label>
-                  <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500">
+                  <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500 bg-transparent">
                     <option>Select News Status</option>
                     <option>Published</option>
                     <option>Draft</option>
@@ -840,7 +863,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                 </div>
                 <div>
                   <label className="block text-base font-medium text-gray-900 mb-2">Portfolio Status</label>
-                  <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500">
+                  <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500 bg-transparent">
                     <option>Select Portfolio Status</option>
                     <option>Published</option>
                     <option>Draft</option>
@@ -894,7 +917,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
                 </div>
                 <div>
                   <label className="block text-base font-medium text-gray-900 mb-2">Product Status</label>
-                  <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500">
+                  <select className="w-full p-3 py-3.5 border border-gray-300 rounded-lg focus:outline-gray-500 focus:outline-[1px] text-gray-500 bg-transparent">
                     <option>Select Product Status</option>
                     <option>Published</option>
                     <option>Draft</option>
@@ -908,7 +931,7 @@ export default function CreatePostModal({ isOpen, onClose, category }: CreatePos
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end p-4 pt-3 border-t border-gray-200">
+        <div className="hidden sm:flex justify-end p-4 pt-3 pb-0 border-t border-gray-200">
           <button className="px-8 py-3 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors">
             Post
           </button>

@@ -20,7 +20,7 @@ export default function ProjectDetailPage() {
 
   return (
 
-        <main className="min-w-[51%] xl:max-w-[51%] flex-1 min-h-[calc(100vh-4rem)]">
+        <main className="min-w-[51%] xl:max-w-[51%] flex-1  sm:h-[85vh]">
           <div className="h-full">
             <ProjectDetailContent projectId={projectId} />
           </div>

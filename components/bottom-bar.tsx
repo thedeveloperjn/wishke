@@ -18,7 +18,9 @@ export default function BottomBar() {
   }
 
   return (
-    <div className="block sm:hidden bg-white fixed bottom-0 w-full border-t">
+    <div style={{
+      paddingBottom: "env(safe-area-inset-bottom)",
+    }} className="block sm:hidden bg-white fixed bottom-0 w-full border-t">
       <div className="flex py-1">
         <button 
           onClick={() => router.push('/')} 

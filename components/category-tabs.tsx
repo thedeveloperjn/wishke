@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Buildings, Binoculars, CalendarDots, Newspaper, Image as ImageIcon, Package } from "@phosphor-icons/react/dist/ssr"
+import { Buildings, Binoculars, CalendarDots, Newspaper, Image as ImageIcon, Package, MonitorPlay } from "@phosphor-icons/react/dist/ssr"
 
 interface CategoryTabsProps {
   onCategoryClick: (category: string) => void
@@ -9,6 +9,7 @@ interface CategoryTabsProps {
 
 export default function CategoryTabs({ onCategoryClick }: CategoryTabsProps) {
   const categories = [
+    { id: 0 ,name: "Reels", icon:<MonitorPlay size={24} />  ,color:"#8E33FF"},
     { id: 1, name: "Properties", icon: <Buildings size={24} />, color: "#F66488" },
     { id: 2, name: "Requirements", icon: <Binoculars size={24} />, color: "#A769F4" },
     { id: 3, name: "Events", icon: <CalendarDots size={24} />, color: "#FF923F" },
@@ -39,7 +40,7 @@ export default function CategoryTabs({ onCategoryClick }: CategoryTabsProps) {
   }
 
   return (
-    <div className="mb-4 flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+    <div className="mb-4 flex flex-col sm:flex-row gap-4 sm:gap-2 overflow-x-auto pb-2 no-scrollbar">
       {categories.map((category) => {
         const isActive = active === category.id
         return (
@@ -48,17 +49,31 @@ export default function CategoryTabs({ onCategoryClick }: CategoryTabsProps) {
             onClick={() => handleTabClick(category.id, category.name)}
             className="flex items-center gap-3 whitespace-nowrap rounded-md px-2 py-1 text-sm font-medium transition-colors"
             style={{
-              background: isActive ? category.color : undefined,
-              color: isActive ? "#fff" : "#919191",
+              color: isActive ? category.color : "#919191",
             }}
             onMouseOver={(e) => {
-              if (!isActive) e.currentTarget.style.background = hexToRgba(category.color, 0.10)
+              if (window.innerWidth >= 640) {
+                e.currentTarget.style.background = hexToRgba(category.color, 0.16)
+              }
             }}
             onMouseOut={(e) => {
-              if (!isActive) e.currentTarget.style.background = ""
+              if (window.innerWidth >= 640) {
+                e.currentTarget.style.background = ""
+              }
             }}
           >
-            <span style={{ color: isActive ? "#fff" : category.color }}>{category.icon}</span>
+            <span 
+              className={`rounded-xl p-2 sm:p-0 sm:rounded-none transition-colors
+                ${isActive ? 'sm:bg-transparent' : ''}`}
+              style={{ 
+                background: window.innerWidth < 640 
+                  ? hexToRgba(category.color, 0.08)
+                  : 'transparent',
+                color: category.color
+              }}
+            >
+              {category.icon}
+            </span>
             <span>{category.name}</span>
           </button>
         )

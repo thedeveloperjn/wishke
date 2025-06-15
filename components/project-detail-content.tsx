@@ -46,9 +46,11 @@ import {
   CarBattery,
   Warehouse,
   PhoneCall,
+  DotsThreeVertical,
   ChatTeardropText,
 } from "@phosphor-icons/react"
 import { Button } from "@/components/ui/button"
+
 
 interface ProjectDetailContentProps {
   projectId: number
@@ -59,6 +61,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [liked, setLiked] = useState(false)
   const [activeTab, setActiveTab] = useState("Description")
+  const [isScrolled, setIsScrolled] = useState(false)
 
   // Refs for scroll sections
   const descriptionRef = useRef<HTMLDivElement>(null)
@@ -73,7 +76,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
     id: projectId,
     title: "3, 4, 5 BHK Flats",
     priceRange: "₹21 Cr - 40 Cr",
-    location: "Godrej Evenue 11, Mahalaxmi, Mumbai South",
+    location: "Malabar Hills, Mumbai",
     images: [
       "/modern-apartment-exterior.png",
       "/luxury-lobby.png",
@@ -148,10 +151,13 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
 
   // Scroll spy functionality
   useEffect(() => {
-    const handleScroll = () => {
-      if (!contentRef.current) return
+    const content = contentRef.current
+    if (!content) return
 
-      const container = contentRef.current
+    const handleScroll = () => {
+      setIsScrolled(content.scrollTop > 0)
+
+      const container = content
       const scrollTop = container.scrollTop
       const containerHeight = container.clientHeight
 
@@ -183,13 +189,10 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
       setActiveTab(activeSection)
     }
 
-    const contentElement = contentRef.current
-    if (contentElement) {
-      contentElement.addEventListener("scroll", handleScroll)
-      // Call once to set initial state
-      handleScroll()
-      return () => contentElement.removeEventListener("scroll", handleScroll)
-    }
+    content.addEventListener("scroll", handleScroll)
+    // Call once to set initial state
+    handleScroll()
+    return () => content.removeEventListener("scroll", handleScroll)
   }, [])
 
   const toggleLike = () => {
@@ -197,36 +200,65 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
   }
 
   return (
-    <div className="w-full h-full bg-white rounded-lg overflow-hidden">
-      <div ref={contentRef} className="h-[calc(100vh-96px)] overflow-y-auto no-scrollbar">
-        <div className="p-6 pt-0">
-          {/* Header */}
-          <button
-            onClick={() => router.back()}
-            className="sticky top-0 py-4 flex w-full items-center bg-white z-[5] text-[20px] font-semibold gap-2 text-gray-900 hover:text-gray-900"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Property Detail
-          </button>
+    <div
+    ref={contentRef}
+    className={`flex-1 overflow-y-auto  sm:h-[calc(85vh)] bg-white  no-scrollbar transition-all duration-200  ${
+      isScrolled ? "rounded-b-lg" : "rounded-lg"
+    }`}
+    style={{
+      borderTopLeftRadius: isScrolled ? 0 : "0.5rem",
+      borderTopRightRadius: isScrolled ? 0 : "0.5rem",
+    }}
+  >
+      <div ref={contentRef} className="flex-1 overflow-y-auto  no-scrollbar">
+        <div className="sm:p-6 pt-0">
+          {/* Mobile Header */}
+          <div className="block sm:hidden fixed top-0 z-[50] w-full bg-white border-b">
+            <div className="flex items-center justify-between p-3">
+              <div className="flex items-center gap-2">
+                <button onClick={() => router.back()} className="p-2 hover:bg-gray-100 rounded-full">
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+              </div>
+              <h1 className="text-[20px] font-medium">Property Detail</h1>
+              <button className="p-2 hover:bg-gray-100 rounded-full">
+                <DotsThreeVertical size={20} />
+              </button>
+            </div>
+          </div>
+
+          {/* Desktop Header */}
+          <div className="hidden sm:block sticky top-0 z-[50] w-full bg-white border-b mb-4">
+            <div className="flex items-center justify-between pb-4">
+              <button
+                onClick={() => router.back()}
+                className="flex items-center gap-2 text-[20px] font-semibold text-gray-900 hover:text-gray-900"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Property Detail
+              </button>
+            </div>
+          </div>
+
           {/* Project Title and Price */}
-          <div className="mb-6 flex justify-between">
+          <div className="mt-[25px] sm:mt-0 p-2 sm:p-0 sm:mb-6 flex justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900 mb-2">{project.title}</h1>
+              <h1 className="text-[18px] sm:text-2xl font-bold text-gray-900 mb-2">{project.title}</h1>
               <div className="flex items-center gap-2 text-gray-600 mb-2">
                 <MapPin size={16} />
                 <span className="text-[16px]">{project.location}</span>
               </div>
             </div>
-            <p className="text-2xl font-bold text-gray-900">{project.priceRange}</p>
+            <p className="text-[18px] sm:text-2xl font-bold text-gray-900">{project.priceRange}</p>
           </div>
 
           {/* Project Images - Horizontal Scroll */}
-          <div className="mb-6 overflow-hidden">
+          <div className="sm:mb-6 p-2 sm:p-0 overflow-hidden">
             <div className="flex overflow-x-auto gap-4 pb-4 no-scrollbar">
               {project.images.map((image, index) => (
                 <div
                   key={index}
-                  className={`relative flex-shrink-0 w-[80%] aspect-[16/9] rounded-lg overflow-hidden ${
+                  className={`relative flex-shrink-0 w-[80%] sm:w-[60%] aspect-[16/9] rounded-lg overflow-hidden ${
                     currentImageIndex === index ? "" : ""
                   }`}
                   onClick={() => setCurrentImageIndex(index)}
@@ -243,29 +275,29 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           </div>
 
           {/* Action Buttons */}
-          <div className="flex items-center justify-between mb-6 pb-4 border-b">
-            <div className="flex items-center gap-6">
+          <div className="flex items-center justify-between mb-6 p-3 sm:p-0 pb-4 sm:pb-4 border-b">
+            <div className="flex items-center gap-4 sm:gap-6">
               <button
                 onClick={toggleLike}
                 className={`flex items-center gap-2 ${liked ? "text-red-500" : "text-gray-500"}`}
               >
                 <Heart size={20} weight={liked ? "fill" : "regular"} />
-                <span className="text-sm">{liked ? project.likes + 1 : project.likes} Likes</span>
+                <span className="text-sm hidden sm:inline">{liked ? project.likes + 1 : project.likes} Likes</span>
               </button>
 
               <button className="flex items-center gap-2 text-gray-500">
                 <ChatCircle size={20} />
-                <span className="text-sm">{project.comments} Comments</span>
+                <span className="text-sm hidden sm:inline">{project.comments} Comments</span>
               </button>
 
               <button className="flex items-center gap-2 text-gray-500">
                 <PaperPlaneTilt size={20} />
-                <span className="text-sm">Message</span>
+                <span className="text-sm hidden sm:inline">Message</span>
               </button>
 
               <button className="flex items-center gap-2 text-gray-500">
                 <ShareFat size={20} />
-                <span className="text-sm">Share</span>
+                <span className="text-sm hidden sm:inline">Share</span>
               </button>
             </div>
 
@@ -275,12 +307,12 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           </div>
 
           {/* Sticky Tabs */}
-          <div className="sticky top-[60px] bg-white border-b mb-6 z-10">
-            <div className="flex gap-8">
+          <div className="sticky top-[15px] sm:top-[60px] sm:top-[85px] bg-white border-b mb-6 z-10">
+            <div className="flex gap-0 sm:gap-8 overflow-x-auto no-scrollbar">
               {tabs.map((tab) => (
                 <button
                   key={tab.id}
-                  className={`pb-3 px-1 w-[20%] border-b-2 transition-colors ${
+                  className={`pb-3 px-3 sm:px-1 whitespace-nowrap border-b-2 transition-colors ${
                     activeTab === tab.id
                       ? "border-purple-500 text-purple-600 font-medium"
                       : "border-transparent text-gray-500 hover:text-gray-700"
@@ -296,16 +328,16 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           {/* All Content Sections */}
 
           {/* Description Section */}
-          <div ref={descriptionRef} className="space-y-4 mb-12">
+          <div ref={descriptionRef} className="space-y-4 mb-12 px-4 sm:px-0">
             <h3 className="text-xl font-semibold border-b pb-4 mb-6 text-gray-900">Description</h3>
             <p className="text-gray-600 leading-relaxed">{project.description}</p>
           </div>
 
           {/* Overview Section */}
-          <div ref={overviewRef} className="space-y-6 mb-12">
+          <div ref={overviewRef} className="space-y-6 mb-12 px-4 sm:px-0">
             <h3 className="text-xl font-semibold border-b pb-4 mb-6 text-gray-900">Overview</h3>
 
-            <div className="grid grid-cols-3 gap-6 px-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 px-0 sm:px-4">
               <div className="space-y-4">
                 <div className="flex items-center gap-2 text-gray-500">
                   <Buildings size={22} />
@@ -445,9 +477,9 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           </div>
 
           {/* Amenities Section */}
-          <div ref={amenitiesRef} className="space-y-6 mb-12">
+          <div ref={amenitiesRef} className="space-y-6 mb-12 px-4 sm:px-0">
             <h3 className="text-xl font-semibold border-b pb-4 mb-6 text-gray-900">Amenities</h3>
-            <div className="grid grid-cols-3 gap-6 px-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-6 px-0 sm:px-4">
               {project.amenities.map((amenity, index) => (
                 <div key={index} className="flex items-center gap-3">
                   <amenity.icon size={28} className="text-gray-700" />
@@ -458,11 +490,11 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           </div>
 
           {/* Highlights Section */}
-          <div ref={highlightsRef} className="space-y-6 mb-12">
+          <div ref={highlightsRef} className="space-y-6 mb-12 px-4 sm:px-0">
             <h3 className="text-xl font-semibold border-b pb-4 mb-6 text-gray-900">Highlights</h3>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {project.highlights.map((highlight, index) => (
-                <div key={index} className="flex items-center gap-3 px-4">
+                <div key={index} className="flex items-center gap-3 px-0 sm:px-4">
                   <CheckCircle size={24} className="text-[#01A76F]" weight="fill" />
                   <span className="text-[16px] text-gray-900">{highlight}</span>
                 </div>
@@ -471,7 +503,7 @@ export default function ProjectDetailContent({ projectId }: ProjectDetailContent
           </div>
 
           {/* Contact Section */}
-          <div ref={contactRef} className="space-y-4 mb-12">
+          <div ref={contactRef} className="space-y-4 mb-12 px-4 sm:px-0">
             <Postedby
               avatar={project.postedBy.avatar || "/placeholder.svg"}
               name={project.postedBy.name}

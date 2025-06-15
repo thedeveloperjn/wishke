@@ -32,16 +32,16 @@ export default function MainContent() {
 
   return (
     <div
-      ref={contentRef}
-      className={`flex-1 overflow-y-auto h-[calc(93vh)]  sm:h-[calc(85vh)] pb-6 no-scrollbar  transition-all duration-200 ${
-        isScrolled ? "rounded-b-lg" : "rounded-lg"
-      }`}
-      style={{
-        borderTopLeftRadius: isScrolled ? 0 : "0.5rem",
-        borderTopRightRadius: isScrolled ? 0 : "0.5rem",
-      }}
-    >
-      <div>
+  ref={contentRef}
+  className={`flex-1 overflow-y-auto  sm:h-[calc(85vh)] sm:pb-6 no-scrollbar transition-all duration-200  ${
+    isScrolled ? "rounded-b-lg" : "rounded-lg"
+  }`}
+  style={{
+    borderTopLeftRadius: isScrolled ? 0 : "0.5rem",
+    borderTopRightRadius: isScrolled ? 0 : "0.5rem",
+  }}
+>
+
         <div className={`flex-1 py-2 sm:py-6 sm:mb-6 overflow-y-auto bg-white  no-scrollbar  transition-all duration-200 ${
           isScrolled ? "rounded-b-lg" : "rounded-lg"
         }`}>
@@ -112,7 +112,7 @@ export default function MainContent() {
           {activeTab === "following" && <FollowingPosts />}
           {activeTab === "connect" && <ConnectSection />}
         </div>
-      </div>
+   
 
       <FilterComponent isOpen={showFilter} onClose={() => setShowFilter(false)} />
     </div>

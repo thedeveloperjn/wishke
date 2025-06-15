@@ -56,6 +56,8 @@ export default function StoryViewer({
   const [showViewers, setShowViewers] = useState(false)
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null)
   const isActiveRef = useRef(true)
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+  const isNavigating = useRef(false)
 
   const story = stories[currentStoryIndex] || stories[0]
   const previousStoryIdRef = useRef(story.id)
@@ -68,11 +70,27 @@ export default function StoryViewer({
   // Reset progress when changing items
   useEffect(() => {
     setProgress(0)
+    if (videoRef.current && storyItem.type === "video") {
+      videoRef.current.currentTime = 0
+      videoRef.current.play()
+    }
   }, [currentStoryIndex, safeItemIndex])
 
-  // Handle progress animation
+  // Sync progress bar with video
   useEffect(() => {
-    if (!isPaused) {
+    if (storyItem.type === "video" && videoRef.current) {
+      const video = videoRef.current
+      const updateProgress = () => {
+        if (video.duration && !isPaused) {
+          setProgress((video.currentTime / video.duration) * 100)
+          if (video.currentTime >= video.duration) {
+            goToNextItem()
+          }
+        }
+      }
+      video.addEventListener("timeupdate", updateProgress)
+      return () => video.removeEventListener("timeupdate", updateProgress)
+    } else if (!isPaused) {
       progressIntervalRef.current = setInterval(() => {
         setProgress((prev) => {
           const newProgress = prev + (100 / (storyItem.duration * 10))
@@ -91,7 +109,7 @@ export default function StoryViewer({
         }
       }
     }
-  }, [isPaused, currentStoryIndex, safeItemIndex, storyItem.duration])
+  }, [isPaused, currentStoryIndex, safeItemIndex, storyItem])
 
   // Mark story as viewed
   useEffect(() => {
@@ -127,6 +145,9 @@ export default function StoryViewer({
   }, [])
 
   const goToNextItem = () => {
+    if (isNavigating.current) return
+    isNavigating.current = true
+
     if (safeItemIndex < storyItems.length - 1) {
       setCurrentItemIndex(safeItemIndex + 1)
     } else if (currentStoryIndex < stories.length - 1) {
@@ -137,9 +158,16 @@ export default function StoryViewer({
     } else {
       onClose()
     }
+
+    setTimeout(() => {
+      isNavigating.current = false
+    }, 300)
   }
 
   const goToPreviousItem = () => {
+    if (isNavigating.current) return
+    isNavigating.current = true
+
     if (safeItemIndex > 0) {
       setCurrentItemIndex(safeItemIndex - 1)
     } else if (currentStoryIndex > 0) {
@@ -148,17 +176,40 @@ export default function StoryViewer({
       setCurrentStoryIndex(currentStoryIndex - 1)
       setCurrentItemIndex((stories[currentStoryIndex - 1].storyItems.length || 1) - 1)
     }
+
+    setTimeout(() => {
+      isNavigating.current = false
+    }, 300)
   }
 
-  const handleMouseDown = () => {
+  const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation()
     setIsPaused(true)
     if (progressIntervalRef.current) {
       clearInterval(progressIntervalRef.current)
+    }
+    if (videoRef.current) {
+      videoRef.current.pause()
+    }
+
+    // Handle click-based navigation
+    const clientX = "touches" in e ? e.touches[0].clientX : e.clientX
+    const screenWidth = window.innerWidth
+    const leftThreshold = screenWidth * 0.35
+    const rightThreshold = screenWidth * 0.65
+
+    if (clientX < leftThreshold && !isNavigating.current) {
+      goToPreviousItem()
+    } else if (clientX > rightThreshold && !isNavigating.current) {
+      goToNextItem()
     }
   }
 
   const handleMouseUp = () => {
     setIsPaused(false)
+    if (videoRef.current && storyItem.type === "video") {
+      videoRef.current.play()
+    }
   }
 
   const handleDeleteStory = () => {
@@ -178,16 +229,19 @@ export default function StoryViewer({
 
   const variants = {
     enter: (direction: number) => ({
-      x: direction * 300,
+      x: direction > 0 ? '100%' : '-100%',
       opacity: 0,
+      transition: { duration: 0.3, ease: 'easeInOut' }
     }),
     center: {
       x: 0,
       opacity: 1,
+      transition: { duration: 0.3, ease: 'easeInOut' }
     },
     exit: (direction: number) => ({
-      x: direction * -300,
+      x: direction > 0 ? '-100%' : '100%',
       opacity: 0,
+      transition: { duration: 0.3, ease: 'easeInOut' }
     }),
   }
 
@@ -200,7 +254,7 @@ export default function StoryViewer({
           ) : idx === safeItemIndex ? (
             <div
               className="h-full bg-[#8E33FF]"
-              style={{ width: `${progress}%`, transition: "width 0.1s linear" }}
+              style={{ width: `${progress}%`, transition: storyItem.type === "video" ? "none" : "width 0.1s linear" }}
             />
           ) : null}
         </div>
@@ -212,7 +266,7 @@ export default function StoryViewer({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-black/30 backdrop-blur-[15px] flex items-center justify-center"
+      className="fixed inset-0 z-[101] bg-black/30 backdrop-blur-[15px] flex items-center justify-center"
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onTouchStart={handleMouseDown}
@@ -242,7 +296,7 @@ export default function StoryViewer({
         <ChevronRight className="h-8 w-8" />
       </button>
 
-      <div className="relative w-full sm:max-w-[360px] h-full max-h-[100%] flex flex-col">
+      <div className="relative w-full sm:max-w-[360px] h-full max-h-[100%] sm:mt-5 flex flex-col">
         {/* Web View Header - Above Content */}
         {!isMobile && (
           <div className="w-full z-50">
@@ -284,9 +338,7 @@ export default function StoryViewer({
                     >
                       <MoreHorizontal className="h-5 w-5" />
                     </button>
-                  
                   </DropdownMenuTrigger>
-                  
                   <DropdownMenuContent align="end" className="w-56" onCloseAutoFocus={() => setIsPaused(false)}>
                     {isUserStory && (
                       <>
@@ -328,8 +380,7 @@ export default function StoryViewer({
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ duration: 0.3 }}
-            className="flex-1 relative overflow-hidden"
+            className="flex-1 relative overflow-hidden sm:h-[94%] sm:mt-2"
           >
             {/* Mobile View Header - Over Content */}
             {isMobile && (
@@ -404,25 +455,27 @@ export default function StoryViewer({
                       </DropdownMenuContent>
                     </DropdownMenu>
                     <button onClick={onClose} className="relative text-white z-50">
-        <X className="h-6 w-6" />
-      </button>
+                      <X className="h-6 w-6" />
+                    </button>
                   </div>
                 </div>
               </div>
             )}
 
             {/* Content Area */}
-            <div className="h-full w-full sm:rounded-[12px] overflow-hidden">
+            <div className="h-full w-full sm:h-[98%] sm:rounded-[12px] overflow-hidden">
               {storyItem.type === "image" ? (
                 <Image
                   src={storyItem.url}
                   alt="Story"
-                  fill
-                  className="sm:rounded-[12px] overflow-hidden object-cover"
+                  height={100}
+                  width={100}
+                  className="sm:rounded-[12px] h-full w-full overflow-hidden object-cover"
                   priority
                 />
               ) : (
                 <video
+                  ref={videoRef}
                   src={storyItem.url}
                   className="h-full w-full object-cover"
                   autoPlay
@@ -440,7 +493,7 @@ export default function StoryViewer({
         </AnimatePresence>
 
         {/* Bottom Controls (same for both web and mobile) */}
-        <div className="py-1 sm:py-3 px-2 sm:py-0 absolute bottom-4 sm:relative h-auto  w-full flex items-center gap-2">
+        <div className="py-1 sm:py-3 px-2 sm:py-0 absolute bottom-4 sm:relative h-auto w-full flex items-center gap-2">
           <button className="w-10 h-10 flex items-center justify-center text-white border border-white bg-white/20 rounded-full">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path

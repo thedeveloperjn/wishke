@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
-import { Send, Paperclip, Smile, MoreVertical, ArrowLeft } from "lucide-react"
+import { Send, Paperclip, Smile, MoreVertical, ArrowLeft, Mic } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { ImageIcon, Microphone } from "@phosphor-icons/react/dist/ssr"
@@ -252,7 +252,7 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
   }
 
   const handleBackToHome = () => {
-    router.push("/")
+    router.back()
   }
 
   useEffect(() => {
@@ -281,14 +281,12 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
   }
 
   return (
-   <div
+   <div      
         ref={contentRef}
-        className="flex-1 bg-white  overflow-y-auto max-h-[85vh] no-scrollbar transition-all duration-200 !rounded-lg"
-        
-        
-      >
+        className="bg-white  fixed sm:relative top-0 z-[50] sm:z-[10] overflow-y-auto h-[100%] sm:h-[84vh] no-scrollbar transition-all duration-200 !rounded-lg"
+     >
       {/* Chat Header - Fixed at top */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-white">
+      <div className="fixed sm:relative w-full z-[50] flex items-center justify-between p-2 sm:p-4 border-b border-gray-100 bg-white">
         <div className="flex items-center gap-3">
           <Button variant="ghost" size="sm" onClick={handleBackToHome}>
             <ArrowLeft className="h-4 w-4" />
@@ -317,17 +315,16 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
           </Button>
         </div>
       </div>
-
-      {/* Messages Area - Flexible height, bottom aligned when few messages */}
-      <div className="flex-1 overflow-y-auto h-[50vh] bg-white">
-        <div className="min-h-full flex flex-col justify-end p-6">
+ 
+      <div className="flex-1 overflow-y-auto w-full pt-[70px] sm:pt-2 pb-[50px] sm:pb-0 h-full  sm:h-[60vh] bg-white">
+        <div className="min-h-full flex flex-col justify-end p-2 sm:p-4 sm:py-0">
           <div className="space-y-4">
             {currentMessages.map((msg) => (
               <div
                 key={msg.id}
                 className={`flex items-end gap-3 ${msg.sender === "me" ? "justify-end" : "justify-start"}`}
               >
-                {/* Profile Picture for Other User */}
+                 
                 {msg.sender === "other" && (
                   <div className="relative h-8 w-8 flex-shrink-0">
                     <Image
@@ -339,7 +336,7 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
                   </div>
                 )}
 
-                {/* Message Bubble */}
+                 
                 <div
                   className={`max-w-[70%] rounded-2xl px-4 py-3 cursor-pointer transition-all ${
                     msg.sender === "me"
@@ -351,7 +348,7 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
                   <p className="text-sm leading-relaxed">{msg.text}</p>
                 </div>
 
-                {/* Profile Picture for My Messages */}
+                 
                 {msg.sender === "me" && (
                   <div className="relative h-8 w-8 flex-shrink-0">
                     <Image
@@ -399,32 +396,32 @@ export default function ChatInterface({ selectedContactId }: ChatInterfaceProps)
       </div>
 
       {/* Message Input - Fixed at bottom */}
-      <div className="p-4 border-t border-gray-100 bg-white">
-        <div className="flex items-center border border-gray-200 bg-[#F8F8FA] rounded-full px-4 py-2 shadow-sm w-full">
-          <Smile className="h-5 w-5 text-gray-400 mr-2" />
+      <div className="fixed sm:relative w-full bottom-0 py-2 px-4 sm:p-4 border-t border-gray-100 bg-white">
+        <div className="flex items-center border border-gray-700 bg-[#F8F8FA] rounded-xl  pr-2 sm:px-4 py-0 sm:py-2 shadow-sm w-full">
+          <Smile className="h-5 w-5 text-gray-400 ml-2 mr-2" />
           <Input
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder="Type your message..."
-            className="flex-1 bg-transparent border-none outline-none text-base placeholder-gray-400"
+            className="flex-1 bg-transparent border-none outline-none !rounded-sm text-base placeholder-gray-400"
           />
           <Button variant="ghost" size="icon" className="ml-2">
-            <Image src="/image.svg" alt="Add Image" width={20} height={20} />
+          <ImageIcon size={22}  className="text-gray-400"/ >
           </Button>
           <Button variant="ghost" size="icon">
             <Paperclip className="h-5 w-5 text-gray-400" />
           </Button>
           <Button variant="ghost" size="icon">
-            <Image src="/mic.svg" alt="Mic" width={20} height={20} />
+           < Microphone size={22} className="text-gray-400" />
           </Button>
           {message.trim() && (
             <Button
               onClick={handleSendMessage}
-              className="rounded-full bg-[#8E33FF] hover:bg-[#7A2EE6] px-4 py-2 ml-2"
+              className="rounded-full bg-[#8E33FF] hover:bg-[#7A2EE6] px-6 py-2 ml-2"
               size="icon"
             >
-              <Send className="h-5 w-5 text-white" />
+              <Send className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </Button>
           )}
         </div>

@@ -1,6 +1,8 @@
 "use client"
 
 import { useState,useEffect,useRef } from "react"
+import { useRouter } from "next/navigation"
+import { ArrowLeft, MagnifyingGlass, DotsThreeVertical, MagnifyingGlassIcon } from "@phosphor-icons/react"
 import PropertyPost from "@/components/property-post"
 import RequirementPost from "@/components/requirement-post"
 import HashtagNavigation from "@/components/hashtag-navigation"
@@ -31,6 +33,7 @@ interface MainContentProps {
 }
 
 export default function MainContent({ posts, selectedHashtag, onHashtagSelect }: MainContentProps) {
+    const router = useRouter()
     const contentRef = useRef<HTMLDivElement>(null)
     const [isScrolled, setIsScrolled] = useState(false)
     const [showFilter, setShowFilter] = useState(false)
@@ -50,15 +53,30 @@ export default function MainContent({ posts, selectedHashtag, onHashtagSelect }:
   
     return (
       <div
-        ref={contentRef}
-        className={`flex-1 overflow-y-auto  h-[calc(85vh)] pb-6 no-scrollbar  transition-all duration-200 ${
-          isScrolled ? "rounded-b-lg" : "rounded-lg"
-        }`}
-        style={{
-          borderTopLeftRadius: isScrolled ? 0 : "0.5rem",
-          borderTopRightRadius: isScrolled ? 0 : "0.5rem",
-        }}
-      >
+      ref={contentRef}
+      className={`flex-1 overflow-y-auto sm:h-[calc(85vh)] sm:pb-6 no-scrollbar transition-all duration-200 ${
+        isScrolled ? "rounded-b-lg" : "rounded-lg"
+      }`}
+      style={{
+        borderTopLeftRadius: isScrolled ? 0 : "0.5rem",
+        borderTopRightRadius: isScrolled ? 0 : "0.5rem",
+      }}
+    >
+    
+      <div className="block sm:hidden fixed top-0 z-[50] w-full bg-white border-b z-10">
+        <div className="flex items-center justify-between p-3">
+          <div className="flex items-center gap-2">
+            <button onClick={() => router.back()} className="p-2 hover:bg-gray-100 rounded-full">
+              <ArrowLeft size={20} />
+            </button>
+         
+          </div>
+          <h1 className="text-[20px] font-medium">Discover</h1>
+          <button className="p-2 hover:bg-gray-100 rounded-full">
+            <MagnifyingGlassIcon size={20} />
+          </button>
+        </div>
+        </div>
       <div className="bg-white rounded-lg mb-0 sm:mb-6">
         <HashtagNavigation selectedHashtag={selectedHashtag} onHashtagSelect={onHashtagSelect} />
       </div>

@@ -10,42 +10,151 @@ export default function MessagesPage() {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState("")
 
-  // Mock conversations data
+  // Function to truncate message and add "You: " prefix if needed
+  const formatLastMessage = (message: string, isFromMe: boolean) => {
+    const prefix = isFromMe ? "You: " : ""
+    const truncatedMessage = message.length > 40 ? message.substring(0, 40) + "..." : message
+    return prefix + truncatedMessage
+  }
+
+  // Mock conversations data with last messages
   const conversations = [
     {
       id: 1,
-      name: "Mark Russel",
-      username: "@markrussel",
-      avatar: "/imagesstatic/malvika.jpg",
-      lastMessage: "Hi, I'm interested in your property",
-      timestamp: "2m ago",
+      name: "John Manual",
+      status: "online",
+      avatar: "/stylish-profile-picture.png",
+      lastMessage: "Perfect! Can we schedule a viewing this weekend?",
+      lastMessageFromMe: false,
+      timestamp: "10:42 AM",
       unread: 2
     },
     {
       id: 2,
-      name: "Sarah Wilson",
-      username: "@sarahw",
-      avatar: "/imagesstatic/malvika.jpg",
-      lastMessage: "When can we schedule a visit?",
-      timestamp: "1h ago",
+      name: "Alex Carter",
+      status: "online",
+      avatar: "/stylish-profile-picture.png",
+      lastMessage: "I'm doing great! Thanks for asking. How about you?",
+      lastMessageFromMe: true,
+      timestamp: "9:20 AM",
       unread: 0
     },
     {
       id: 3,
-      name: "John Doe",
-      username: "@johndoe",
-      avatar: "/imagesstatic/malvika.jpg",
-      lastMessage: "The property is still available?",
-      timestamp: "3h ago",
+      name: "Sam Taylor",
+      status: "",
+      avatar: "/stylish-profile-picture.png",
+      lastMessage: "You're welcome! Let me know if you need any more information.",
+      lastMessageFromMe: true,
+      timestamp: "Yesterday",
       unread: 1
     },
-    // Add more conversations as needed
+    {
+      id: 4,
+      name: "Jordan Lee",
+      status: "",
+      avatar: "/stylish-profile-picture.png",
+      lastMessage: "Wow, these look fantastic! The design is exactly what I had in mind.",
+      lastMessageFromMe: true,
+      timestamp: "2:05 PM",
+      unread: 0
+    },
+    {
+      id: 5,
+      name: "Chris Morgan",
+      status: "",
+      avatar: "/stylish-profile-picture.png",
+      lastMessage: "I've completed the interior design mockups for the living room and bedroom.",
+      lastMessageFromMe: false,
+      timestamp: "11:30 AM",
+      unread: 0
+    },
+    {
+      id: 6,
+      name: "Jamie Parker",
+      status: "",
+      avatar: "/stylish-profile-picture.png",
+      lastMessage: "The location looks great for the new property development.",
+      lastMessageFromMe: false,
+      timestamp: "2 days ago",
+      unread: 0
+    },
+    {
+      id: 7,
+      name: "Robbin Michel",
+      status: "",
+      avatar: "/stylish-profile-picture.png",
+      lastMessage: "Can we discuss the pricing for the construction project?",
+      lastMessageFromMe: false,
+      timestamp: "3 days ago",
+      unread: 3
+    },
+    {
+      id: 8,
+      name: "Taylor Quinn",
+      status: "",
+      avatar: "/stylish-profile-picture.png",
+      lastMessage: "I'm interested in this property. Can you help with the legal documentation?",
+      lastMessageFromMe: false,
+      timestamp: "1 week ago",
+      unread: 0
+    },
+    {
+      id: 9,
+      name: "Jordan Lee",
+      status: "",
+      avatar: "/stylish-profile-picture.png",
+      lastMessage: "Wow, these look fantastic! The design is exactly what I had in mind.",
+      lastMessageFromMe: true,
+      timestamp: "2:05 PM",
+      unread: 0
+    },
+    {
+      id: 10,
+      name: "Chris Morgan",
+      status: "",
+      avatar: "/stylish-profile-picture.png",
+      lastMessage: "I've completed the interior design mockups for the living room and bedroom.",
+      lastMessageFromMe: false,
+      timestamp: "11:30 AM",
+      unread: 0
+    },
+    {
+      id: 11,
+      name: "Jamie Parker",
+      status: "",
+      avatar: "/stylish-profile-picture.png",
+      lastMessage: "The location looks great for the new property development.",
+      lastMessageFromMe: false,
+      timestamp: "2 days ago",
+      unread: 0
+    },
+    {
+      id: 12,
+      name: "Robbin Michel",
+      status: "",
+      avatar: "/stylish-profile-picture.png",
+      lastMessage: "Can we discuss the pricing for the construction project?",
+      lastMessageFromMe: false,
+      timestamp: "3 days ago",
+      unread: 3
+    },
+    {
+      id: 13,
+      name: "Taylor Quinn",
+      status: "",
+      avatar: "/stylish-profile-picture.png",
+      lastMessage: "I'm interested in this property. Can you help with the legal documentation?",
+      lastMessageFromMe: false,
+      timestamp: "1 week ago",
+      unread: 0
+    }
   ]
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="  min-h-screen w-full bg-white">
       {/* Header */}
-      <div className="sticky top-0 bg-white border-b z-10">
+      <div className="fixed top-0 z-[50] w-full bg-white border-b z-10">
         <div className="flex items-center justify-between p-4">
           <div className="flex items-center gap-2">
             <button onClick={() => router.back()} className="p-2 hover:bg-gray-100 rounded-full">
@@ -67,21 +176,21 @@ export default function MessagesPage() {
               placeholder="Search messages"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 py-6 text-[16px] bg-gray-50"
+              className="pl-10 py-4 text-[16px] border-0 bg-gray-50"
             />
           </div>
         </div>
       </div>
 
       {/* Conversations List */}
-      <div className="divide-y">
+      <div className="divide-y w-full pt-16">
         {conversations.map((conversation) => (
           <button
             key={conversation.id}
-            onClick={() => router.push(`/messages/${conversation.id}`)}
+            onClick={() => router.push(`/chat/${conversation.id}`)}
             className="w-full p-4 hover:bg-gray-50 flex items-start gap-3"
           >
-            <div className="relative">
+            <div className="relative flex-shrink-0">
               <Image
                 src={conversation.avatar}
                 alt={conversation.name}
@@ -89,22 +198,29 @@ export default function MessagesPage() {
                 height={48}
                 className="rounded-full"
               />
-              {conversation.unread > 0 && (
-                <span className="absolute -top-1 -right-1 bg-purple-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                  {conversation.unread}
-                </span>
+              {conversation.status === "online" && (
+                <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-[#FF5631]"></span>
               )}
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between mb-1">
+            <div className="flex-1 min-w-0 flex flex-col">
+              <div className="flex items-center justify-between w-full">
                 <h3 className="font-medium text-[16px] truncate">{conversation.name}</h3>
-                <span className="text-sm text-gray-500">{conversation.timestamp}</span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-500">{conversation.timestamp}</span>
+                  {conversation.unread > 0 && (
+                    <span className="bg-purple-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">
+                      {conversation.unread}
+                    </span>
+                  )}
+                </div>
               </div>
-              <p className="text-sm text-gray-500 truncate">{conversation.lastMessage}</p>
+              <p className="text-sm text-gray-500 truncate text-left">
+                {formatLastMessage(conversation.lastMessage, conversation.lastMessageFromMe)}
+              </p>
             </div>
           </button>
         ))}
       </div>
     </div>
   )
-} 
+}

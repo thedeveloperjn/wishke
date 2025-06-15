@@ -854,11 +854,11 @@ export default function FilterComponent({ isOpen, onClose }: FilterComponentProp
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[600px] p-0 gap-0">
-        <div className="p-4 border-b">
+      <DialogContent className="sm:max-w-[600px] p-0 gap-0 h-[100vh] sm:h-auto w-[100vw] sm:w-auto m-0 sm:m-4 rounded-none sm:rounded-lg">
+        <div className="p-4 border-b sticky top-0 bg-white z-10">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Applied Filter</h2>
-            <button onClick={onClose} className="text-gray-500">
+            <h2 className="text-xl font-semibold">Filters</h2>
+            <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
               <X className="h-5 w-5" />
             </button>
           </div>
@@ -878,8 +878,8 @@ export default function FilterComponent({ isOpen, onClose }: FilterComponentProp
           </div>
         </div>
 
-        <div className="flex h-[500px]">
-          <div className="w-[250px] border-r">
+        <div className="flex flex-col sm:flex-row h-[calc(100vh-180px)] sm:h-[500px]">
+          <div className="w-full sm:w-[250px] border-b sm:border-b-0 sm:border-r overflow-y-auto">
             <button
               className={`w-full text-left px-4 py-3 border-b ${activeSection === "budget" ? "bg-green-50" : ""}`}
               onClick={() => setActiveSection("budget")}
@@ -951,7 +951,7 @@ export default function FilterComponent({ isOpen, onClose }: FilterComponentProp
           <div className="flex-1 overflow-y-auto">{renderFilterSection()}</div>
         </div>
 
-        <div className="flex p-4 border-t">
+        <div className="flex p-4 border-t sticky bottom-0 bg-white">
           <Button
             variant="outline"
             className="flex-1 mr-2 bg-purple-50 text-purple-600 border-purple-100"

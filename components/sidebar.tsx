@@ -91,8 +91,8 @@ export default function Sidebar({ isOpen = false, onClose }: SidebarProps = {}) 
 
       <aside
         ref={sidebarRef}
-        className={`fixed top-0 left-0 z-[999] md:relative md:z-40 w-[280px] md:w-auto xl:w-[24%] min-w-[80px] flex-col md:flex overflow-y-auto h-[100vh]  sm:h-[calc(100vh-96px)] no-scrollbar transition-transform duration-200 ${
-          isScrolled ? "rounded-b-lg" : "rounded-lg"
+        className={`fixed top-0 left-0 z-[999] md:relative md:z-40 w-[280px] md:w-auto xl:w-[24%] min-w-[80px] flex-col md:flex overflow-y-auto h-[100vh]  sm:h-[calc(85vh)] no-scrollbar transition-transform duration-200 ${
+          isScrolled ? "rounded-b-lg" : "sm:rounded-lg"
         } bg-white sm:bg-transparent ${isOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}
         style={{
           borderTopLeftRadius: isScrolled ? 0 : "0.5rem",
